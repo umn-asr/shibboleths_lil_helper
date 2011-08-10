@@ -54,7 +54,10 @@ class TestShibbolethsLilHelper < Test::Unit::TestCase
       assert strategy.hosts.first.apps.first.auth_rules[1].url_path == '/lazy'
       assert strategy.hosts.first.apps.first.auth_rules[1].rule_type == :location
       assert strategy.hosts.first.apps.first.auth_rules[1].flavor == :lazy_authentication
+    end
 
+    should "generate a valid Shibbolleth Service Provider Meta-Data file that can be given to an IDP" do
+      
     end
   end
 end
