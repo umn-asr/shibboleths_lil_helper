@@ -1,10 +1,15 @@
 class Slh::Models::Strategy
-  attr_accessor :name
-  def initialize(strategy_name,&block)
-    self.name = strategy_name
+  attr_reader :name,:hosts
+  def initialize(strategy_name,*args, &block)
+    @name = strategy_name
+    @hosts = []
     if block_given?
-      self.instance_eval(block)
+      self.instance_eval(&block)
     end
+  end
+
+  def for_host(host_name,*args,&block)
+    @hosts << Slh::Models::Host.new(host_name,*args, &block)
   end
 
   def generate_config

@@ -5,8 +5,9 @@ module Slh
 
   module Models
     extend ActiveSupport::Autoload
+    autoload :Strategy
     autoload :Host
     autoload :App
-    autoload :Strategy
+    autoload :AppAuthRule
   end
 end
