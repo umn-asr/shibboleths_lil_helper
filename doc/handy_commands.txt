@@ -1,0 +1,3 @@
+---
+Find the version of shibboleth you are currently running on a host
+  rpm -qi shibboleth
