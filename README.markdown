@@ -1,6 +1,6 @@
 About
 =====
-
+WARNING: THIS IS VERY BETA RIGHT NOW
 A Rubygem to help manage the configuration associated with many instances of the Shibboleth Apache/IIS Native Service Provider code.
 
 Inspiration: Thank you Santa Clause
@@ -27,7 +27,23 @@ so went with the [[Apache/IIS Native Service Provider]] approach.
 Since the Native SP approach pushes critical app auth logic to the web
 server layer of the stack, we need a way to keep this logic versioned with the application itself.
 
+Installation
+============
+gem install shibboleths_lil_helper
+
+Assumptions
+===========
+TODO: (lots of them...shoots to solve the dominant use case/simple path: 1 IDP)
+
 Usage
 =====
+* `slh create_strategy asr_default`
+* edit asr_default.rb, anywhere you see "TODO_CHANGE" in particular
+* `slh generate_config asr_default`
+* copy the generated shibboleth config files to the remote server, and
+  restart shibd
+
+Usage with Capistrano
+=====================
 TODO
 
