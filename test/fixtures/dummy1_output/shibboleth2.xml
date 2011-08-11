@@ -4,9 +4,9 @@
     xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"    
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
-    <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>">
+    <ApplicationDefaults entityID="https://shib-local-vm1.asr.umn.edu/rhel5_sp1">
         <Sessions lifetime="28800" timeout="3600" checkAddress="false" relayState="ss:mem" handlerSSL="false">
-            <SSO entityID="<%= @strategy.idp_entity_id %>">
+            <SSO entityID="https://idp-test.shib.umn.edu/idp/shibboleth">
               SAML2 SAML1
             </SSO>
             <Logout>SAML2 Local</Logout>
@@ -15,8 +15,8 @@
             <Handler type="Session" Location="/Session" showAttributeValues="false"/>
             <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
         </Sessions>
-        <Errors supportContact="<%= @strategy.error_support_contact %>" logoLocation="/shibboleth-sp/logo.jpg" styleSheet="/shibboleth-sp/main.css"/>
-        <MetadataProvider type="XML" file="<%= @strategy.config_file_name('idp_metadata.xml') %>"/>
+        <Errors supportContact="goggins@umn.edu" logoLocation="/shibboleth-sp/logo.jpg" styleSheet="/shibboleth-sp/main.css"/>
+        <MetadataProvider type="XML" file="idp_metadata.xml"/>
         <AttributeExtractor type="XML" validate="true" path="attribute-map.xml"/>
         <AttributeResolver type="Query" subjectMatch="true"/>
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>

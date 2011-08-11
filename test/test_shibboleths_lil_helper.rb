@@ -34,7 +34,9 @@ class TestShibbolethsLilHelper < Test::Unit::TestCase
       # WARNING: THIS CODE IS BRITTLE AND CODED AGAINST an XML format returned from https://idp-test.shib.umn.edu/metadata.xml
       assert_equal "https://idp-test.shib.umn.edu/idp/shibboleth", @strategy.idp_entity_id
     end
-
+    should "have an error_support_contact" do
+      assert_equal "goggins@umn.edu", @strategy.error_support_contact
+    end
     should "load up a strategy" do
       assert_kind_of Slh::Models::Strategy, @strategy
       assert_raises RuntimeError do 
@@ -78,10 +80,18 @@ class TestShibbolethsLilHelper < Test::Unit::TestCase
       assert_equal expected_content, actual_content
     end
 
-    should "write the idp_metadata to a file" do
+    should "write the idp_metadata gathered from the idp_metadata_url to a file" do
       @strategy.generate_config
       assert File.exists?(@strategy.config_file_path('idp_metadata.xml'))
       assert_equal @strategy.idp_metadata, File.read(@strategy.config_file_path('idp_metadata.xml'))
+    end
+
+    should "generate the attribute-map.xml" do
+      @strategy.generate_config
+      assert File.exists?(@strategy.config_file_path('attribute-map.xml'))
+      expected_content = File.read(File.join(File.dirname(__FILE__),'fixtures','dummy1_output/attribute-map.xml'))
+      actual_content = File.read(@strategy.config_file_path('attribute-map.xml'))
+      assert_equal expected_content, actual_content
     end
   end
 end

@@ -1,10 +1,11 @@
 class Slh::Models::Strategy
-  attr_reader :name,:hosts,:sp_entity_id,:idp_metadata_url
-  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml shib_apache22.conf idp_metadata.xml)
+  attr_reader :name,:hosts,:sp_entity_id,:idp_metadata_url, :error_support_contact
+  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml)
   def initialize(strategy_name,*args, &block)
     @name = strategy_name
     @hosts = []
     options = args.extract_options! 
+    @error_support_contact = options[:error_support_contact] || 'your institutions help desk department'
     if options.has_key? :sp_entity_id
       @sp_entity_id = options[:sp_entity_id]
     else
@@ -71,12 +72,6 @@ class Slh::Models::Strategy
     File.join('shibboleths_lil_helper_generated_config',self.name.to_s)
   end
 
-  # def now
-  #   if @now.blank?
-  #     @now = Time.now
-  #   end
-  #   @now
-  # end
   def config_file_path(file_base_name)
     File.join(self.config_dir, self.config_file_name(file_base_name))
   end
@@ -84,20 +79,18 @@ class Slh::Models::Strategy
   def config_file_name(file_base_name)
     validate_config_file_name(file_base_name)
     file_base_name
-    # if file_base_name == 'idp_metadata.xml'
-    #   file_base_name = (self.idp_metadata_url + self.now.to_s).gsub(/[^A-Za-z0-9:]/,'_') + '.xml'
-    # end
-    file_base_name
   end
 
   def generate_config_file_content(file_base_name)
     validate_config_file_name(file_base_name)
+    @strategy = self # to be references in erb templates below
     case file_base_name
-    when 'shibboleth2.xml'
-      @strategy = self
-      erb = ERB.new(self.config_template_content(file_base_name)).result(binding)
+    when 'shibboleth2.xml','attribute-map.xml'
+      ERB.new(self.config_template_content(file_base_name)).result(binding)
     when 'idp_metadata.xml'
       self.idp_metadata
+    else
+      raise "dont know how to generate config for #{file_base_name}"
     end
   end
 
