@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'shibboleths_lil_helper'
+Slh::Cli.execute
