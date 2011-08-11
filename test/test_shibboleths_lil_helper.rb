@@ -10,7 +10,6 @@ class TestShibbolethsLilHelper < Test::Unit::TestCase
     # TODO add more
   end
   should "provide some top level methods for using the tool" do
-    assert_respond_to Slh, :define_entity_id
     # TODO add more
   end
 
@@ -23,11 +22,19 @@ class TestShibbolethsLilHelper < Test::Unit::TestCase
       FileUtils.rm_rf(@strategy.config_dir)
     end
     should "have an entity id" do
-      assert_kind_of String, Slh.entity_id(:default) 
-      assert_raises RuntimeError do 
-        Slh.entity_id(:asdfewrjkjkj)
+      assert_equal "https://shib-local-vm1.asr.umn.edu/rhel5_sp1", @strategy.sp_entity_id
+      assert_raises RuntimeError do
+        Slh::Models::Strategy.new(:poo) # Must specify a :sp_entity_id and idp_entity_id
       end
     end
+    should "have an idp_metadata_url" do
+      assert_equal "https://idp-test.shib.umn.edu/metadata.xml", @strategy.idp_metadata_url
+    end
+    should "have an idp_entity_id extracted from the idp_metadata_url contents" do
+      # WARNING: THIS CODE IS BRITTLE AND CODED AGAINST an XML format returned from https://idp-test.shib.umn.edu/metadata.xml
+      assert_equal "https://idp-test.shib.umn.edu/idp/shibboleth", @strategy.idp_entity_id
+    end
+
     should "load up a strategy" do
       assert_kind_of Slh::Models::Strategy, @strategy
       assert_raises RuntimeError do 

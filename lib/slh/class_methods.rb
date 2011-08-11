@@ -1,13 +1,4 @@
 module Slh::ClassMethods
-  @@entity_ids = {}
-  def define_entity_id(sym,string)
-    @@entity_ids[sym] = string
-  end
-  def entity_id(sym)
-    raise "No entity_id set for :#{sym}" unless @@entity_ids.has_key?(sym)
-    @@entity_ids[sym]
-  end
-
   @@strategies = []
   def define_strategy(strategy_sym, *args, &block)
     @@strategies << Slh::Models::Strategy.new(strategy_sym, *args, &block)
