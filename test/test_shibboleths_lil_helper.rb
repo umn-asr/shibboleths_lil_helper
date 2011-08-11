@@ -77,5 +77,11 @@ class TestShibbolethsLilHelper < Test::Unit::TestCase
       actual_content = File.read(@strategy.config_file_path('shibboleth2.xml'))
       assert_equal expected_content, actual_content
     end
+
+    should "write the idp_metadata to a file" do
+      @strategy.generate_config
+      assert File.exists?(@strategy.config_file_path('idp_metadata.xml'))
+      assert_equal @strategy.idp_metadata, File.read(@strategy.config_file_path('idp_metadata.xml'))
+    end
   end
 end

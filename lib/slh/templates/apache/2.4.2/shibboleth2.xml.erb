@@ -16,7 +16,7 @@
             <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
         </Sessions>
         <Errors supportContact="POOPOO@dogs.com" logoLocation="/shibboleth-sp/logo.jpg" styleSheet="/shibboleth-sp/main.css"/>
-        <MetadataProvider type="XML" file="idp-test.shib.umn.edu_metadata.xml"/>
+        <MetadataProvider type="XML" file="<%= @strategy.config_file_name('idp_metadata.xml') %>"/>
         <AttributeExtractor type="XML" validate="true" path="attribute-map.xml"/>
         <AttributeResolver type="Query" subjectMatch="true"/>
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
