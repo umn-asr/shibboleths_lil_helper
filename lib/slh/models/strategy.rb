@@ -34,8 +34,19 @@ class Slh::Models::Strategy
     validate_config_file_name(file_base_name)
     case file_base_name
     when 'shibboleth2.xml'
-      "THIS IS SOME XML"
+      @strategy = self
+      erb = ERB.new(self.config_template_content(file_base_name)).result(binding)
     end
+  end
+
+  TODO_SP_VERSION_DIR = '2.4.2'
+  TODO_SP_TYPE_DIR = 'apache'
+  def config_template_file_path(file_base_name)
+    validate_config_file_name(file_base_name)
+    File.join(File.dirname(__FILE__), '..', 'templates',TODO_SP_TYPE_DIR,TODO_SP_VERSION_DIR,"#{file_base_name}.erb")
+  end
+  def config_template_content(file_base_name)
+    File.read(self.config_template_file_path(file_base_name))
   end
   protected
     def validate_config_file_name(file_base_name)

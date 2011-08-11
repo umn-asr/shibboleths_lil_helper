@@ -1,0 +1,27 @@
+<SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config"
+    xmlns:conf="urn:mace:shibboleth:2.0:native:sp:config"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"    
+    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+    clockSkew="180">
+    <ApplicationDefaults entityID="https://shib-local-vm1.asr.umn.edu/rhel5_sp1">
+        <Sessions lifetime="28800" timeout="3600" checkAddress="false" relayState="ss:mem" handlerSSL="false">
+            <SSO entityID="https://idp-test.shib.umn.edu/idp/shibboleth">
+              SAML2 SAML1
+            </SSO>
+            <Logout>SAML2 Local</Logout>
+            <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
+            <Handler type="Status" Location="/Status" />
+            <Handler type="Session" Location="/Session" showAttributeValues="false"/>
+            <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
+        </Sessions>
+        <Errors supportContact="POOPOO@dogs.com" logoLocation="/shibboleth-sp/logo.jpg" styleSheet="/shibboleth-sp/main.css"/>
+        <MetadataProvider type="XML" file="idp-test.shib.umn.edu_metadata.xml"/>
+        <AttributeExtractor type="XML" validate="true" path="attribute-map.xml"/>
+        <AttributeResolver type="Query" subjectMatch="true"/>
+        <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
+        <CredentialResolver type="File" key="sp-key.pem" certificate="sp-cert.pem"/>
+    </ApplicationDefaults>
+    <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
+    <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>
+</SPConfig>

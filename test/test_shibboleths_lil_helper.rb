@@ -66,7 +66,7 @@ class TestShibbolethsLilHelper < Test::Unit::TestCase
     should "generate a shibboleth2.xml" do
       @strategy.generate_config
       assert File.exists?(@strategy.config_file_path('shibboleth2.xml'))
-      expected_content = "THIS IS SOME XML"
+      expected_content = @strategy.config_template_content('shibboleth2.xml')
       actual_content = File.read(@strategy.config_file_path('shibboleth2.xml'))
       assert_equal expected_content, actual_content
     end
