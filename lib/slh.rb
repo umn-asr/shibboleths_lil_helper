@@ -3,6 +3,7 @@ module Slh
   autoload :ClassMethods
   extend Slh::ClassMethods
 
+  autoload :Cli
   module Models
     extend ActiveSupport::Autoload
     autoload :Strategy

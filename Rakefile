@@ -17,10 +17,11 @@ Jeweler::Tasks.new do |gem|
   gem.name = "shibboleths_lil_helper"
   gem.homepage = "http://github.com/joegoggins/shibboleths_lil_helper"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{A ruby gem to streamline the setup, deployment, and ongoing management of Apache & IIS web-servers running the Shibboleth Native Service Provider implementations.}
+  gem.description = %Q{Very very very Beta right now}
   gem.email = "goggins@umn.edu"
   gem.authors = ["Joe Goggins"]
+  gem.executables = 'slh'
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
