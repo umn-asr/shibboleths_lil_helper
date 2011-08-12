@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
-
+# This load path thingy
+# for testing executables in gems
+# http://blakesmith.github.com/2010/06/26/gem-executables-loading-the-relative-path.html
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
+require 'rubygems'
 require 'shibboleths_lil_helper'
 Slh::Cli.execute

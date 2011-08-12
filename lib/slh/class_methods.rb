@@ -1,5 +1,6 @@
 module Slh::ClassMethods
   @@strategies = []
+  def strategies; @@strategies; end
   def define_strategy(strategy_sym, *args, &block)
     @@strategies << Slh::Models::Strategy.new(strategy_sym, *args, &block)
   end

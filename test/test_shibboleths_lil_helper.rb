@@ -93,5 +93,13 @@ class TestShibbolethsLilHelper < Test::Unit::TestCase
       actual_content = File.read(@strategy.config_file_path('attribute-map.xml'))
       assert_equal expected_content, actual_content
     end
+
+    should "generate shib_for_vhost.conf for each host and app" do
+      @strategy.generate_config
+      assert File.exists?(@strategy.config_file_path('shib_for_vhost.conf'))
+      expected_content = File.read(File.join(File.dirname(__FILE__),'fixtures','dummy1_output/shib_for_vhost.conf'))
+      actual_content = File.read(@strategy.config_file_path('shib_for_vhost.conf'))
+      assert_equal expected_content, actual_content
+    end
   end
 end

@@ -37,13 +37,46 @@ TODO: (lots of them...shoots to solve the dominant use case/simple path: 1 IDP)
 
 Usage
 =====
-* `slh create_strategy asr_default`
-* edit asr_default.rb, anywhere you see "TODO_CHANGE" in particular
-* `slh generate_config asr_default`
+* type "slh initialize"
+  > The first time this happens it will create a
+  > "shibboleths_lil_helper" dir and an example config.rb you should
+  > customize to meet your deployment needs
+* customize the shibboleths_lil_helper/config.rb
+* type "slh generate"
+  > It will generate a directory structure like the following
+  shibboleths_lil_helper/
+    generated/
+      <strategy>/
+        <host>/
+          shibboleth2.xml
+          attribute-map.xml
+          <app>/
+            shib_apache.conf
+  > Where <strategy>, <host>, and <app> are the dynamic names of your
+  > stuff, extracted from the config.rb file.
+
+* Check this code into source control.  This defines the shib auth rules
+  across your entire organization.
 * copy the generated shibboleth config files to the remote server, and
   restart shibd
+* 
 
-Usage with Capistrano
+Usage within Apps
 =====================
-TODO
+If you are using git, submodule the shibboleths_lil_helper directory
+into your project.  This will serve as a reference to how the server is
+configured.
+
+Usage with Capistrano (or other deployment automation tool)
+===========================================================
+TODO: HANDLE THIS ONCE THE FIRST STUFF IS DONE...
+The generated config files from the 'slh generate' command is
+consistent, so with Capistrano, you set the after_symlink hook to "slh
+generate", then copy shibboleth2.xml, attribute-map, and other apache
+files to where they need to go on the server....
+
+
+
+
+
 

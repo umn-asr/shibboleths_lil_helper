@@ -1,6 +1,6 @@
 class Slh::Models::Strategy
   attr_reader :name,:hosts,:sp_entity_id,:idp_metadata_url, :error_support_contact
-  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml)
+  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml shib_for_vhost.conf)
   def initialize(strategy_name,*args, &block)
     @name = strategy_name
     @hosts = []
@@ -85,7 +85,7 @@ class Slh::Models::Strategy
     validate_config_file_name(file_base_name)
     @strategy = self # to be references in erb templates below
     case file_base_name
-    when 'shibboleth2.xml','attribute-map.xml'
+    when 'shibboleth2.xml','attribute-map.xml','shib_for_vhost.conf'
       ERB.new(self.config_template_content(file_base_name)).result(binding)
     when 'idp_metadata.xml'
       self.idp_metadata
@@ -95,10 +95,9 @@ class Slh::Models::Strategy
   end
 
   TODO_SP_VERSION_DIR = '2.4.2'
-  TODO_SP_TYPE_DIR = 'apache'
   def config_template_file_path(file_base_name)
     validate_config_file_name(file_base_name)
-    File.join(File.dirname(__FILE__), '..', 'templates',TODO_SP_TYPE_DIR,TODO_SP_VERSION_DIR,"#{file_base_name}.erb")
+    File.join(File.dirname(__FILE__), '..', 'templates',TODO_SP_VERSION_DIR,"#{file_base_name}.erb")
   end
 
   def config_template_content(file_base_name)
