@@ -8,7 +8,9 @@ module Slh
     extend ActiveSupport::Autoload
     autoload :Strategy
     autoload :Host
-    autoload :App
-    autoload :AppAuthRule
+    autoload :App # to deprecate
+    autoload :AppAuthRule # to deprecate
+    autoload :Site
+    autoload :SitePath
   end
 end

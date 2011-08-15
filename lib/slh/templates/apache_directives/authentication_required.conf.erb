@@ -1,0 +1,6 @@
+<Location <%= @path.name %>>
+  AuthType shibboleth
+  ShibRequestSetting requireSession 1
+  ShibUseEnvironment On
+  require valid-user
+</Location>

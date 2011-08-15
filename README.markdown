@@ -50,7 +50,8 @@ Usage
         <host>/
           shibboleth2.xml
           attribute-map.xml
-          <app>/
+          idp_metadata.xml
+          <site>/
             shib_apache.conf
   > Where <strategy>, <host>, and <app> are the dynamic names of your
   > stuff, extracted from the config.rb file.

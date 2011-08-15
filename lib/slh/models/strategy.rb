@@ -63,27 +63,46 @@ class Slh::Models::Strategy
 
   def generate_config
     FileUtils.mkdir_p(self.config_dir)
-    VALID_CONFIG_FILES.each do |cf|
-      File.open(self.config_file_path(cf), 'w') {|f| f.write(self.generate_config_file_content(cf)) }
+    self.hosts.each do |h|
+      %w(shibboleth2.xml attribute-map.xml idp_metadata.xml).each do |cf|
+        FileUtils.mkdir_p(File.join(self.config_dir,h.name.to_s))
+        File.open(self.config_file_path(cf,h), 'w') {|f| f.write(self.generate_config_file_content(cf,h)) }
+      end
     end
+    self.hosts.each do |h|
+      h.sites.each do |s|
+        FileUtils.mkdir_p(File.join(self.config_dir,h.name.to_s,s.name.to_s))
+        File.open(self.config_file_path('shib_for_vhost.conf',h,s), 'w') {|f| f.write(self.generate_config_file_content('shib_for_vhost.conf',h,s)) }
+      end
+    end
+    # VALID_CONFIG_FILES.each do |cf|
+    #   File.open(self.config_file_path(cf), 'w') {|f| f.write(self.generate_config_file_content(cf)) }
+    # end
   end
 
   def config_dir
     File.join(Slh.config_dir,'generated',self.name.to_s)
   end
 
-  def config_file_path(file_base_name)
-    File.join(self.config_dir, self.config_file_name(file_base_name))
+  def config_file_path(file_base_name,host,site=nil)
+    File.join(self.config_dir, self.config_file_name(file_base_name,host,site))
   end
 
-  def config_file_name(file_base_name)
+  def config_file_name(file_base_name,host,site=nil)
     validate_config_file_name(file_base_name)
-    file_base_name
+    if site.nil?
+      File.join(host.name, file_base_name)
+    else
+      File.join(host.name, site.name, file_base_name)
+    end
   end
 
-  def generate_config_file_content(file_base_name)
+  def generate_config_file_content(file_base_name,host,site=nil)
     validate_config_file_name(file_base_name)
-    @strategy = self # to be references in erb templates below
+    # to be referenced in erb templates below
+    @strategy = self
+    @host = host
+    @site = site
     case file_base_name
     when 'shibboleth2.xml','attribute-map.xml','shib_for_vhost.conf'
       ERB.new(self.config_template_content(file_base_name)).result(binding)

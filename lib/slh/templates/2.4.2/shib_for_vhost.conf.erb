@@ -1,15 +1,12 @@
 # THIS SHOULD BE INCLUDED via an Apache Include statement or copy and
 # pasted in your
-# <VirtualHost AN_IP_ADD:80> and <VirtualHost AN_IP_ADDR:443> sections
-<Location /secure>
-  AuthType shibboleth
-  ShibRequestSetting requireSession 1
-  ShibUseEnvironment On
-  require valid-user
-</Location>
-
-<Location /lazy>
-  AuthType shibboleth
-  require shibboleth
-</Location>
+# <VirtualHost AN_IP_ADDR:80> and <VirtualHost AN_IP_ADDR:443> sections
+<% if @site.paths.empty? %>
+  # YOU HAVE NOT SPECIFIED ANY PATHS TO BE PROTECTED
+  # TIZ WEIRD DUDE, YOU SURE YOU WANT TO DO THIS?
+<% else %>
+  <% @site.paths.each do |path| %>
+    <%= path.to_apache_directive(:strategy => @strategy, :host => @host, :site => @site) %>
+  <% end %>
+<% end %>
 
