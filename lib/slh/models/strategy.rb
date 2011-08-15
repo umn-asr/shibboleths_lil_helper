@@ -59,21 +59,22 @@ class Slh::Models::Strategy  < Slh::Models::Base
 
   def generate_config
     FileUtils.mkdir_p(self.config_dir)
+    # Generate Shib specific crap
     self.hosts.each do |h|
       %w(shibboleth2.xml attribute-map.xml idp_metadata.xml).each do |cf|
         FileUtils.mkdir_p(File.join(self.config_dir,h.name.to_s))
         File.open(self.config_file_path(cf,h), 'w') {|f| f.write(self.generate_config_file_content(cf,h)) }
       end
     end
+
+    # Generate Apache conf stuff where relevant.
     self.hosts.each do |h|
+      next if h.server_type == :iis
       h.sites.each do |s|
         FileUtils.mkdir_p(File.join(self.config_dir,h.name.to_s,s.name.to_s))
         File.open(self.config_file_path('shib_for_vhost.conf',h,s), 'w') {|f| f.write(self.generate_config_file_content('shib_for_vhost.conf',h,s)) }
       end
     end
-    # VALID_CONFIG_FILES.each do |cf|
-    #   File.open(self.config_file_path(cf), 'w') {|f| f.write(self.generate_config_file_content(cf)) }
-    # end
   end
 
   def config_dir

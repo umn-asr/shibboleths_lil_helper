@@ -4,6 +4,36 @@
     xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"    
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
+    <% if @host.server_type == :iis %>
+      <InProcess logger="native.logger">
+        <ISAPI normalizeRequest="true" safeHeaderNames="true">
+          <% @host.sites.each do |site| %>
+            <Site id="<%= site.site_id %>" name="<%= site.name %>"/>
+          <% end %>
+        </ISAPI>
+      </InProcess>
+      <RequestMapper type="Native">
+        <RequestMap>
+          <% @host.sites.each do |site| %>
+            <%= site.to_iis_directive(:strategy => @strategy, :host => @host, :site => site) %>
+          <% end %>
+            <Host name="asr-web-iisshibtest1.oit.umn.edu" authType="shibboleth" requireSession="false" redirectToSSL="443" />
+			      <Host name="asr-web-iisshibtest2.oit.umn.edu" redirectToSSL="443">
+				      <Path name="secure" authType="shibboleth" requireSession="true" />
+				      <Path name="webteam" authType="shibboleth" requireSession="true">
+					      <AccessControl>
+						      <AND>
+							      <Rule require="user">goggins@umn.edu ding0057@umn.edu</Rule>
+							    <NOT>
+								    <Rule require="user">ding0057@umn.edu</Rule>
+							    </NOT>
+						     </AND>
+					     </AccessControl>
+				      </Path>
+			      </Host>
+        </RequestMap>
+    </RequestMapper>
+    <% end %>
     <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>">
         <Sessions lifetime="28800" timeout="3600" checkAddress="false" relayState="ss:mem" handlerSSL="false">
             <SSO entityID="<%= @strategy.idp_entity_id %>">
