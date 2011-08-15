@@ -4,22 +4,18 @@ class Slh::Models::Strategy  < Slh::Models::Base
   def initialize(strategy_name,*args, &block)
     @name = strategy_name
     @hosts = []
-    options = args.extract_options! 
-    @error_support_contact = options[:error_support_contact] || 'your institutions help desk department'
-    if options.has_key? :sp_entity_id
-      @sp_entity_id = options[:sp_entity_id]
-    else
-      raise "All strategies must specify an entity ID"
-    end
-
-    if options.has_key? :idp_metadata_url
-      @idp_metadata_url = options[:idp_metadata_url]
-    else
-      raise "All strategies must specify an IDP metadata URL"
-    end
-
     if block_given?
       self.instance_eval(&block)
+    end
+    # The following are checks to ensure required "set" commands are done to set required values
+    if self.sp_entity_id.nil?
+      raise "All strategies must specify an entity ID"
+    end
+    if self.idp_metadata_url.nil?
+      raise "All strategies must specify an IDP metadata URL"
+    end
+    if self.error_support_contact.nil?
+      raise "All strategies must specify an error support contact for when Shibboleth breaks/fails/etc."
     end
   end
 
@@ -113,10 +109,9 @@ class Slh::Models::Strategy  < Slh::Models::Base
     end
   end
 
-  TODO_SP_VERSION_DIR = '2.4.2'
   def config_template_file_path(file_base_name)
     validate_config_file_name(file_base_name)
-    File.join(File.dirname(__FILE__), '..', 'templates',TODO_SP_VERSION_DIR,"#{file_base_name}.erb")
+    File.join(File.dirname(__FILE__), '..', 'templates',"#{file_base_name}.erb")
   end
 
   def config_template_content(file_base_name)

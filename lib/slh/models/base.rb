@@ -6,6 +6,9 @@ class Slh::Models::Base
     raise "Must specify a symbol to this here .set method" unless inst_var.kind_of? Symbol
     inst_val = inst_val.to_s if inst_val.kind_of?(Symbol)
     if inst_val.kind_of?(String)
+      unless self.respond_to?(inst_var)
+        Slh::Cli.instance.output "WARNING: call to .set references an unknown piece of info (#{inst_var}) not referenced in the default templates, you should ignore this warning only if you are overriding the templates"
+      end
       self.instance_eval <<-EOS,__FILE__,__LINE__
         def #{inst_var}
           '#{inst_val}'
