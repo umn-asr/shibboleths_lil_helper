@@ -31,9 +31,12 @@ Installation
 ============
 gem install shibboleths_lil_helper
 
-Assumptions
+Apache Assumptions
 ===========
-TODO: (lots of them...shoots to solve the dominant use case/simple path: 1 IDP)
+* Shibboleth Native Service Provider is already installed on your target server.
+* the Shibboleth apache module is loaded globally for all vHosts
+  This is typically done for you, but if not: something like this might work:
+  cp /etc/shibboleth/apache22.conf /etc/httpd/conf/shib.conf
 
 Usage
 =====
@@ -52,7 +55,7 @@ Usage
           attribute-map.xml
           idp_metadata.xml
           <site>/
-            shib_apache.conf
+            shib_for_vhost.conf
   > Where <strategy>, <host>, and <app> are the dynamic names of your
   > stuff, extracted from the config.rb file.
 

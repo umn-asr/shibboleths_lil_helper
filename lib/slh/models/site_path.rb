@@ -1,4 +1,4 @@
-class Slh::Models::SitePath
+class Slh::Models::SitePath < Slh::Models::Base
   attr_reader :name,:flavor
   def initialize(site_path,*args, &block)
     @name = site_path
@@ -25,18 +25,4 @@ class Slh::Models::SitePath
     ERB.new(self.apache_directive_template_file_content).result(binding)
   end
 
-  def set(inst_var, inst_val)
-    inst_val = inst_val.to_s if inst_val.kind_of?(Symbol)
-    if inst_val.kind_of?(String)
-      self.instance_eval <<-EOS,__FILE__,__LINE__
-        def #{inst_var}
-          '#{inst_val}'
-        end
-      EOS
-    elsif inst_val.kind_of? Proc
-      raise "Not implemented, someone should add if this is needed"
-    else
-      raise "don't know how to set with a #{inst_val.class.to_s} typped object, u had #{inst_val}"
-    end
-  end
 end

@@ -1,5 +1,5 @@
 # This model represents the actual hostname/machine the shib SP instance lives on
-class Slh::Models::Host
+class Slh::Models::Host < Slh::Models::Base
   attr_reader :name, :sites
   def initialize(host_name,*args,&block)
     @name = host_name

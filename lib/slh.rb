@@ -6,10 +6,9 @@ module Slh
   autoload :Cli
   module Models
     extend ActiveSupport::Autoload
+    autoload :Base
     autoload :Strategy
     autoload :Host
-    autoload :App # to deprecate
-    autoload :AppAuthRule # to deprecate
     autoload :Site
     autoload :SitePath
   end
