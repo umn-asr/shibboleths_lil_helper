@@ -1,15 +1,20 @@
 # TWEAK DSL TO WORK LIKE THIS
 
-Slh.define_strategy :dummy1,
-  :sp_entity_id => 'https://shib-local-vm1.asr.umn.edu/rhel5_sp1',
-  :idp_metadata_url => 'https://idp-test.shib.umn.edu/metadata.xml',
-  :error_support_contact => 'goggins@umn.edu' do
-  for_host 'shib-local-vm1.asr.umn.edu', :server => :iis6 do
+Slh.define_strategy :dummy1 do
+  set :sp_entity_id, 'https://shib-local-vm1.asr.umn.edu/rhel5_sp1'
+  set :idp_metadata_url, 'https://idp-test.shib.umn.edu/metadata.xml'
+  set :error_support_contact, 'goggins@umn.edu'
+  for_host 'shib-local-vm1.asr.umn.edu' do
+    set :web_server_type, :iis
     for_site 'shib-local-vm1.asr.umn.edu' do
-      protect_location '/'
-      protect_location '/secure'
-      protect_location '/lazy', :with => :lazy_authentication
-      protect_location '/some_users', :with => :user_group, :users => ['goggins@umn.edu','ding0057@umn.edu']
+      protect_path '/'
+      protect_path '/secure'
+      protect_path '/lazy' do
+        set :flavor, :lazy_authentication
+      end
+      protect_path '/some_users' do
+        set :flavor, :user_group,
+        set :users, ['goggins@umn.edu','ding0057@umn.edu']
     end
   end
   # TODO

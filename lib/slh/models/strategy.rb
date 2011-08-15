@@ -69,7 +69,7 @@ class Slh::Models::Strategy
   end
 
   def config_dir
-    File.join('shibboleths_lil_helper_generated_config',self.name.to_s)
+    File.join(Slh.config_dir,'generated',self.name.to_s)
   end
 
   def config_file_path(file_base_name)

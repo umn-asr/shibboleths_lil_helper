@@ -1,21 +1,13 @@
-class Slh::Cli::Initialize
-  attr_reader :args,:option_parser,:options
-  def initialize(args)
-    if args.nil?
-      @args = [] 
-    else
-      @args = args.dup
-    end
-    @options = {
-      :force_create => false
-    }
-    @option_parser = OptionParser.new do |opts|
+class Slh::Cli::Initialize < Slh::Cli::CommandBase
+  def default_options
+   { :force_create => false }
+  end
+  def option_parser
+    return OptionParser.new do |opts|
       opts.on('-f','--force', "Destroy existing dir if exists") do |value|
         @options[:force_create] = true
       end
     end
-    @option_parser.parse!(args)
-    perform_action 
   end
   def perform_action
     if self.options[:force_create]
