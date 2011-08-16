@@ -16,10 +16,18 @@ Slh.for_strategy :default do
   end
   for_host 'asr-web-dev2.oit.umn.edu' do
     set :host_type, :iis
-    for_site 'asr-web-dev2.oit.umn.edu' do
-      set :site_id, "1351780944"
-      protect '/lazy' do
+    for_site 'asr-web-iisshibtest1.oit.umn.edu' do
+      set :site_id, "1496896398"
+      protect '/' do
         set :flavor, :authentication_optional
+      end
+    end
+    for_site 'asr-web-iisshibtest2.oit.umn.edu' do
+      set :site_id, "1708263520"
+      protect "/secure"
+      protect "/webteam" do
+        set :flavor, :authentication_required_for_specific_users
+        set :specific_users, %w(goggins@umn.edu ding0057@umn.edu)
       end
     end
   end
