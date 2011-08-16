@@ -1,12 +1,12 @@
 class Slh::Models::Site < Slh::Models::Base
-  attr_reader :name, :paths,:site_id
+  attr_reader :name, :paths
+  attr_accessor :site_id # site_id is for hosts who's host_type == :iis
   def initialize(site_name,*args,&block)
     @name = site_name 
     @paths = []
     if block_given?
       self.instance_eval(&block)
     end
-    # site_id is for hosts who's server_type == :iis
   end
 
   def protect(site_path, *args, &block)

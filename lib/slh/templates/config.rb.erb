@@ -15,7 +15,7 @@ Slh.for_strategy :default do
     end
   end
   for_host 'asr-web-dev2.oit.umn.edu' do
-    set :server_type, :iis
+    set :host_type, :iis
     for_site 'asr-web-dev2.oit.umn.edu' do
       set :site_id, "1351780944"
       protect '/lazy' do

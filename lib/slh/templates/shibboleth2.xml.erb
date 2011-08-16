@@ -4,7 +4,7 @@
     xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"    
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
-    <% if @host.server_type == :iis %>
+    <% if @host.host_type == :iis %>
       <InProcess logger="native.logger">
         <ISAPI normalizeRequest="true" safeHeaderNames="true">
           <% @host.sites.each do |site| %>

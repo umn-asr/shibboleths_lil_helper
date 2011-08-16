@@ -1,5 +1,6 @@
 class Slh::Models::Strategy  < Slh::Models::Base
-  attr_reader :name,:hosts,:sp_entity_id,:idp_metadata_url, :error_support_contact
+  attr_reader :name,:hosts
+  attr_accessor :sp_entity_id, :idp_metadata_url, :error_support_contact
   VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml shib_for_vhost.conf)
   def initialize(strategy_name,*args, &block)
     @name = strategy_name
@@ -69,7 +70,7 @@ class Slh::Models::Strategy  < Slh::Models::Base
 
     # Generate Apache conf stuff where relevant.
     self.hosts.each do |h|
-      next if h.server_type == :iis
+      next if h.host_type == :iis
       h.sites.each do |s|
         FileUtils.mkdir_p(File.join(self.config_dir,h.name.to_s,s.name.to_s))
         File.open(self.config_file_path('shib_for_vhost.conf',h,s), 'w') {|f| f.write(self.generate_config_file_content('shib_for_vhost.conf',h,s)) }

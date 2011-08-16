@@ -1,5 +1,6 @@
 class Slh::Models::SitePath < Slh::Models::Base
-  attr_reader :name,:flavor
+  attr_reader :name
+  attr_accessor :flavor
   def initialize(site_path,*args, &block)
     @name = site_path
     @flavor = :authentication_required
