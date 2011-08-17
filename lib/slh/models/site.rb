@@ -19,6 +19,64 @@ class Slh::Models::Site < Slh::Models::Base
     @paths << Slh::Models::SitePath.new(site_path, *args, &block)
   end
 
+  def metadata
+    if @metadata.blank?
+      url = URI.parse(self.metadata_url)
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true
+      http.open_timeout = 60
+      http.read_timeout = 60
+      begin
+        the_metadata_for_site = http.get(url.path)
+      rescue
+        raise "Could not https GET #{self.metadata_url}, have you deployed your generated shib config files to this machine and restarted shibd?"
+      end
+      case the_metadata_for_site
+      when Net::HTTPSuccess
+        @metadata = the_metadata_for_site.body
+      else
+        raise "Got a non-200 http status code from #{self.metadata_url}"
+      end
+    end 
+    @metadata
+  end
+
+  def metadata_nokogiri
+    if @metadata_nokogiri.blank?
+      @metadata_nokogiri = Nokogiri::XML(self.metadata)
+    end
+    @metadata_nokogiri
+  end
+
+  def metadata_url
+    "https://#{self.name}/Shibboleth.sso/Metadata"
+  end
+
+  def self.metadata_site_specific_xpaths
+    ['//md:ArtifactResolutionService', '//md:SingleLogoutService','//md:AssertionConsumerService']
+  end
+  def metadata_site_specific_xml
+    if @metadata_site_specific_xml.blank?
+      @metadata_site_specific_xml = ''
+      self.class.metadata_site_specific_xpaths.each do |xpath|
+        @metadata_site_specific_xml << self.metadata_nokogiri.xpath(xpath).to_a.join("\n")
+        @metadata_site_specific_xml << "\n"
+      end
+    end
+    @metadata_site_specific_xml
+  end
+
+  def metadata_non_site_specific_xml
+    if @metadata_non_site_specific_xml.blank?
+      cloned_metadata_nokogiri = self.metadata_nokogiri.clone
+      self.class.metadata_site_specific_xpaths.each do |xpath|
+        cloned_metadata_nokogiri.xpath(xpath).remove
+      end
+      @metadata_non_site_specific_xml = cloned_metadata_nokogiri.to_s
+    end
+    @metadata_non_site_specific_xml
+  end
+
   # def iis_directive_template_file_content
   #   f_name = File.join(File.dirname(__FILE__), '..', 'templates','iis_directives',"#{self.flavor.to_s}.xml.erb")
   #   unless File.exists?(f_name)
@@ -73,36 +131,6 @@ EOS
       end
     end
     return "#{host_begin}\n#{path_strings.join("\n")}\n#{host_end}"
-    # EXAMPLE1
-    # for_site 'asr-web-dev2.oit.umn.edu' do
-    #   set :site_id, "1351780944"
-    #   protect '/'
-    # EXAMPLE2
-    # for_site 'asr-web-dev2.oit.umn.edu' do
-    #   set :site_id, "1351780944"
-    #   protect '/' do
-    #     set :flavor :authentication_optional
-   # INTERPRETATION
-    #   Single auth rule for entire site, no <Path> nodes needed
-    # if self.paths.length == 1 && self.paths.first.name == '/'
-    #   host_attrs = flavors[self.paths.first.flavor]
-    #   raise "No iis config info for #{self.paths.first.flavor}" if host_attrs.blank?
-    #   return <<-EOS
-    #     <Host name="#{self.name}" #{host_attrs} redirectToSSL="443" />
-    #   EOS
-    # else
-    #   # setup the opening host tag
-    #   s = <<-EOS
-    #     <Host name="#{self.name}" redirectToSSL="443">
-    #   EOS
-    #   self.paths.each do |p|
-    #     if p.name == '/'
-
-    #     end
-    #   end
-    # end
-    "TODO, do magic w #{@strategy} #{@host} #{@site}"
-    # ERB.new(self.iis_directive_template_file_content).result(binding)
   end
 
 end

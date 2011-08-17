@@ -16,8 +16,15 @@ class Slh::Cli::CommandBase
       @args = args.dup
     end
   end
+  def load_config
+    require Slh.config_file
+    if Slh.strategies.empty?
+      Slh::Cli.instance.output "NO strategies found in #{Slh.config_file}, make sure to edit this before running the generate command", :error => true
+    end
+  end
   def execute
     self.option_parser.parse!(self.args)
+    self.load_config
     self.perform_action
   end
 end

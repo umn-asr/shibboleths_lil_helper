@@ -78,6 +78,16 @@ class Slh::Models::Strategy  < Slh::Models::Base
     end
   end
 
+  def assemble_metadata
+    self.hosts.each do |host|
+      host.sites.each do |site|
+        puts "NON SPEC:"
+        puts site.metadata_non_site_specific_xml
+        puts "SPEC:"
+        puts site.metadata_site_specific_xml
+      end
+    end
+  end
   def config_dir
     File.join(Slh.config_dir,'generated',self.name.to_s)
   end

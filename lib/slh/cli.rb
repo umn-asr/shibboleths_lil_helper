@@ -4,6 +4,7 @@ module Slh
     autoload :CommandBase
     autoload :Initialize
     autoload :Generate
+    autoload :AssembleMetadata
 
     attr_reader :args,:action
     def output(msg,*args)
@@ -30,6 +31,8 @@ module Slh
         klass = Slh::Cli::Initialize
       when 'generate'
         klass = Slh::Cli::Generate
+      when 'metadata'
+        klass = Slh::Cli::AssembleMetadata
       else 
         raise "Invalid slh action"
       end

@@ -6,13 +6,13 @@ Slh.for_strategy :default do
     for_site 'shib-local-vm1.asr.umn.edu' do
       protect '/secure'
     end
-    for_site 'site2.umn.edu' do
-      protect '/lazy' do
-        set :flavor, :authentication_optional
-      end
-    end
-    for_site 'anothersite.umn.edu' do
-    end
+   # for_site 'site2.umn.edu' do
+   #   protect '/lazy' do
+   #     set :flavor, :authentication_optional
+   #   end
+   # end
+   # for_site 'anothersite.umn.edu' do
+   # end
   end
   for_host 'asr-web-dev2.oit.umn.edu' do
     set :host_type, :iis
