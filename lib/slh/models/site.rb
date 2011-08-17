@@ -52,9 +52,15 @@ class Slh::Models::Site < Slh::Models::Base
     "https://#{self.name}/Shibboleth.sso/Metadata"
   end
 
+  # These nodes are extracted to create .metadata_site_specific_xml
+  # and removed to create metadata_non_site_specific_nokogiri
+  # which is used in Host to put the site specific crap below 1 instance of the non specific crap
+  # so you can give your IDP one metadata file
+  #
   def self.metadata_site_specific_xpaths
     ['//md:ArtifactResolutionService', '//md:SingleLogoutService','//md:AssertionConsumerService']
   end
+
   def metadata_site_specific_xml
     if @metadata_site_specific_xml.blank?
       @metadata_site_specific_xml = ''
@@ -66,15 +72,14 @@ class Slh::Models::Site < Slh::Models::Base
     @metadata_site_specific_xml
   end
 
-  def metadata_non_site_specific_xml
-    if @metadata_non_site_specific_xml.blank?
-      cloned_metadata_nokogiri = self.metadata_nokogiri.clone
+  def metadata_non_site_specific_nokogiri
+    if @metadata_non_site_specific_nokogiri.blank?
+      @metadata_non_site_specific_nokogiri = self.metadata_nokogiri.clone
       self.class.metadata_site_specific_xpaths.each do |xpath|
-        cloned_metadata_nokogiri.xpath(xpath).remove
+        @metadata_non_site_specific_nokogiri.xpath(xpath).remove
       end
-      @metadata_non_site_specific_xml = cloned_metadata_nokogiri.to_s
     end
-    @metadata_non_site_specific_xml
+    @metadata_non_site_specific_nokogiri
   end
 
   # def iis_directive_template_file_content

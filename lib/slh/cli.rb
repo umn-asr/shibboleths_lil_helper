@@ -27,7 +27,43 @@ module Slh
       end
       $stdout.sync = true # no output buffering
       case @args.first
-      when 'initialize',nil   # DEFAULT IF NONE-SPECIFIED
+      when nil
+        puts <<-'EOS'
+  This is Shibboleth's Lil Helper.
+               ___,@
+               /  <
+          ,_  /    \  _,                    He's kinda dumb, but is helpful by
+      ?    \`/______\`/                     making config XML that you can use
+   ,_(_).  |; (e  e) ;|                     in your Apache or IIS Shibboleth
+    \___ \ \/\   7  /\/    _\8/_            Native Service Provider implementations.
+        \/\   \'=='/      | /| /|
+         \ \___)--(_______|//|//|
+          \___  ()  _____/|/_|/_|
+             /  ()  \    `----'             He knows several commands listed below
+            /   ()   \                      invoked like: "slh initialize"
+           '-.______.-'
+   jgs   _    |_||_|    _
+        (@____) || (____@)
+         \______||______/
+COMMANDS
+  initialize
+    Creates a shibboleths_lil_helper/config.rb file that is the place where
+    you specify all authentication settings for all hosts, sites, and paths
+    in your organization
+
+  generate
+    Generates a bunch of Native shibboleth configuration files and puts them in
+    a directory structure under "shibboleths_lil_helper/generated" that mirrors
+    your config.rb file.  These files can then be copied to your target hosts.
+
+  metadata
+    Assembles your Service Provider metadata for each host by hitting URLs like
+      https://some.site.in.your.config.rb/Shibboleth.sso/Metadata
+    and creating your assembed_sp_metadata.xml file in the "generated" folder.
+    Before shibboleth will work, you'll need to provide this to your Identity Provider.
+        EOS
+        exit
+      when 'initialize'
         klass = Slh::Cli::Initialize
       when 'generate'
         klass = Slh::Cli::Generate

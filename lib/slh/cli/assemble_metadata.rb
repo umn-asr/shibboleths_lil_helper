@@ -4,7 +4,7 @@ class Slh::Cli::AssembleMetadata < Slh::Cli::CommandBase
   end
   def perform_action
     Slh.strategies.each do |s|
-      s.assemble_metadata
+      s.assemble_sp_metadata
     end
   end
 end

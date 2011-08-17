@@ -1,7 +1,7 @@
 class Slh::Models::Strategy  < Slh::Models::Base
   attr_reader :name,:hosts
   attr_accessor :sp_entity_id, :idp_metadata_url, :error_support_contact
-  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml shib_for_vhost.conf)
+  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml assembled_sp_metadata.xml shib_for_vhost.conf)
   def initialize(strategy_name,*args, &block)
     @name = strategy_name
     @hosts = []
@@ -78,16 +78,12 @@ class Slh::Models::Strategy  < Slh::Models::Base
     end
   end
 
-  def assemble_metadata
+  def assemble_sp_metadata
     self.hosts.each do |host|
-      host.sites.each do |site|
-        puts "NON SPEC:"
-        puts site.metadata_non_site_specific_xml
-        puts "SPEC:"
-        puts site.metadata_site_specific_xml
-      end
+      File.open(self.config_file_path('assembled_sp_metadata.xml',host), 'w') {|f| f.write(host.assembled_sp_metadata) }
     end
   end
+
   def config_dir
     File.join(Slh.config_dir,'generated',self.name.to_s)
   end
