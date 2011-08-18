@@ -1,15 +1,11 @@
 class Slh::Models::Strategy  < Slh::Models::Base
-  attr_reader :name,:hosts
+  attr_reader :name, :hosts
   attr_accessor :sp_entity_id, :idp_metadata_url, :error_support_contact, :template_dir
-  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml assembled_sp_metadata.xml)
+
+  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml assembled_sp_metadata.xml shib_apache.conf)
   def initialize(strategy_name,*args, &block)
     @name = strategy_name
     @hosts = []
-    # this is the dir structure under lib/slh/templates
-    # the first dir is the institution aka "umn.edu"
-    # the second dir is the flavor of the templates
-    #
-    self.template_dir = 'default/default' 
     if block_given?
       self.instance_eval(&block)
     end
@@ -67,8 +63,8 @@ class Slh::Models::Strategy  < Slh::Models::Base
     FileUtils.mkdir_p(self.config_dir)
     # Generate Shib specific crap
     self.hosts.each do |h|
-      %w(shibboleth2.xml attribute-map.xml idp_metadata.xml).each do |cf|
-        FileUtils.mkdir_p(File.join(self.config_dir,h.name.to_s))
+      (VALID_CONFIG_FILES - ['assembled_sp_metadata.xml']).each do |cf|
+        FileUtils.mkdir_p(self.config_dir_for_host(h))
         File.open(self.config_file_path(cf,h), 'w') {|f| f.write(self.generate_config_file_content(cf,h)) }
       end
     end
@@ -84,8 +80,12 @@ class Slh::Models::Strategy  < Slh::Models::Base
     File.join(Slh.config_dir,'generated',self.name.to_s)
   end
 
+  def config_dir_for_host(host)
+    File.join(self.config_dir,self.template_dir,host.name.to_s)
+  end
+
   def config_file_path(file_base_name,host,site=nil)
-    File.join(self.config_dir, self.config_file_name(file_base_name,host,site))
+    File.join(self.config_dir, self.template_dir,self.config_file_name(file_base_name,host,site))
   end
 
   def config_file_name(file_base_name,host,site=nil)
@@ -104,12 +104,10 @@ class Slh::Models::Strategy  < Slh::Models::Base
     @host = host
     @site = site
     case file_base_name
-    when 'shibboleth2.xml','attribute-map.xml'
-      ERB.new(self.config_template_content(file_base_name)).result(binding)
     when 'idp_metadata.xml'
       self.idp_metadata
     else
-      raise "dont know how to generate config for #{file_base_name}"
+      ERB.new(self.config_template_content(file_base_name)).result(binding)
     end
   end
 
@@ -128,10 +126,4 @@ class Slh::Models::Strategy  < Slh::Models::Base
         raise "#{file_base_name} is not a valid shib SP config file name, must be one of the following #{VALID_CONFIG_FILES.join(',')}"
       end
     end
-  # def config_file_dir
-  #   if @config_file_dir.blank?
-  #     @config_file_dir = Time.now.to_s.gsub(/[^A-Za-z0-9:-]/,'_') # Wed_Aug_10_15:54:06_-0500_2011
-  #   end
-  #   @config_file_dir
-  # end
 end

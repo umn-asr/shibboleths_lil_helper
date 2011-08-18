@@ -1,16 +1,16 @@
 class Slh::Cli::Initialize < Slh::Cli::CommandBase
   def default_options
    { :force_create => false,
-     :template_dir => 'default/default'
+     :template_dir => 'default_institution/default_templates'
    }
   end
   def option_parser
     return OptionParser.new do |opts|
-      opts.on('-f','--force', "Destroy existing dir if exists") do |value|
+      opts.on('-f','--force', "Destroy existing dir if exists") do
         @options[:force_create] = true
       end
-      opts.on('-t','--template_dir', "Specify a config template dir for your institution") do |value|
-        @options[:template_dir] = value
+      opts.on('-t','--template_dir=TEMPLATE_DIR', "Specify a config template dir for your institution") do |template_dir|
+        @options[:template_dir] = template_dir
       end
     end
   end
