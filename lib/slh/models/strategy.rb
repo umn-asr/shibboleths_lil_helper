@@ -1,10 +1,15 @@
 class Slh::Models::Strategy  < Slh::Models::Base
   attr_reader :name,:hosts
-  attr_accessor :sp_entity_id, :idp_metadata_url, :error_support_contact
-  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml assembled_sp_metadata.xml shib_for_vhost.conf)
+  attr_accessor :sp_entity_id, :idp_metadata_url, :error_support_contact, :template_dir
+  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml assembled_sp_metadata.xml)
   def initialize(strategy_name,*args, &block)
     @name = strategy_name
     @hosts = []
+    # this is the dir structure under lib/slh/templates
+    # the first dir is the institution aka "umn.edu"
+    # the second dir is the flavor of the templates
+    #
+    self.template_dir = 'default/default' 
     if block_given?
       self.instance_eval(&block)
     end
@@ -67,15 +72,6 @@ class Slh::Models::Strategy  < Slh::Models::Base
         File.open(self.config_file_path(cf,h), 'w') {|f| f.write(self.generate_config_file_content(cf,h)) }
       end
     end
-
-    # Generate Apache conf stuff where relevant.
-    self.hosts.each do |h|
-      next if h.host_type == :iis
-      h.sites.each do |s|
-        FileUtils.mkdir_p(File.join(self.config_dir,h.name.to_s,s.name.to_s))
-        File.open(self.config_file_path('shib_for_vhost.conf',h,s), 'w') {|f| f.write(self.generate_config_file_content('shib_for_vhost.conf',h,s)) }
-      end
-    end
   end
 
   def assemble_sp_metadata
@@ -108,7 +104,7 @@ class Slh::Models::Strategy  < Slh::Models::Base
     @host = host
     @site = site
     case file_base_name
-    when 'shibboleth2.xml','attribute-map.xml','shib_for_vhost.conf'
+    when 'shibboleth2.xml','attribute-map.xml'
       ERB.new(self.config_template_content(file_base_name)).result(binding)
     when 'idp_metadata.xml'
       self.idp_metadata
@@ -119,7 +115,7 @@ class Slh::Models::Strategy  < Slh::Models::Base
 
   def config_template_file_path(file_base_name)
     validate_config_file_name(file_base_name)
-    File.join(File.dirname(__FILE__), '..', 'templates',"#{file_base_name}.erb")
+    File.join(File.dirname(__FILE__), '..', 'templates',self.template_dir,"#{file_base_name}.erb")
   end
 
   def config_template_content(file_base_name)

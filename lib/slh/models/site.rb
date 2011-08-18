@@ -82,38 +82,23 @@ class Slh::Models::Site < Slh::Models::Base
     @metadata_non_site_specific_nokogiri
   end
 
-  # def iis_directive_template_file_content
-  #   f_name = File.join(File.dirname(__FILE__), '..', 'templates','iis_directives',"#{self.flavor.to_s}.xml.erb")
-  #   unless File.exists?(f_name)
-  #     raise "No iis directive at #{f_name}, perhaps the flavor youve specified is illegit #{self.flavor} (too illegit to quit -- M.C. Hammer)"
-  #   end
-  #   File.read(f_name)
-  # end
-
-  # This is a little different than the to_apache_directive on SitePath
-  # because the particular bit of XML includes 2 layers...it's not just
-  # a function of the SitePath...
-  #
-  # See https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPRequestMapHowTo
-  # for details on this logic
-  #
-  def iis_xml_payload_for_flavor(flavor)
+  def auth_request_map_xml_payload_for_flavor(flavor)
     if flavor == :authentication_optional
       'authType="shibboleth" requireSession="false"'
     elsif [:authentication_required,:authentication_required_for_specific_users].include?(flavor)
       'authType="shibboleth" requireSession="true"'
     else 
-      raise "No iis_xml_payload_for_flavor flavor=#{flavor}"
+      raise "No auth_request_map_xml_payload_for_flavor flavor=#{flavor}"
     end
   end
-  def to_iis_directive(*args)
+  def to_auth_request_map_directive(*args)
     host_begin = ''
     host_end = '</Host>'
     path_strings = []
     if self.paths.first.name == '/'
       host_begin = <<-EOS
 <!-- Shibboleths Lil Helper flavor=#{self.paths.first.flavor} protection for entire site -->
-<Host name="#{self.name}" #{self.iis_xml_payload_for_flavor(self.paths.first.flavor)} redirectToSSL="443" >"
+<Host name="#{self.name}" #{self.auth_request_map_xml_payload_for_flavor(self.paths.first.flavor)} redirectToSSL="443" >"
 EOS
     else
       host_begin = "<Host name=\"#{self.name}\" redirectToSSL=\"443\" >"
@@ -123,7 +108,7 @@ EOS
       if p.flavor == :authentication_required_for_specific_users
         path_strings << <<-EOS
           <!-- Shibboleths Lil Helper flavor=#{p.flavor} -->
-          <Path name="#{p.name}" #{self.iis_xml_payload_for_flavor(p.flavor)}>
+          <Path name="#{p.name}" #{self.auth_request_map_xml_payload_for_flavor(p.flavor)}>
             <AccessControl>
               <AND>
                 <Rule require="user">#{p.specific_users.join(' ')}</Rule>
@@ -132,7 +117,7 @@ EOS
           </Path>
         EOS
       else
-        path_strings << "<Path name=\"#{p.name}\" #{self.iis_xml_payload_for_flavor(p.flavor)} />"
+        path_strings << "<Path name=\"#{p.name}\" #{self.auth_request_map_xml_payload_for_flavor(p.flavor)} />"
       end
     end
     return "#{host_begin}\n#{path_strings.join("\n")}\n#{host_end}"

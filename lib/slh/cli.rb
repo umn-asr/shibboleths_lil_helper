@@ -40,11 +40,11 @@ module Slh
          \ \___)--(_______|//|//|
           \___  ()  _____/|/_|/_|
              /  ()  \    `----'             He knows several commands listed below
-            /   ()   \                      invoked like: "slh initialize"
+            /   ()   \                      invoked like: "slh initialize".
            '-.______.-'
-   jgs   _    |_||_|    _
-        (@____) || (____@)
-         \______||______/
+   jgs   _    |_||_|    _                   Append "--help" like "slh initialize --help"
+        (@____) || (____@)                  to learn about the options each command can
+         \______||______/                   take.
 COMMANDS
   initialize
     Creates a shibboleths_lil_helper/config.rb file that is the place where
@@ -72,7 +72,7 @@ COMMANDS
       else 
         raise "Invalid slh action"
       end
-      @action = klass.new(@args[1..-1])
+      @action = klass.new(@args[1..-1]) # everything except "slh" aka "initialize -f"
       @action.execute
     end
     def self.execute

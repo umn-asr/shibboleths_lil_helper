@@ -24,7 +24,7 @@ class Slh::Cli::CommandBase
   end
   def execute
     self.option_parser.parse!(self.args)
-    self.load_config
+    self.load_config unless self.class == Slh::Cli::Initialize
     self.perform_action
   end
 end

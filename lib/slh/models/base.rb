@@ -1,11 +1,11 @@
 class Slh::Models::Base
-
   def set(attr_accessor_name, val)
     self.send("#{attr_accessor_name}=",val)
   end
   # Use this to set any string you might want to target in your templates
   # can be used to override existing object defaults
   #
+  # TODO reimplement as set_custom
   # def set(inst_var, inst_val)
   #   raise "Must specify a symbol to this here .set method" unless inst_var.kind_of? Symbol
   #   # We assume if a getter exists already for inst_var, then
