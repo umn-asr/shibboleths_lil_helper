@@ -1,7 +1,7 @@
 # This model represents the actual hostname/machine the shib SP instance lives on
 class Slh::Models::Host < Slh::Models::Base
   attr_reader :name, :sites
-  attr_accessor :host_type
+  attr_accessor :host_type, :shib_prefix
   def initialize(host_name,*args,&block)
     @name = host_name
     @host_type = :apache
@@ -39,5 +39,17 @@ EOS
 )
     end
     non_site_specific_nokogiri.to_s
+  end
+
+  # File.join('', 'asdf.txt') returns '/asdf.txt'. We need a way to accomodate
+  # shib_prefix when needed, but avoiding values like '/shibboleth2.xml' when
+  # a prefix isn't set.
+  #
+  def prefixed_filepath_for(filename)
+    filepath = filename
+    unless @shib_prefix.nil?
+      filepath = File.join(@shib_prefix, filename)
+    end
+    filepath
   end
 end

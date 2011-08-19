@@ -4,6 +4,7 @@ Slh.for_strategy :default_strategy do
   set :error_support_contact, 'goggins@umn.edu'
   set :template_dir, '<%= @template_dir %>'
   for_host 'shib-local-vm1.asr.umn.edu' do
+    set :shib_prefix, "/swadm/etc/shibboleth"
     for_site 'shib-local-vm1.asr.umn.edu' do
       protect '/secure'
     end

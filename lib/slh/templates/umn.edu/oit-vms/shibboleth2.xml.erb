@@ -5,13 +5,16 @@
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
     <% if @host.host_type == :iis %>
-      <InProcess logger="native.logger">
+      <InProcess logger="<%= @host.prefixed_filepath_for("native.logger") %>">
         <ISAPI normalizeRequest="true" safeHeaderNames="true">
           <% @host.sites.each do |site| %>
             <Site id="<%= site.site_id %>" name="<%= site.name %>"/>
           <% end %>
         </ISAPI>
       </InProcess>
+    <% else %>
+      <OutOfProcess logger="<%= @host.prefixed_filepath_for("shibd.logger") %>" />
+      <InProcess logger="<%= @host.prefixed_filepath_for("native.logger") %>" />
     <% end %>
     <RequestMapper type="Native">
       <RequestMap>
@@ -21,7 +24,7 @@
       </RequestMap>
     </RequestMapper>
     <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>">
-        <Sessions lifetime="28800" timeout="3600" checkAddress="false" relayState="ss:mem" handlerSSL="false">
+        <Sessions lifetime="28800" timeout="3600" checkAddress="true" relayState="ss:mem" handlerSSL="false" idpHistory="false">
             <SSO entityID="<%= @strategy.idp_entity_id %>">
               SAML2 SAML1
             </SSO>
@@ -32,12 +35,12 @@
             <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
         </Sessions>
         <Errors supportContact="<%= @strategy.error_support_contact %>" logoLocation="/shibboleth-sp/logo.jpg" styleSheet="/shibboleth-sp/main.css"/>
-        <MetadataProvider type="XML" file="<%= "idp_metadata.xml" %>" />
-        <AttributeExtractor type="XML" validate="true" path="attribute-map.xml"/>
+        <MetadataProvider type="XML" file="<%= @host.prefixed_filepath_for("idp_metadata.xml") %>" />
+        <AttributeExtractor type="XML" validate="true" path="<%= @host.prefixed_filepath_for("attribute-map.xml") %>"/>
         <AttributeResolver type="Query" subjectMatch="true"/>
-        <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
-        <CredentialResolver type="File" key="sp-key.pem" certificate="sp-cert.pem"/>
+        <AttributeFilter type="XML" validate="true" path="<%= @host.prefixed_filepath_for("attribute-policy.xml") %>"/>
+        <CredentialResolver type="File" key="<%= @host.prefixed_filepath_for("sp-key.pem") %>" certificate="<%= @host.prefixed_filepath_for("sp-cert.pem") %>"/>
     </ApplicationDefaults>
-    <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
-    <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>
+    <SecurityPolicyProvider type="XML" validate="true" path="<%= @host.prefixed_filepath_for("security-policy.xml") %>"/>
+    <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="<%= @host.prefixed_filepath_for("protocols.xml") %>"/>
 </SPConfig>
