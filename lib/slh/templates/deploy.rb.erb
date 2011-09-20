@@ -1,4 +1,42 @@
-I am the cap template.  I can reflect on strategies like this:
-<% Slh.strategies.each do |s| %>
-  <%= s.name %>
-<% end %>
+# About
+# =====
+# This file is an EXAMPLE you might find handy if you are using capistrano for deployment
+# See each section that has a TODO section to add something in here
+# TODO:JOE TODO:CHRIS DOCUMENT HOW THIS SHOULD BE USED
+#
+set :application, "shibboleth_deployer"
+set :repository,  "TODO: add your repo url here"
+
+# defaults
+set :use_sudo,              false
+set :scm,                   :git
+# set :git_enable_submodules, 1
+
+# override this if you want your deployed files to be owned by a different group (or blank if not at all)
+set :deploy_group,          "deploy"
+
+set :host, ENV['HOST']
+role :db,   host, :primary => true
+role :web,  host
+role :app,  host
+
+
+set :deploy_to,   "TODO: SPECIFY WHERE YOUR FILES ARE GOING"
+after  'deploy', 'deploy:restart_shibd'
+namespace :deploy do
+ # Override defaults
+ task :start do ; end
+ task :stop do ; end
+ task :restart do ; end
+ task :finalize_update do ; end # does crap with stylesheets & javascripts dirs
+
+ desc "Restarts shibd"
+ task :restart_shibd, :roles => :web do
+   sudo "/etc/init.d/shibd restart"
+ end
+end
+
+after 'deploy:update_code' do
+  # Add custom symlinks here
+end
+

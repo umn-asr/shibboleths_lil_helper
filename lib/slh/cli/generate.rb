@@ -7,6 +7,5 @@ class Slh::Cli::Generate < Slh::Cli::CommandBase
       s.generate_config
       Slh::Cli.instance.output "Generated config for strategy \"#{s.name.to_s}\" in #{s.config_dir}"
     end
-    Slh::Models::CapistranoHelper.generate_deploy_dot_rb
   end
 end

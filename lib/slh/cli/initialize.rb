@@ -18,6 +18,7 @@ class Slh::Cli::Initialize < Slh::Cli::CommandBase
     if self.options[:force_create]
       if File.directory?(Slh.config_dir)
         FileUtils.rm_rf(Slh.config_dir)
+        FileUtils.rm_rf(Slh::Models::CapistranoHelper.config_dir)
       end
     end
     begin
@@ -27,9 +28,11 @@ class Slh::Cli::Initialize < Slh::Cli::CommandBase
       Slh::Cli.instance.output "Could not create directory, use --force option #{Slh.config_dir}", :exception => e
       exit
     end
+
     @template_dir = self.options[:template_dir] # targeted in config.rb.erb
     config_string = ERB.new(File.read(File.join(File.dirname(__FILE__),'..','templates',self.options[:template_dir],'config.rb.erb'))).result(binding)
     File.open(Slh.config_file,'w') {|f| f.write(config_string)}
+    Slh::Models::CapistranoHelper.generate_deploy_dot_rb
     Slh::Cli.instance.output "Edit #{Slh.config_file} and run `slh generate`"
   end
 end
