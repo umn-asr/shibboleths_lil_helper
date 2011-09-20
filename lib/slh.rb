@@ -11,5 +11,6 @@ module Slh
     autoload :Host
     autoload :Site
     autoload :SitePath
+    autoload :CapistranoHelper
   end
 end

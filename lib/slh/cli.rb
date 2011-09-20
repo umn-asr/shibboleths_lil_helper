@@ -55,8 +55,9 @@ COMMANDS (in usage order)
     Generates a bunch of Native shibboleth configuration files and puts them in
     a directory structure under "shibboleths_lil_helper/generated" that mirrors
     your config.rb file.  These files can then be copied to your target hosts.
+    Also generates a Capistrano "config/deploy.rb"
 
-  <DEPLOY>
+  <DEPLOY> (could be cap deploy TODO:JOE REVISIT THIS ONCE STABLE)
     There is no command for this, you need to place your config out on the target hosts
     in the right place and restart shibd and httpd.  The metadata command will only work if this
     has been done.
