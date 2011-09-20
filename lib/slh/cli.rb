@@ -45,7 +45,7 @@ module Slh
    jgs   _    |_||_|    _                   Append "--help" like "slh initialize --help"
         (@____) || (____@)                  to learn about the options each command can
          \______||______/                   take.
-COMMANDS
+COMMANDS (in usage order)
   initialize
     Creates a shibboleths_lil_helper/config.rb file that is the place where
     you specify all authentication settings for all hosts, sites, and paths
@@ -55,6 +55,11 @@ COMMANDS
     Generates a bunch of Native shibboleth configuration files and puts them in
     a directory structure under "shibboleths_lil_helper/generated" that mirrors
     your config.rb file.  These files can then be copied to your target hosts.
+
+  <DEPLOY>
+    There is no command for this, you need to place your config out on the target hosts
+    in the right place and restart shibd and httpd.  The metadata command will only work if this
+    has been done.
 
   metadata
     Assembles your Service Provider metadata for each host by hitting URLs like
