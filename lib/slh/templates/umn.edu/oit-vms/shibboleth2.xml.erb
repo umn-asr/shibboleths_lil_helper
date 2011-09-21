@@ -1,11 +1,3 @@
-<!-- 
-DO NOT MODIFY!
-
-This file was generated using Shibboleth's lil' Helper (slh):
-https://github.com/joegoggins/shibboleths_lil_helper
-
-Changes should not be made directly to this file. Instead, modify your slh config.rb file, re-generate, and re-deploy
--->
 <SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config"
     xmlns:conf="urn:mace:shibboleth:2.0:native:sp:config"
     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
@@ -31,74 +23,12 @@ Changes should not be made directly to this file. Instead, modify your slh confi
         <% end %>
       </RequestMap>
     </RequestMapper>
-    <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>" >
-        <Sessions lifetime="28800" timeout="3600" checkAddress="true" relayState="ss:mem" handlerSSL="false" idpHistory="false" exportLocation="http://localhost/Shibboleth.sso/GetAssertion" exportACL="127.0.0.1">
+    <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>">
+        <Sessions lifetime="28800" timeout="3600" checkAddress="true" relayState="ss:mem" handlerSSL="false" idpHistory="false">
             <SSO entityID="<%= @strategy.idp_entity_id %>">
               SAML2 SAML1
             </SSO>
-            <%# <Logout>SAML2 Local</Logout>%>
-
-            <!-- UMN Testing Shib IdP -->
-            <SessionInitiator type="Chaining" Location="/Login" isDefault="true" id="Intranet"
-                    relayState="cookie" entityID="<%= @strategy.idp_entity_id %>">
-                <SessionInitiator type="SAML2" acsIndex="1" acsByIndex="false" template="bindingTemplate.html"/>
-                <SessionInitiator type="Shib1" acsIndex="5"/>
-            </SessionInitiator>
-
-            <!--
-            md:AssertionConsumerService locations handle specific SSO protocol bindings,
-            such as SAML 2.0 POST or SAML 1.1 Artifact. The isDefault and index attributes
-            are used when sessions are initiated to determine how to tell the IdP where and
-            how to return the response.
-            -->
-            <md:AssertionConsumerService Location="/SAML2/POST" index="1"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"/>
-            <md:AssertionConsumerService Location="/SAML2/POST-SimpleSign" index="2"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"/>
-            <md:AssertionConsumerService Location="/SAML2/Artifact" index="3"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"/>
-            <md:AssertionConsumerService Location="/SAML2/ECP" index="4"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS"/>
-            <md:AssertionConsumerService Location="/SAML/POST" index="5"
-                Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"/>
-            <md:AssertionConsumerService Location="/SAML/Artifact" index="6"
-                Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"/>
-
-            <!-- LogoutInitiators enable SP-initiated local or global/single logout of sessions. -->
-            <LogoutInitiator type="Chaining" Location="/Logout" relayState="cookie">
-                <LogoutInitiator type="SAML2" template="bindingTemplate.html"/>
-                <LogoutInitiator type="Local"/>
-            </LogoutInitiator>
-
-            <!-- md:SingleLogoutService locations handle single logout (SLO) protocol messages. -->
-            <md:SingleLogoutService Location="/SLO/SOAP"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"/>
-            <md:SingleLogoutService Location="/SLO/Redirect" conf:template="bindingTemplate.html"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"/>
-            <md:SingleLogoutService Location="/SLO/POST" conf:template="bindingTemplate.html"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"/>
-            <md:SingleLogoutService Location="/SLO/Artifact" conf:template="bindingTemplate.html"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"/>
-
-            <!-- md:ManageNameIDService locations handle NameID management (NIM) protocol messages. -->
-            <md:ManageNameIDService Location="/NIM/SOAP"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"/>
-            <md:ManageNameIDService Location="/NIM/Redirect" conf:template="bindingTemplate.html"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"/>
-            <md:ManageNameIDService Location="/NIM/POST" conf:template="bindingTemplate.html"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"/>
-            <md:ManageNameIDService Location="/NIM/Artifact" conf:template="bindingTemplate.html"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"/>
-
-            <!--
-            md:ArtifactResolutionService locations resolve artifacts issued when using the
-            SAML 2.0 HTTP-Artifact binding on outgoing messages, generally uses SOAP.
-            -->
-            <md:ArtifactResolutionService Location="/Artifact/SOAP" index="1"
-                Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"/>
-
-
-
+            <Logout>SAML2 Local</Logout>
             <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
             <Handler type="Status" Location="/Status" />
             <Handler type="Session" Location="/Session" showAttributeValues="false"/>
@@ -110,11 +40,6 @@ Changes should not be made directly to this file. Instead, modify your slh confi
         <AttributeResolver type="Query" subjectMatch="true"/>
         <AttributeFilter type="XML" validate="true" path="<%= @host.prefixed_filepath_for("attribute-policy.xml") %>"/>
         <CredentialResolver type="File" key="<%= @host.prefixed_filepath_for("sp-key.pem") %>" certificate="<%= @host.prefixed_filepath_for("sp-cert.pem") %>"/>
-
-        <% @host.sites.each do |site| %>
-          <ApplicationOverride id="<%= site.name %>" homeURL="https://<%= site.name %>" />
-        <% end %>
-
     </ApplicationDefaults>
     <SecurityPolicyProvider type="XML" validate="true" path="<%= @host.prefixed_filepath_for("security-policy.xml") %>"/>
     <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="<%= @host.prefixed_filepath_for("protocols.xml") %>"/>
