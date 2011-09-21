@@ -23,7 +23,7 @@
         <% end %>
       </RequestMap>
     </RequestMapper>
-    <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>">
+    <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>" exportLocation="http://localhost/Shibboleth.sso/GetAssertion" exportACL="127.0.0.1">
         <Sessions lifetime="28800" timeout="3600" checkAddress="true" relayState="ss:mem" handlerSSL="false" idpHistory="false">
             <SSO entityID="<%= @strategy.idp_entity_id %>">
               SAML2 SAML1
