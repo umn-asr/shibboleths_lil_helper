@@ -1,7 +1,10 @@
 # Shibboleth Apache Global configuration
 UseCanonicalName On
 
-
+<% unless @host.shib_prefix.nil? %>
+ShibConfig <%= File.join(@host.shib_prefix, 'shibboleth2.xml') %>
+<% end %>
+  
 LoadModule mod_shib /usr/lib64/shibboleth/mod_shib_22.so
 
 <IfModule mod_alias.c>
@@ -18,4 +21,5 @@ LoadModule mod_shib /usr/lib64/shibboleth/mod_shib_22.so
 <Location />
   AuthType shibboleth
   Require shibboleth
+  ShibUseHeaders On
 </Location>
