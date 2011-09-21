@@ -40,6 +40,11 @@
         <AttributeResolver type="Query" subjectMatch="true"/>
         <AttributeFilter type="XML" validate="true" path="<%= @host.prefixed_filepath_for("attribute-policy.xml") %>"/>
         <CredentialResolver type="File" key="<%= @host.prefixed_filepath_for("sp-key.pem") %>" certificate="<%= @host.prefixed_filepath_for("sp-cert.pem") %>"/>
+
+        <% @host.sites.each do |site| %>
+          <ApplicationOverride id="<%= site.name %>" homeURL="https://<%= site.name %>" />
+        <% end %>
+
     </ApplicationDefaults>
     <SecurityPolicyProvider type="XML" validate="true" path="<%= @host.prefixed_filepath_for("security-policy.xml") %>"/>
     <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="<%= @host.prefixed_filepath_for("protocols.xml") %>"/>

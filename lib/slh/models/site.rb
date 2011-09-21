@@ -10,9 +10,6 @@ class Slh::Models::Site < Slh::Models::Base
   end
 
   def protect(site_path, *args, &block)
-    unless site_path.match(/^\//)
-      raise "protect statements must begin with a slash, aka /"
-    end
     if site_path == '/' && !@paths.empty?
       raise "If you want to protect the entire site, you must specify \"protect '/'\" before all other site path rules"
     end
@@ -98,10 +95,10 @@ class Slh::Models::Site < Slh::Models::Base
     if self.paths.first.name == '/'
       host_begin = <<-EOS
 <!-- Shibboleths Lil Helper flavor=#{self.paths.first.flavor} protection for entire site -->
-<Host name="#{self.name}" #{self.auth_request_map_xml_payload_for_flavor(self.paths.first.flavor)} redirectToSSL="443" >"
+<Host name="#{self.name}" #{self.auth_request_map_xml_payload_for_flavor(self.paths.first.flavor)} redirectToSSL="443" >
 EOS
     else
-      host_begin = "<Host name=\"#{self.name}\" redirectToSSL=\"443\" >"
+      host_begin = "<Host name=\"#{self.name}\" redirectToSSL=\"443\" applicationId=\"#{self.name}\" >"
     end
     self.paths.each do |p|
       next if p.name == '/' # Already dealt with/baked into the <Host> Xml
