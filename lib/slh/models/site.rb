@@ -107,9 +107,7 @@ EOS
           <!-- Shibboleths Lil Helper flavor=#{p.flavor} -->
           <Path name="#{p.name}" #{self.auth_request_map_xml_payload_for_flavor(p.flavor)}>
             <AccessControl>
-              <AND>
-                <Rule require="user">#{p.specific_users.join(' ')}</Rule>
-              </AND>
+              <Rule require="user">#{p.specific_users.join(' ')}</Rule>
             </AccessControl>
           </Path>
         EOS
