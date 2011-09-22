@@ -1,3 +1,9 @@
+<!-- 
+DO NOT MODIFY!
+Auto-generated on <%= Time.now.to_s %> by Shibboleth's Lil Helper:
+https://github.com/joegoggins/shibboleths_lil_helper
+Changes should not be made directly to this file. Instead, modify your slh config.rb file, re-generate, and re-deploy
+-->
 <SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config"
     xmlns:conf="urn:mace:shibboleth:2.0:native:sp:config"
     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
@@ -23,12 +29,13 @@
         <% end %>
       </RequestMap>
     </RequestMapper>
-    <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>">
+    <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>" >
         <Sessions lifetime="28800" timeout="3600" checkAddress="true" relayState="ss:mem" handlerSSL="false" idpHistory="false">
             <SSO entityID="<%= @strategy.idp_entity_id %>">
               SAML2 SAML1
             </SSO>
-            <Logout>SAML2 Local</Logout>
+            <%# <Logout>SAML2 Local</Logout>%>
+
             <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
             <Handler type="Status" Location="/Status" />
             <Handler type="Session" Location="/Session" showAttributeValues="false"/>
@@ -40,6 +47,11 @@
         <AttributeResolver type="Query" subjectMatch="true"/>
         <AttributeFilter type="XML" validate="true" path="<%= @host.prefixed_filepath_for("attribute-policy.xml") %>"/>
         <CredentialResolver type="File" key="<%= @host.prefixed_filepath_for("sp-key.pem") %>" certificate="<%= @host.prefixed_filepath_for("sp-cert.pem") %>"/>
+
+        <% @host.sites.each do |site| %>
+          <ApplicationOverride id="<%= site.name %>" homeURL="<%= site.to_https_prefixed_name %>" />
+        <% end %>
+
     </ApplicationDefaults>
     <SecurityPolicyProvider type="XML" validate="true" path="<%= @host.prefixed_filepath_for("security-policy.xml") %>"/>
     <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="<%= @host.prefixed_filepath_for("protocols.xml") %>"/>

@@ -118,4 +118,7 @@ EOS
     return "#{host_begin}\n#{path_strings.join("\n")}\n#{host_end}"
   end
 
+  def to_https_prefixed_name
+    "https://#{self.name}"
+  end
 end

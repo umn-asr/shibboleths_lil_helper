@@ -1,17 +1,11 @@
 About
 =====
 WARNING: THIS IS VERY BETA RIGHT NOW
+WARNING: THIS IS VERY BETA RIGHT NOW
+WARNING: THIS IS VERY BETA RIGHT NOW
+WARNING: THIS IS VERY BETA RIGHT NOW
+
 A Rubygem to help manage the configuration associated with many instances of the Shibboleth Apache/IIS Native Service Provider code.
-
-Inspiration: Thank you Santa Clause
-===================================
-
-While Santa should be respected for his hard word, jolly attitude, and
-dedication to dole out toys to weasels planet-wide, his elves deserve some
-props as well!...There are lots of little things that need to be done.
-
-  Santa provides the toys, elves do the dirty work.
-  Shibboleth provides the auth, it's lil helpers do the dirty work.
 
 Background
 ==========
@@ -29,8 +23,7 @@ server layer of the stack, we need a way to keep this logic versioned with the a
 
 Installation
 ============
-gem install shibboleths_lil_helper
-
+TODO
 Apache Assumptions
 ===========
 * Shibboleth Native Service Provider is already installed on your target server.
