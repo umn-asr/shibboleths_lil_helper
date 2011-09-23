@@ -14,4 +14,20 @@
 <AttributeExtractor type="XML" validate="true" path="<%= @host.prefixed_filepath_for("attribute-map.xml") %>"/>
 <AttributeResolver type="Query" subjectMatch="true"/>
 <AttributeFilter type="XML" validate="true" path="<%= @host.prefixed_filepath_for("attribute-policy.xml") %>"/>
-<CredentialResolver type="File" key="<%= @host.prefixed_filepath_for("sp-key.pem") %>" certificate="<%= @host.prefixed_filepath_for("sp-cert.pem") %>"/>
+<CredentialResolver type="File">
+	<Certificate>
+		<Path><%= @host.prefixed_filepath_for("sp-cert.pem") %></Path>
+	</Certificate>
+	<Key>
+		<Path><%= @host.prefixed_filepath_for("sp-key.pem") %></Path>
+    <!-- 
+    This key alias is used by Shibbleth's lil' Helper to
+    determine whether or not a generated SP metadata is
+    up-to-date. It is NOT used by anything Shibboleth.
+    -->
+    <Name><%= Slh::Models::Version::VERSION %></Name>
+	</Key>
+</CredentialResolver>
+
+
+

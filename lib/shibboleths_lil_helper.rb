@@ -5,4 +5,5 @@ require 'net/https'
 require 'nokogiri' # XML Parser Gem sudo gem install nokogiri
 require 'fileutils'
 require 'optparse'
+require 'UUIDTools' # for generating GUID version strings
 require 'slh'
