@@ -29,15 +29,13 @@ Changes should not be made directly to this file. Instead, modify your slh confi
         <% end %>
       </RequestMap>
     </RequestMapper>
-    <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>" >
+    <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>" REMOTE_USER="eppn mail">
       <%= @strategy.generate_config_file_content('_application_details', @host) %>
-
         <% @host.sites.each do |site| %>
           <ApplicationOverride id="<%= site.name %>" homeURL="<%= site.to_https_prefixed_name %>">
             <%= @strategy.generate_config_file_content('_application_details', @host) %>
           </ApplicationOverride>
         <% end %>
-
     </ApplicationDefaults>
     <SecurityPolicyProvider type="XML" validate="true" path="<%= @host.prefixed_filepath_for("security-policy.xml") %>"/>
     <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="<%= @host.prefixed_filepath_for("protocols.xml") %>"/>

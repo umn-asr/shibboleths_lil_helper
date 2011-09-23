@@ -4,7 +4,6 @@ source "http://rubygems.org"
 gem "activesupport", "~> 3.0.9"
 gem "nokogiri"
 gem 'i18n' # Required to make require 'active_support/all' work...
-gem 'uuidtools', '2.1.2'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
