@@ -4,7 +4,11 @@ module Slh
     autoload :CommandBase
     autoload :Initialize
     autoload :Generate
-    autoload :AssembleMetadata
+    autoload :AssembleMetadata # TODO: Deprecate
+    autoload :FetchMetadata
+    autoload :CompareMetadata
+    autoload :GenerateMetadata
+    autoload :TestMetadata
 
     attr_reader :args,:action
     def output(msg,*args)
@@ -74,12 +78,20 @@ COMMANDS (in usage order)
       when 'generate'
         klass = Slh::Cli::Generate
       when 'metadata'
-        klass = Slh::Cli::AssembleMetadata
+        # klass = Slh::Cli::AssembleMetadata
+        klass = [Slh::Cli::FetchMetadata,Slh::Cli::CompareMetadata,Slh::Cli::GenerateMetadata, Slh::Cli::TestMetadata]
       else 
         raise "Invalid slh action"
       end
-      @action = klass.new(@args[1..-1]) # everything except "slh" aka "initialize -f"
-      @action.execute
+      if klass.kind_of? Array
+        klass.each do |k|
+          @action = k.new(@args[1..-1])   # everything except "slh" aka "initialize -f"
+          @action.execute
+        end
+      else
+        @action = klass.new(@args[1..-1]) # everything except "slh" aka "initialize -f"
+        @action.execute
+      end
     end
     def self.execute
       @@instance = self.new
