@@ -11,27 +11,11 @@ module Slh
     autoload :TestMetadata
 
     attr_reader :args,:action
+
     def output(msg,*args)
-      options = args.extract_options!
-      s=msg
-      unless options[:highlight].blank?
-        case options[:highlight]
-        when :green
-          s="\e[1;32m#{s}\e[0m"
-        when :red
-          s="\e[1;31m#{s}\e[0m"
-        else
-          s="\e[1;31m#{s}\e[0m"
-        end
-      end
-      unless options[:exception].blank?
-        s << "Exception = #{options[:exception].class.to_s}, message=#{options[:exception].message}"
-      end
-      puts s 
-      if options[:exit]
-        exit
-      end
+      Slh.command_line_output(msg,*args)
     end
+
     def parse_options_and_delegate(args)
       if args.nil?
         @args = [] 
@@ -106,6 +90,7 @@ COMMANDS (in usage order)
       @@instance = self.new
       @@instance.parse_options_and_delegate(ARGV)
     end
+    @@instance = nil
     def self.instance
       raise "must hit execute to get this piece rolling" if @@instance.nil?
       @@instance

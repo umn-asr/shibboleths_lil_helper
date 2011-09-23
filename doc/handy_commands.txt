@@ -1,3 +1,30 @@
 ---
 Find the version of shibboleth you are currently running on a host
   rpm -qi shibboleth
+
+
+
+
+
+FOR SHIBBOLETHS_LIL_HELPER DEVELOPERS
+---
+Assuming
+  * you are in the root dir of a git clone of shibboleths_lil_helper
+  * you have already run initialize and therefore have a
+    "shibboleths_lil_helper" sub-dir within the 
+     shibboleths_lil_helper repo
+
+You can get at an irb session loaded with your config stuff like this:
+  rake console
+
+  # then once in console
+  require 'shibboleths_lil_helper'
+  Slh.load_config 
+
+  # Then tinker with config stuff stemming from
+  Slh.strategies
+
+DEV_WISH_LIST: `rake console` should do all of these things for you, I
+think this will involve looking at jeweler's "console" rake task and
+figuring out how to add files to load and ruby to run before entering
+the irb session
