@@ -72,7 +72,7 @@ COMMANDS (in usage order)
         klass = Slh::Cli::Generate
       when 'metadata'
         # klass = Slh::Cli::AssembleMetadata
-        klass = [Slh::Cli::FetchMetadata,Slh::Cli::CompareMetadata,Slh::Cli::GenerateMetadata, Slh::Cli::TestMetadata]
+        klass = [Slh::Cli::CompareMetadata,Slh::Cli::FetchMetadata,Slh::Cli::GenerateMetadata, Slh::Cli::TestMetadata]
       else 
         raise "Invalid slh action"
       end

@@ -26,6 +26,7 @@ class Slh::Models::Strategy  < Slh::Models::Base
       url= URI.parse(self.idp_metadata_url)
       @http = Net::HTTP.new(url.host, url.port)
       @http.use_ssl = true
+      @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       @http.open_timeout = 60
       @http.read_timeout = 60
       @idp_metadata_url_response = @http.get(url.path)
