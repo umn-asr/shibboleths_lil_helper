@@ -1,36 +1,15 @@
-Slh.for_strategy :default_strategy do
-  set :sp_entity_id, 'https://shib-local-vm1.asr.umn.edu/rhel5_sp1'
+Slh.for_strategy :umn_apache_shib_test_server do
+  set :sp_entity_id, 'https://asr.umn.edu/shibboleth/default'
   set :idp_metadata_url, 'https://idp-test.shib.umn.edu/metadata.xml'
   set :error_support_contact, 'goggins@umn.edu'
   set :template_dir, '<%= @template_dir %>'
-  for_host 'shib-local-vm1.asr.umn.edu' do
+  for_host 'asr-web-dev4.oit.umn.edu' do
     set :shib_prefix, "/swadm/etc/shibboleth"
-    for_site 'shib-local-vm1.asr.umn.edu' do
-      protect '/secure'
+    for_site 'shib-php-test.asr.umn.edu' do
+      protect 'secure'
     end
-   # for_site 'site2.umn.edu' do
-   #   protect '/lazy' do
-   #     set :flavor, :authentication_optional
-   #   end
-   # end
-   # for_site 'anothersite.umn.edu' do
-   # end
-  end
-  for_host 'asr-web-dev2.oit.umn.edu' do
-    set :host_type, :iis
-    for_site 'asr-web-iisshibtest1.oit.umn.edu' do
-      set :site_id, "1496896398"
-      protect '/' do
-        set :flavor, :authentication_optional
-      end
-    end
-    for_site 'asr-web-iisshibtest2.oit.umn.edu' do
-      set :site_id, "1708263520"
-      protect "/secure"
-      protect "/webteam" do
-        set :flavor, :authentication_required_for_specific_users
-        set :specific_users, %w(goggins@umn.edu ding0057@umn.edu)
-      end
+    for_site 'shib-rails2-test.asr.umn.edu' do
+      protect 'secure'
     end
   end
 end
