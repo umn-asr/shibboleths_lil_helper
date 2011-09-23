@@ -13,11 +13,11 @@ Shibboleth's Lil Helper is a tool that automates the generation of Apache/IIS Sh
 **WARNING**: This is in active development and is unstable. 
 Unless you've talked to Joe or Chris regarding this tool, beware.
 
-Background
-==========
-It was created to manage shibboleth configuration and deployment across
+Why another tool?
+-----------------
+We needed something that could help manage shibboleth configuration and deployment across our various web servers:
 
-* iis6, iis7, and Apache 2.2 web servers
+* iis6, iis7, and Apache 2.2
   * each hosting many vhosts (aka sites)
   * each running PHP, Rails 2 + 3, classic ASP, and .NET
   * each running the Apache/IIS Native Service Provider
