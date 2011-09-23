@@ -2,15 +2,13 @@ About
 =====
 Shibboleth's Lil Helper is a tool that automates the generation of Apache/IIS Shibboleth Native Service Provider configuration & metadata files.  It provides several benefits over manually configuring each NativeSp instance/server by:
 
-* Providing a consistent configuration approach you can apply uniformly across all of the servers managed by your organization.
-  > Makes deployment automation possible, errors less frequent, and troubleshooting easier.
-* Dividing high level auth specs from actual NativeSp configuration
-  > Programmers can focus on high level goals like 
-  > "protect files underneath the '/secure' directory on 'somewebsite.com'" 
-  > rather than grappeling with the bewildering complexity of the NativeSp's 
-  > interrelated XML files, the Shibboleth protocal, SAML, etc.
-* Providing conceptually simple linear process that distills the main
-  steps associated with Shibboleth integration.
+* __Providing a consistent configuration approach__ you can apply uniformly across all of the servers managed by your organization.
+  * Makes deployment automation possible, errors less frequent, and troubleshooting easier.
+
+* __Dividing high level auth specs from actual NativeSp configuration__
+  * Programmers can focus on high level goals like "protect files underneath the '/secure' directory on 'somewebsite.com'" rather than grappeling with the bewildering complexity of the NativeSp's interrelated XML files, the Shibboleth protocal, SAML, etc.  
+
+* __Providing conceptually simple linear process__ that distills the main steps associated with Shibboleth integration.
 
 **WARNING**: This is in active development and is unstable. 
 Unless you've talked to Joe or Chris regarding this tool, beware.
@@ -121,6 +119,9 @@ Usage
 
 Real World Example
 ==================
+The following describes how we integrate this tool's generated output
+into a deployment automation tool called Capistrano.
+
 We have a private repo called shibboleth_deployer that includes the shibboleths_lil_helper generated config files and uses Capistrano to push these files out target servers and restarts shibd.  It's usage looks like:
 
     cap deploy HOST=asr-web-dev4.oit.umn.edu
