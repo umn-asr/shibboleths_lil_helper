@@ -122,7 +122,7 @@ class Slh::Models::Strategy  < Slh::Models::Base
 
   protected
     def validate_config_file_name(file_base_name)
-      unless VALID_CONFIG_FILES.include?(file_base_name)
+      unless VALID_CONFIG_FILES.include?(file_base_name) || file_base_name.match(/^_/) # allow 'partial' configs
         raise "#{file_base_name} is not a valid shib SP config file name, must be one of the following #{VALID_CONFIG_FILES.join(',')}"
       end
     end

@@ -30,26 +30,12 @@ Changes should not be made directly to this file. Instead, modify your slh confi
       </RequestMap>
     </RequestMapper>
     <ApplicationDefaults entityID="<%= @strategy.sp_entity_id %>" >
-        <Sessions lifetime="28800" timeout="3600" checkAddress="true" relayState="ss:mem" handlerSSL="false" idpHistory="false">
-            <SSO entityID="<%= @strategy.idp_entity_id %>">
-              SAML2 SAML1
-            </SSO>
-            <%# <Logout>SAML2 Local</Logout>%>
-
-            <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
-            <Handler type="Status" Location="/Status" />
-            <Handler type="Session" Location="/Session" showAttributeValues="false"/>
-            <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
-        </Sessions>
-        <Errors supportContact="<%= @strategy.error_support_contact %>" logoLocation="/shibboleth-sp/logo.jpg" styleSheet="/shibboleth-sp/main.css"/>
-        <MetadataProvider type="XML" file="<%= @host.prefixed_filepath_for("idp_metadata.xml") %>" />
-        <AttributeExtractor type="XML" validate="true" path="<%= @host.prefixed_filepath_for("attribute-map.xml") %>"/>
-        <AttributeResolver type="Query" subjectMatch="true"/>
-        <AttributeFilter type="XML" validate="true" path="<%= @host.prefixed_filepath_for("attribute-policy.xml") %>"/>
-        <CredentialResolver type="File" key="<%= @host.prefixed_filepath_for("sp-key.pem") %>" certificate="<%= @host.prefixed_filepath_for("sp-cert.pem") %>"/>
+      <%= @strategy.generate_config_file_content('_application_details', @host) %>
 
         <% @host.sites.each do |site| %>
-          <ApplicationOverride id="<%= site.name %>" homeURL="<%= site.to_https_prefixed_name %>" />
+          <ApplicationOverride id="<%= site.name %>" homeURL="<%= site.to_https_prefixed_name %>">
+            <%= @strategy.generate_config_file_content('_application_details', @host) %>
+          </ApplicationOverride>
         <% end %>
 
     </ApplicationDefaults>
