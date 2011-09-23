@@ -1,4 +1,5 @@
 module Slh
+#  PROJECT_URL = 'https://github.com/joegoggins/shibboleths_lil_helper'
   extend ActiveSupport::Autoload
   autoload :ClassMethods
   extend Slh::ClassMethods

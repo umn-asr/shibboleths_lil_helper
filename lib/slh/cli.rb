@@ -14,12 +14,21 @@ module Slh
     def output(msg,*args)
       options = args.extract_options!
       s=msg
+      unless options[:highlight].blank?
+        case options[:highlight]
+        when :green
+          s="\e[1;32m#{s}\e[0m"
+        when :red
+          s="\e[1;31m#{s}\e[0m"
+        else
+          s="\e[1;31m#{s}\e[0m"
+        end
+      end
       unless options[:exception].blank?
         s << "Exception = #{options[:exception].class.to_s}, message=#{options[:exception].message}"
       end
-      puts s
-      if options[:error]
-        puts "Exiting..."
+      puts s 
+      if options[:exit]
         exit
       end
     end

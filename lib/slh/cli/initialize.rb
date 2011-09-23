@@ -15,6 +15,7 @@ class Slh::Cli::Initialize < Slh::Cli::CommandBase
     end
   end
   def perform_action
+    Slh::Cli.instance.output "Generating shibboleths_lil_helper/config.rb as a starting point"
     if self.options[:force_create]
       if File.directory?(Slh.config_dir)
         FileUtils.rm_rf(Slh.config_dir)
@@ -23,7 +24,6 @@ class Slh::Cli::Initialize < Slh::Cli::CommandBase
     end
     begin
       FileUtils.mkdir(Slh.config_dir)
-      Slh::Cli.instance.output "#{Slh.config_dir} and #{Slh.config_file} created."
     rescue Exception => e
       Slh::Cli.instance.output "Could not create directory, use --force option #{Slh.config_dir}", :exception => e
       exit
@@ -33,6 +33,6 @@ class Slh::Cli::Initialize < Slh::Cli::CommandBase
     config_string = ERB.new(File.read(File.join(File.dirname(__FILE__),'..','templates',self.options[:template_dir],'config.rb.erb'))).result(binding)
     File.open(Slh.config_file,'w') {|f| f.write(config_string)}
     Slh::Models::CapistranoHelper.generate_deploy_dot_rb
-    Slh::Cli.instance.output "Edit #{Slh.config_file} and run `slh generate`"
+    Slh::Cli.instance.output "Edit #{Slh.config_file} to reflect your organizations Shib setup and run `slh generate`", :highlight => :red
   end
 end

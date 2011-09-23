@@ -4,13 +4,9 @@ class Slh::Cli::Generate < Slh::Cli::CommandBase
   end
   def perform_action
     Slh.strategies.each do |s|
+      Slh::Cli.instance.output "Generating Native SP config files for #{s.name.to_s} strategy"
       s.generate_config
-      Slh::Cli.instance.output <<-EOS
-Generated config for strategy \"#{s.name.to_s}\" in #{s.config_dir}
-
-You MUST deploy these genereated files to your web server before running `slh metadata`
-
-EOS
     end
+    Slh::Cli.instance.output "You MUST deploy these files your web servers before running `slh metadata`", :highlight => true
   end
 end

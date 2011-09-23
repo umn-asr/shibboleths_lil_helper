@@ -19,12 +19,20 @@ class Slh::Cli::CommandBase
   def load_config
     require Slh.config_file
     if Slh.strategies.empty?
-      Slh::Cli.instance.output "NO strategies found in #{Slh.config_file}, make sure to edit this before running the generate command", :error => true
+      Slh::Cli.instance.output "NO strategies found in #{Slh.config_file}, make sure to edit this before running the generate command", :exit => true
     end
+  end
+  def output_header
+    Slh::Cli.instance.output "\n<<<< BEGIN #{self.class.to_s} >>>>\n"
+  end
+  def output_footer
+    Slh::Cli.instance.output "\n<<<< END #{self.class.to_s} >>>>\n"
   end
   def execute
     self.option_parser.parse!(self.args)
     self.load_config unless self.class == Slh::Cli::Initialize
+    self.output_header
     self.perform_action
+    self.output_footer
   end
 end
