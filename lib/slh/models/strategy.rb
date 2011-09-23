@@ -112,8 +112,12 @@ class Slh::Models::Strategy  < Slh::Models::Base
   end
 
   def config_template_file_path(file_base_name)
-    validate_config_file_name(file_base_name)
-    File.join(File.dirname(__FILE__), '..', 'templates',self.template_dir,"#{file_base_name}.erb")
+    template_file_path = File.join(File.dirname(__FILE__), '..', 'templates',self.template_dir,"#{file_base_name}.erb")
+    if File.exists?(template_file_path)
+      template_file_path 
+    else
+      raise "#{template_file_path} does not exist"
+    end
   end
 
   def config_template_content(file_base_name)
@@ -121,6 +125,7 @@ class Slh::Models::Strategy  < Slh::Models::Base
   end
 
   protected
+    # TODO: DEPRECATE: If the file exists in the template_dir its legit
     def validate_config_file_name(file_base_name)
       unless VALID_CONFIG_FILES.include?(file_base_name) || file_base_name.match(/^_/) # allow 'partial' configs
         raise "#{file_base_name} is not a valid shib SP config file name, must be one of the following #{VALID_CONFIG_FILES.join(',')}"
