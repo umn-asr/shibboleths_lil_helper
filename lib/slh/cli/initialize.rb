@@ -33,6 +33,6 @@ class Slh::Cli::Initialize < Slh::Cli::CommandBase
     config_string = ERB.new(File.read(File.join(File.dirname(__FILE__),'..','templates',self.options[:template_dir],'config.rb.erb'))).result(binding)
     File.open(Slh.config_file,'w') {|f| f.write(config_string)}
     Slh::Models::CapistranoHelper.generate_deploy_dot_rb
-    Slh::Cli.instance.output "Edit #{Slh.config_file} to reflect your organizations Shib setup and run `slh generate`", :highlight => :red
+    Slh::Cli.instance.output "You should go edit #{Slh.config_file} to reflect your organizations Shib setup", :highlight => :red
   end
 end

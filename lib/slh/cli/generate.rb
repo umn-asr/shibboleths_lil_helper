@@ -7,6 +7,6 @@ class Slh::Cli::Generate < Slh::Cli::CommandBase
       Slh::Cli.instance.output "Generating Native SP config files for #{s.name.to_s} strategy"
       s.generate_config
     end
-    Slh::Cli.instance.output "You MUST deploy these files your web servers before running `slh metadata`", :highlight => true
+    Slh::Cli.instance.output "You MUST deploy these files your web servers for subsequent commands to work", :highlight => true
   end
 end
