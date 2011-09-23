@@ -46,7 +46,7 @@ class Slh::Models::Site < Slh::Models::Base
   end
 
   def metadata_url
-    "https://#{self.name}/Shibboleth.sso/Metadata"
+    "#{self.to_https_prefixed_name}/Shibboleth.sso/Metadata"
   end
 
   # These nodes are extracted to create .metadata_site_specific_xml
