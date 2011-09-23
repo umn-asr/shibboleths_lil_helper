@@ -1,21 +1,33 @@
 About
 =====
-A Rubygem to help manage the configuration associated with many instances of the Shibboleth Apache/IIS Native Service Provider code.
-(WARNING: This is in active development and is fairly unstable, unless
-you've talked to Joe or Chris regarding this tool, beware).
+Shibboleth's Lil Helper is a tool that automates the generation of Apache/IIS Shibboleth Native Service Provider configuration & metadata files.  It provides several benefits over manually configuring each NativeSp instance/server by:
+
+* Providing a consistent configuration approach you can apply uniformly across all of the servers managed by your organization.
+  > Makes deployment automation possible, errors less frequent, and troubleshooting easier.
+* Dividing high level auth specs from actual NativeSp configuration
+  > Programmers can focus on high level goals like 
+  > "protect files underneath the '/secure' directory on 'somewebsite.com'" 
+  > rather than grappeling with the bewildering complexity of the NativeSp's 
+  > interrelated XML files, the Shibboleth protocal, SAML, etc.
+* Providing conceptually simple linear process that distills the main
+  steps associated with Shibboleth integration.
+
+**WARNING**: This is in active development and is unstable. 
+Unless you've talked to Joe or Chris regarding this tool, beware.
 
 Background
 ==========
 It was created to manage shibboleth configuration and deployment across
+
 * iis6, iis7, and Apache 2.2 web servers
-*   each hosting many vhosts (aka sites)
-*   each running PHP, Rails 2 + 3, classic ASP, and .NET
-*   running the Apache/IIS Native Service Provider
+  * each hosting many vhosts (aka sites)
+  * each running PHP, Rails 2 + 3, classic ASP, and .NET
+  * each running the Apache/IIS Native Service Provider
 
 Installation
 ============
-1. gem install shibboleths_lil_helper (DEV_WISH_LIST: Not working yet)
-2. git clone git://github.com/joegoggins/shibboleths_lil_helper.git
+* git clone git://github.com/joegoggins/shibboleths_lil_helper.git
+* gem install shibboleths_lil_helper (DEV_WISH_LIST: Not working yet)
 
 Assumptions
 ===========
@@ -24,23 +36,41 @@ Assumptions
 * /bin/slh is in your $PATH (automatically done with Rubygem install
   method, manual is git cloned
 
-Usage
-=====
-* Type `slh`, you will see instructions for each sub-command and how
-  to get additional information about them.  In general the process is
-  * [initialize] initialize a shibboleths_lil_helper/config.rb
-  * [in your editor] tweak shibboleths_lil_helper/config.rb to reflect the servers you
-    will be using shibboleth with
-  * [generate] generate shibboleth2.xml, attribute-map.xml, and other Native Sib
-    config files
-  * [a deployment tool or manually] deploy these files out to each host using Capistrano (DEV_WISH_LIST,TODO: Though the initialize command does drop a config/deploy.rb there is no documenation of its usage or examples of how it should be used)
-  * [metadata] generate metadata
-
 Concept
 =======
-Most of the `slh` sub-commands are simply config file generators that place
-generated content into a directory structure in the current working like
-like follows:
+
+Auth specs are stated in your shibboleths_lil_helper/config.rb
+via an easily readable ruby parseable domain specific language.  From these specs, Shibboleth's Lil Helper is capable of generating all of the required XML files you will need to integrate with
+a Shibboleth Identify Provider (Idp).
+
+The generation of these XML files happens through a command line tool
+called "slh".  Each particular task is broken into sub-commands such as
+"initialize", "generate", or "metadata" that perform various tasks.
+
+For example, given the following shibboleths_lil_helper/config.rb:
+
+    Slh.for_strategy :umn_apache_shib_test_server do
+      set :sp_entity_id, 'https://asr.umn.edu/shibboleth/default'
+      set :idp_metadata_url, 'https://idp-test.shib.umn.edu/metadata.xml'
+      set :error_support_contact, 'goggins@umn.edu'
+      set :template_dir, 'umn.edu/oit-vms'
+      for_host 'asr-web-dev4.oit.umn.edu' do
+        set :shib_prefix, "/swadm/etc/shibboleth"
+        for_site 'shib-php-test.asr.umn.edu' do
+          protect 'secure'
+        end
+        for_site 'shib-rails2-test.asr.umn.edu' do
+          protect 'secure'
+        end
+      end
+    end
+
+an invocations of
+
+    `slh generate`
+
+will produce the a dir structure and various config files
+associated with these specifications for each strategy, host, and site.
 
     shibboleths_lil_helper/
       generated/
@@ -56,12 +86,43 @@ like follows:
                 <site>/           (shib-php-test.asr.umn.edu)
                   fetched_metadata.xml
 
+* These generated files should be checked into a source control repository.
 
-* You should check these generated files into source control. 
+The core assumptions of the specifications DSL are
+
+* a strategy ("for_strategy")
+  * has one IDP entity id (:idp_metadata_url)
+  * has one service provider entity id (:sp_entity_id)
+  * has one template_dir used to translate specs into config XML (:template_dir)
+  * has many hosts
+* a host (for_host)
+  * has many sites 
+* a site (for_site)
+  * has many site paths that have various auth rules
+* a site path (protect)
+  * has a "flavor" such as the following specified like
+    *protect "optional_auth", :flavor => :authentication_optional*
+    * authentication_required
+    * authentication_optional
+    * authentication_required_for_specific_users
+
+
+Usage
+=====
+* Type `slh`, you will see instructions for each sub-command and how
+  to get additional information about them.  In general the process is
+  * [initialize] initialize a shibboleths_lil_helper/config.rb
+  * [in your editor] tweak shibboleths_lil_helper/config.rb to reflect the servers you
+    will be using shibboleth with
+  * [generate] generate shibboleth2.xml, attribute-map.xml, and other Native Sib
+    config files
+  * [a deployment tool or manually] deploy these files out to each host using Capistrano (DEV_WISH_LIST,TODO: Though the initialize command does drop a config/deploy.rb there is no documenation of its usage or examples of how it should be used)
+  * [metadata] generate metadata
 
 Real World Example
 ==================
 We have a private repo called shibboleth_deployer that includes the shibboleths_lil_helper generated config files and uses Capistrano to push these files out target servers and restarts shibd.  It's usage looks like:
+
     cap deploy HOST=asr-web-dev4.oit.umn.edu
 
 For each of our target servers we setup Capistrano to have a clone of
