@@ -9,6 +9,9 @@ class Slh::Cli::GenerateMetadata < Slh::Cli::CommandBase
         file_path = 'sp_metadata_for_host_to_give_to_idp.xml'
         @strategy = strategy
         @host = host
+        # Global config shared across vhosts like the X509Certificate
+        # uses the first site arbirarily
+        @first_site_for_host = @host.sites.first
         Slh::Cli.instance.output "Generating metadata for #{host.name}"
         File.open(File.join(host_dir, file_path),'w') do |f|
           f.write(ERB.new(strategy.config_template_content(file_path)).result(binding))

@@ -11,7 +11,7 @@
         <ds:KeyName><%= @host.name %></ds:KeyName>
         <ds:X509Data>
           <ds:X509SubjectName>CN=<%= @host.name %></ds:X509SubjectName>
-          <ds:X509Certificate>TODO</ds:X509Certificate>
+          <ds:X509Certificate><%= @first_site_for_host.x509_certificate_string %></ds:X509Certificate>
         </ds:X509Data>
       </ds:KeyInfo>
     </md:KeyDescriptor>
