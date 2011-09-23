@@ -65,8 +65,9 @@ We have a private repo called shibboleth_deployer that includes the shibboleths_
     cap deploy HOST=asr-web-dev4.oit.umn.edu
 
 For each of our target servers we setup Capistrano to have a clone of
-this shibboleth_deployer repo structured in the standard way, i.e.
-    `ls /etc/shibboleth_deployer`
+this shibboleth_deployer repo structured in the standard way, e.g:
+
+    ls /etc/shibboleth_deployer
         current
         releases
         shared
@@ -104,8 +105,8 @@ Contribute to the code
 
 Authors
 =======
-Joe Goggins, Academic Support Resources, goggins@umn.edu
-Chris Dinger, Academic Support Resources, ding0057@umn.edu
+* Joe Goggins, Academic Support Resources, goggins@umn.edu
+* Chris Dinger, Academic Support Resources, ding0057@umn.edu
 
 
 Copyright (c) 2011 University of Minnesota
