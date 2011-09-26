@@ -29,6 +29,7 @@ Installation
   * Bundler: gem install bundler
   
 * From github:
+
     git clone git://github.com/joegoggins/shibboleths_lil_helper.git
     cd shibboleths_lil_helper
     bundle
