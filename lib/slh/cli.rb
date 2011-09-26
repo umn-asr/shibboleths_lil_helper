@@ -27,13 +27,14 @@ module Slh
       when nil
         puts <<-'EOS'
   This is Shibboleth's Lil Helper.
+
                ___,@
                /  <
-          ,_  /    \  _,                    He's kinda dumb, but is helpful by
-      ?    \`/______\`/                     making config XML that you can use
-   ,_(_).  |; (e  e) ;|                     in your Apache or IIS Shibboleth
-    \___ \ \/\   7  /\/    _\8/_            Native Service Provider implementations.
-        \/\   \'=='/      | /| /|
+          ,_  /    \  _,                    He'll help you create consistent
+      ?    \`/______\`/                     config XML for your Shibboleth-Native 
+   ,_(_).  |; (e  e) ;|                     Service-Provider servers (Apache or IIS)
+    \___ \ \/\   7  /\/    _\8/_            without pulling your hair out.
+        \/\   \'=='/      | /| /|           
          \ \___)--(_______|//|//|
           \___  ()  _____/|/_|/_|
              /  ()  \    `----'             He knows several commands listed below
