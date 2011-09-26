@@ -24,8 +24,18 @@ We needed something that could help manage shibboleth configuration and deployme
 
 Installation
 ============
-* git clone git://github.com/joegoggins/shibboleths_lil_helper.git
-* gem install shibboleths_lil_helper (DEV_WISH_LIST: Not working yet)
+* Pre-requisites:
+  * Rubygems: http://rubygems.org/pages/download
+  * Bundler: gem install bundler
+  
+* From github:
+    git clone git://github.com/joegoggins/shibboleths_lil_helper.git
+    cd shibboleths_lil_helper
+    bundle
+    ./bin/slh
+    (follow instructions)
+
+* Via Ruby Gems: Not working yet
 
 Assumptions
 ===========
