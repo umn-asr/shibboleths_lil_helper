@@ -1,10 +1,11 @@
 # This model represents the actual hostname/machine the shib SP instance lives on
 class Slh::Models::Host < Slh::Models::Base
   attr_reader :name, :sites
-  attr_accessor :host_type, :shib_prefix
+  attr_accessor :host_type, :shib_prefix, :propogate_data_via_http_headers
   def initialize(host_name,*args,&block)
     @name = host_name
     @host_type = :apache
+    @propogate_data_via_http_headers = false
     @sites = []
     if block_given?
       self.instance_eval(&block)

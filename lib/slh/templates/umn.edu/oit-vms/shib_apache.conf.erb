@@ -21,5 +21,7 @@ LoadModule mod_shib /usr/lib64/shibboleth/mod_shib_22.so
 <Location />
   AuthType shibboleth
   Require shibboleth
+  <% if @host.propogate_data_via_http_headers %>
   ShibUseHeaders On
+  <% end %>
 </Location>
