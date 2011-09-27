@@ -30,11 +30,11 @@ Installation
   
 * From github:
 
-    git clone git://github.com/joegoggins/shibboleths_lil_helper.git
-    cd shibboleths_lil_helper
-    bundle
-    ./bin/slh
-    (follow instructions)
+      git clone git://github.com/joegoggins/shibboleths_lil_helper.git
+      cd shibboleths_lil_helper
+      bundle
+      ./bin/slh
+      (then follow instructions)
 
 * Via Ruby Gems: Not working yet
 

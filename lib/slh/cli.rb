@@ -26,6 +26,7 @@ module Slh
       case @args.first
       when nil
         puts <<-'EOS'
+
   This is Shibboleth's Lil Helper.
 
                ___,@
@@ -33,8 +34,8 @@ module Slh
           ,_  /    \  _,                    He'll help you create consistent
       ?    \`/______\`/                     config XML for your Shibboleth-Native 
    ,_(_).  |; (e  e) ;|                     Service-Provider servers (Apache or IIS)
-    \___ \ \/\   7  /\/    _\8/_            without pulling your hair out.
-        \/\   \'=='/      | /| /|           
+    \___ \ \/\   7  /\/    _\8/_            without pulling your hair out in frustration.
+        \/\   \'=='/      | /| /|
          \ \___)--(_______|//|//|
           \___  ()  _____/|/_|/_|
              /  ()  \    `----'             He knows several commands listed below

@@ -9,6 +9,11 @@ class Slh::Models::Strategy  < Slh::Models::Base
     if block_given?
       self.instance_eval(&block)
     end
+    self.sp_entity_id ||= Slh.strategy_defaults[:sp_entity_id]
+    self.idp_metadata_url ||= Slh.strategy_defaults[:idp_metadata_url]
+    self.error_support_contact ||= Slh.strategy_defaults[:error_support_contact]
+    self.template_dir ||= Slh.strategy_defaults[:template_dir]
+
     # The following are checks to ensure required "set" commands are done to set required values
     if self.sp_entity_id.nil?
       raise "All strategies must specify an entity ID"
