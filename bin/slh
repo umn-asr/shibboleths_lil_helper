@@ -2,7 +2,8 @@
 # This load path thingy
 # for testing executables in gems
 # http://blakesmith.github.com/2010/06/26/gem-executables-loading-the-relative-path.html
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
+this_files_path = File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(this_files_path), *%w[.. lib])
 require 'rubygems'
 require 'shibboleths_lil_helper'
 Slh::Cli.execute
