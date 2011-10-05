@@ -74,6 +74,11 @@ class Slh::Models::Site < Slh::Models::Base
     end
   end
 
+  
+  # See these for specs
+  # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPRequestMapHowTo
+  # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPRequestMapPath
+  # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPRequestMapPathRegex
   def to_auth_request_map_directive(*args)
     host_begin = ''
     host_end = '</Host>'

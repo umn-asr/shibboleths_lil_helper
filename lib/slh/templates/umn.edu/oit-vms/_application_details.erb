@@ -2,7 +2,7 @@
     <SSO entityID="<%= @strategy.idp_entity_id %>">
       SAML2 SAML1
     </SSO>
-    <%# <Logout>SAML2 Local</Logout>%>
+    <Logout>SAML2 Local</Logout>
 
     <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
     <Handler type="Status" Location="/Status" />

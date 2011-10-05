@@ -16,6 +16,13 @@ Slh.for_strategy :umn_apache_shib_test_server do
     end
     for_site 'shib-rails2-test.asr.umn.edu' do
       protect 'secure'
+      # Could also say 
+      # protect 'lazy_auth', :flavor => :authentication_optional
+      # OR
+      #
+      # Could also say 
+      # protect 'users', :flavor => :authentication_required_for_specific_users
+      # set :specific_users, %w(goggins@umn.edu ding0057@umn.edu)
     end
   end
 end
