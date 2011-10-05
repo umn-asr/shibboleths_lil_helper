@@ -62,10 +62,11 @@ COMMANDS (in usage order)
     has been done.
 
   metadata
-    Assembles your Service Provider metadata for each host by hitting URLs like
-      https://some.site.in.your.config.rb/Shibboleth.sso/Metadata
-    and creating your assembed_sp_metadata.xml file in the "generated" folder.
-    Before shibboleth will work, you'll need to provide this to your Identity Provider.
+    Assembles your Service Provider metadata for each host
+    and creates a sp_metadata_for_host_to_give_to_idp.xml to give your Identity Provider.
+    It goes out and hits urls like https://somehost.com/Shibboleth.sso/Metadata to see if you
+    have already deployed generated content out in the wild (which your idp will require to make stuff work)
+
         EOS
         exit
       when 'initialize'
@@ -73,7 +74,6 @@ COMMANDS (in usage order)
       when 'generate'
         klass = Slh::Cli::Generate
       when 'metadata'
-        # klass = Slh::Cli::AssembleMetadata
         klass = [Slh::Cli::CompareMetadata,Slh::Cli::FetchMetadata,Slh::Cli::GenerateMetadata, Slh::Cli::TestMetadata]
       else 
         raise "Invalid slh action"

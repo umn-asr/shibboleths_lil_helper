@@ -76,12 +76,6 @@ class Slh::Models::Strategy  < Slh::Models::Base
     end
   end
 
-  def assemble_sp_metadata
-    self.hosts.each do |host|
-      File.open(self.config_file_path('assembled_sp_metadata.xml',host), 'w') {|f| f.write(host.assembled_sp_metadata) }
-    end
-  end
-
   def config_dir
     File.join(Slh.config_dir,'generated',self.name.to_s)
   end
