@@ -14,7 +14,6 @@ class Slh::Cli::Initialize < Slh::Cli::CommandBase
     if self.options[:force_create]
       if File.directory?(Slh.config_dir)
         FileUtils.rm_rf(Slh.config_dir)
-        FileUtils.rm_rf(Slh::Models::CapistranoHelper.config_dir)
       end
     end
     begin
@@ -26,7 +25,6 @@ class Slh::Cli::Initialize < Slh::Cli::CommandBase
 
     config_string = ERB.new(File.read(File.join(File.dirname(__FILE__),'..','templates','config.rb.erb'))).result(binding)
     File.open(Slh.config_file,'w') {|f| f.write(config_string)}
-    Slh::Models::CapistranoHelper.generate_deploy_dot_rb
     Slh::Cli.instance.output "You should go edit #{Slh.config_file} to reflect your organizations Shib setup", :highlight => :red
   end
 end

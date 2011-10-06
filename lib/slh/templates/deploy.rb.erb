@@ -1,8 +1,7 @@
 # About
 # =====
 # This file is an EXAMPLE you might find handy if you are using capistrano for deployment
-# See each section that has a TODO section to add something in here
-# TODO:JOE TODO:CHRIS DOCUMENT HOW THIS SHOULD BE USED
+# Make sure to replace "TODO" with stuff that reflects your environment
 #
 set :application, "shibboleth_deployer"
 set :repository,  "TODO: add your repo url here"
@@ -33,6 +32,7 @@ namespace :deploy do
  desc "Restarts shibd"
  task :restart_shibd, :roles => :web do
    sudo "/etc/init.d/shibd restart"
+   sudo "/etc/init.d/httpd restart"
  end
 end
 

@@ -62,7 +62,6 @@ For example, given the following shibboleths_lil_helper/config.rb:
       set :sp_entity_id, 'https://asr.umn.edu/shibboleth/default'
       set :idp_metadata_url, 'https://idp-test.shib.umn.edu/metadata.xml'
       set :error_support_contact, 'goggins@umn.edu'
-      set :template_dir, 'umn.edu/oit-vms'
       for_host 'asr-web-dev4.oit.umn.edu' do
         set :shib_prefix, "/swadm/etc/shibboleth"
         for_site 'shib-php-test.asr.umn.edu' do
@@ -84,15 +83,13 @@ associated with these specifications for each strategy, host, and site.
     shibboleths_lil_helper/
       generated/
         <strategy>/               (apache_shib_test_server)
-          <institution>/          (umn.edu)
-            <templating_flavor/   (oit-vms)
-              <hostname>/         (asr-web-dev4.oit.umn.edu)
-                idp_metadata.xml
-                shib_apache.conf
-                shibboleth2.xml
-                sp_metadata_for_host_to_give_to_idp.xml 
-                <site>/           (shib-php-test.asr.umn.edu)
-                  fetched_metadata.xml
+          <hostname>/             (asr-web-dev4.oit.umn.edu)
+            idp_metadata.xml
+            shib_apache.conf
+            shibboleth2.xml
+            sp_metadata_for_host_to_give_to_idp.xml 
+            <site>/               (shib-php-test.asr.umn.edu)
+              fetched_metadata.xml
 
 * These generated files should be checked into a source control repository.
 

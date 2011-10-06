@@ -8,6 +8,7 @@ module Slh
     autoload :FetchMetadata
     autoload :CompareMetadata
     autoload :GenerateMetadata
+    autoload :GenerateCapistranoDeploy
     autoload :TestMetadata
 
     attr_reader :args,:action
@@ -44,7 +45,7 @@ module Slh
    jgs   _    |_||_|    _                   Append "--help" like "slh initialize --help"
         (@____) || (____@)                  to learn about the options each command can
          \______||______/                   take.
-COMMANDS (in usage order)
+MAIN COMMANDS (in usage order)
   initialize
     Creates a shibboleths_lil_helper/config.rb file that is the place where
     you specify all authentication settings for all hosts, sites, and paths
@@ -56,17 +57,21 @@ COMMANDS (in usage order)
     your config.rb file.  These files can then be copied to your target hosts.
     Also generates a Capistrano "config/deploy.rb"
 
-  <DEPLOY> (could be cap deploy TODO:JOE REVISIT THIS ONCE STABLE)
-    There is no command for this, you need to place your config out on the target hosts
-    in the right place and restart shibd and httpd.  The metadata command will only work if this
-    has been done.
-
   metadata
     Assembles your Service Provider metadata for each host
     and creates a sp_metadata_for_host_to_give_to_idp.xml to give your Identity Provider.
     It goes out and hits urls like https://somehost.com/Shibboleth.sso/Metadata to see if you
     have already deployed generated content out in the wild (which your idp will require to make stuff work)
 
+OPTIONAL COMMANDS
+  generate_capistrano
+    If you intend you use capistrano for deployment of this generated config files, this will
+    create a config/deploy.rb for you as a starting point.  You'll still need to install Capistrano
+    with
+      gem install capistrano
+    and
+      capify .
+    in your current directory
         EOS
         exit
       when 'initialize'
@@ -75,6 +80,8 @@ COMMANDS (in usage order)
         klass = Slh::Cli::Generate
       when 'metadata'
         klass = [Slh::Cli::CompareMetadata,Slh::Cli::FetchMetadata,Slh::Cli::GenerateMetadata, Slh::Cli::TestMetadata]
+      when "generate_capistrano"
+        klass = Slh::Cli::GenerateCapistranoDeploy
       else 
         raise "Invalid slh action"
       end
