@@ -1,13 +1,15 @@
-<!-- 
+<!--
 DO NOT MODIFY!
 Auto-generated on <%= Time.now.to_s %> by Shibboleth's Lil Helper:
 https://github.com/joegoggins/shibboleths_lil_helper
 Changes should not be made directly to this file. Instead, modify your slh config.rb file, re-generate, and re-deploy
+This template was originally created by taking the default /etc/shibboleth/shibboleth2.xml and modifying/templating it
+to accommodate multiple vhosts (for both IIS and Apache) for the shibboleth-2.4.3-2.1.el5 RPM on RHEL 5
 -->
 <SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config"
     xmlns:conf="urn:mace:shibboleth:2.0:native:sp:config"
     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
-    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"    
+    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
     <% if @host.host_type == :iis %>
