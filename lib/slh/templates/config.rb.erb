@@ -3,8 +3,7 @@
 # if you want
 Slh.set_strategy_defaults :sp_entity_id => 'https://asr.umn.edu/shibboleth/default',
   :idp_metadata_url => 'https://idp-test.shib.umn.edu/metadata.xml',
-  :error_support_contact => 'goggins@umn.edu',
-  :template_dir => '<%= @template_dir %>'
+  :error_support_contact => 'goggins@umn.edu'
 
 Slh.for_strategy :umn_apache_shib_test_server do
   # if you want to override a strategy default, you could do something like

@@ -48,7 +48,7 @@ module Slh::ClassMethods
     end
   end
 
-  @@strategy_defaults = {:template_dir => 'default_institution/default_templates'}
+  @@strategy_defaults = {}
   def set_strategy_defaults(*args)
     @@strategy_defaults = args.extract_options!
   end

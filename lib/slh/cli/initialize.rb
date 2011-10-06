@@ -1,16 +1,11 @@
 class Slh::Cli::Initialize < Slh::Cli::CommandBase
   def default_options
-   { :force_create => false,
-     :template_dir => 'default_institution/default_templates'
-   }
+   { :force_create => false }
   end
   def option_parser
     return OptionParser.new do |opts|
       opts.on('-f','--force', "Destroy existing dir if exists") do
         @options[:force_create] = true
-      end
-      opts.on('-t','--template_dir=TEMPLATE_DIR', "Specify a config template dir for your institution") do |template_dir|
-        @options[:template_dir] = template_dir
       end
     end
   end
@@ -29,8 +24,7 @@ class Slh::Cli::Initialize < Slh::Cli::CommandBase
       exit
     end
 
-    @template_dir = self.options[:template_dir] # targeted in config.rb.erb
-    config_string = ERB.new(File.read(File.join(File.dirname(__FILE__),'..','templates',self.options[:template_dir],'config.rb.erb'))).result(binding)
+    config_string = ERB.new(File.read(File.join(File.dirname(__FILE__),'..','templates','config.rb.erb'))).result(binding)
     File.open(Slh.config_file,'w') {|f| f.write(config_string)}
     Slh::Models::CapistranoHelper.generate_deploy_dot_rb
     Slh::Cli.instance.output "You should go edit #{Slh.config_file} to reflect your organizations Shib setup", :highlight => :red

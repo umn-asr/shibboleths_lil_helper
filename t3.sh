@@ -1,4 +1,4 @@
-./bin/slh initialize -f --template_dir=umn.edu/oit-vms
+./bin/slh initialize -f
 ./bin/slh generate
 ./bin/slh metadata
 

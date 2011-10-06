@@ -1,6 +1,6 @@
 class Slh::Models::Strategy  < Slh::Models::Base
   attr_reader :name, :hosts
-  attr_accessor :sp_entity_id, :idp_metadata_url, :error_support_contact, :template_dir
+  attr_accessor :sp_entity_id, :idp_metadata_url, :error_support_contact
 
   VALID_CONFIG_FILES = %w(shibboleth2.xml idp_metadata.xml assembled_sp_metadata.xml shib_apache.conf)
   def initialize(strategy_name,*args, &block)
@@ -12,7 +12,6 @@ class Slh::Models::Strategy  < Slh::Models::Base
     self.sp_entity_id ||= Slh.strategy_defaults[:sp_entity_id]
     self.idp_metadata_url ||= Slh.strategy_defaults[:idp_metadata_url]
     self.error_support_contact ||= Slh.strategy_defaults[:error_support_contact]
-    self.template_dir ||= Slh.strategy_defaults[:template_dir]
 
     # The following are checks to ensure required "set" commands are done to set required values
     if self.sp_entity_id.nil?
@@ -81,11 +80,11 @@ class Slh::Models::Strategy  < Slh::Models::Base
   end
 
   def config_dir_for_host(host)
-    File.join(self.config_dir,self.template_dir,host.name.to_s)
+    File.join(self.config_dir,host.name.to_s)
   end
 
   def config_file_path(file_base_name,host,site=nil)
-    File.join(self.config_dir, self.template_dir,self.config_file_name(file_base_name,host,site))
+    File.join(self.config_dir, self.config_file_name(file_base_name,host,site))
   end
 
   def config_file_name(file_base_name,host,site=nil)
@@ -112,7 +111,7 @@ class Slh::Models::Strategy  < Slh::Models::Base
   end
 
   def config_template_file_path(file_base_name)
-    template_file_path = File.join(File.dirname(__FILE__), '..', 'templates',self.template_dir,"#{file_base_name}.erb")
+    template_file_path = File.join(File.dirname(__FILE__), '..', 'templates',"#{file_base_name}.erb")
     if File.exists?(template_file_path)
       template_file_path 
     else
