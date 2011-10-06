@@ -87,7 +87,6 @@ associated with these specifications for each strategy, host, and site.
           <institution>/          (umn.edu)
             <templating_flavor/   (oit-vms)
               <hostname>/         (asr-web-dev4.oit.umn.edu)
-                attribute-map.xml
                 idp_metadata.xml
                 shib_apache.conf
                 shibboleth2.xml
@@ -123,8 +122,7 @@ Usage
   * [initialize] initialize a shibboleths_lil_helper/config.rb
   * [in your editor] tweak shibboleths_lil_helper/config.rb to reflect the servers you
     will be using shibboleth with
-  * [generate] generate shibboleth2.xml, attribute-map.xml, and other Native Sib
-    config files
+  * [generate] generate shibboleth2.xml and other Native Shib config files
   * [a deployment tool or manually] deploy these files out to each host using Capistrano (DEV_WISH_LIST,TODO: Though the initialize command does drop a config/deploy.rb there is no documenation of its usage or examples of how it should be used)
   * [metadata] generate metadata
 
@@ -152,8 +150,6 @@ files to be, e.g:
     ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/umn.edu/oit-vms/asr-web-dev4.oit.umn.edu/shibboleth2.xml /etc/shibboleth/shibboleth2.xml
 
     ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/umn.edu/oit-vms/asr-web-dev4.oit.umn.edu/idp_metadata.xml /etc/shibboleth/idp_metadata.xml
-
-    ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/umn.edu/oit-vms/asr-web-dev4.oit.umn.edu/attribute-map.xml /etc/shibboleth/attribute-map.xml
 
     ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/umn.edu/oit-vms/asr-web-dev4.oit.umn.edu/shib_apache.conf /etc/httpd/conf.d/shib_apache.conf
 
