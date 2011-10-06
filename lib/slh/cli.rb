@@ -9,6 +9,7 @@ module Slh
     autoload :CompareMetadata
     autoload :GenerateMetadata
     autoload :GenerateCapistranoDeploy
+    autoload :CopyTemplatesToOverride
     autoload :TestMetadata
 
     attr_reader :args,:action
@@ -65,13 +66,27 @@ MAIN COMMANDS (in usage order)
 
 OPTIONAL COMMANDS
   generate_capistrano
-    If you intend you use capistrano for deployment of this generated config files, this will
-    create a config/deploy.rb for you as a starting point.  You'll still need to install Capistrano
-    with
-      gem install capistrano
-    and
-      capify .
-    in your current directory
+    Creates a config/deploy.rb for you as a starting point to use with Capistrano.
+    To install and prep for use with capistrano
+      Install:    gem install capistrano
+      Capify dir: capify .
+      Edit config/deploy.rb
+      cap deploy HOST=somehost.com
+
+  copy_templates_to_override
+    This copies all of the Native Shib config templates into your local directory where your can
+    customize them to your heart's content.  Meant to also be used with the set_custom :var, "somevalue" to
+    put special stuff in your shibboleth configuration files not covered by the defaults of the tool.
+    After running this command, you could add the following to one of the shibboleths_lil_helper/templates files:
+      <% if @strategy.respond_to? :dogz %>
+        <%= @strategy.dogz %>
+      <% end %>
+    then in the shibboleths_lil_helper/config.rb
+      set_custom :dogz, "YEA DOGZ"
+    it would result in "YEA DOGZ" appearing in rendered template
+
+    This feature is like a gun in church: You probably don't need it, but if you do, its good to have.
+    (read: don't use this unless you really need it.)
         EOS
         exit
       when 'initialize'
@@ -82,6 +97,8 @@ OPTIONAL COMMANDS
         klass = [Slh::Cli::CompareMetadata,Slh::Cli::FetchMetadata,Slh::Cli::GenerateMetadata, Slh::Cli::TestMetadata]
       when "generate_capistrano"
         klass = Slh::Cli::GenerateCapistranoDeploy
+      when "copy_templates_to_override"
+        klass = Slh::Cli::CopyTemplatesToOverride
       else 
         raise "Invalid slh action"
       end

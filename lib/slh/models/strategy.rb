@@ -111,7 +111,13 @@ class Slh::Models::Strategy  < Slh::Models::Base
   end
 
   def config_template_file_path(file_base_name)
-    template_file_path = File.join(File.dirname(__FILE__), '..', 'templates',"#{file_base_name}.erb")
+    overridden = File.join(Slh.config_dir,'templates',"#{file_base_name}.erb")
+    if File.exists?(overridden)
+      template_file_path = overridden
+    else
+      template_file_path = File.join(File.dirname(__FILE__), '..', 'templates',"#{file_base_name}.erb")
+    end
+
     if File.exists?(template_file_path)
       template_file_path 
     else
