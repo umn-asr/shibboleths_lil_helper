@@ -2,7 +2,7 @@ class Slh::Models::Strategy  < Slh::Models::Base
   attr_reader :name, :hosts
   attr_accessor :sp_entity_id, :idp_metadata_url, :error_support_contact, :template_dir
 
-  VALID_CONFIG_FILES = %w(shibboleth2.xml attribute-map.xml idp_metadata.xml assembled_sp_metadata.xml shib_apache.conf)
+  VALID_CONFIG_FILES = %w(shibboleth2.xml idp_metadata.xml assembled_sp_metadata.xml shib_apache.conf)
   def initialize(strategy_name,*args, &block)
     @name = strategy_name
     @hosts = []

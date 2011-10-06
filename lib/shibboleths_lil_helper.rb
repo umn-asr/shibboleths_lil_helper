@@ -1,4 +1,5 @@
 require 'active_support/all'
+require 'securerandom' # part of the Ruby standard library
 require 'erb'
 require 'net/http'
 require 'net/https'
