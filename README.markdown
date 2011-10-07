@@ -10,16 +10,35 @@ Shibboleth's Lil Helper is a tool that automates the generation of Apache/IIS Sh
 
 * __Providing conceptually simple linear process__ that distills the main steps associated with Shibboleth integration.
 
-**WARNING**: This is in active development and is unstable. 
-Unless you've talked to Joe or Chris regarding this tool, beware.
+IMPORTANT NOTE/DISCLAIMER
+-------------------------
+All you see here on Github is the readme, no code yet.
+For that to happen two things need to occur:
+
+* We need to battle-test the (working) code across our entire
+  infrastructure and fix bugs before releasing.
+
+* Someone from the IDM team within OIT needs approve that our approach
+  is solid and endorse its usage for the U of M.
+
+**The current status as of October 6th, 2011**
+
+* We have it working in PHP, .NET, and Rails on 2 servers and 4 vhosts for Apache and IIS.
+
+* Assuming no snags (cause that never happens in software, :)), we
+anticipate 90% of our infrastructure migrated by Nov 1st.  At which
+point we hope to release this code into the wild.  And perhaps do a demo
+session at a Code-People meeting.
 
 Why another tool?
 -----------------
-We needed something that could help manage shibboleth configuration and deployment across our various web servers:
+We needed something that could help manage shibboleth SP
+configuration consistently with minimal manual work for:
 
-* iis6, iis7, and Apache 2.2
+* Many web servers
+  * each running iis6, iis7, or Apache 2.2
   * each hosting many vhosts (aka sites)
-  * each running PHP, Rails 2 + 3, classic ASP, and .NET
+  * each running PHP, Rails 2 + 3, classic ASP, or .NET
   * each running the Apache/IIS Native Service Provider
 
 Installation
@@ -41,6 +60,7 @@ Installation
 Assumptions
 ===========
 * Shibboleth Native Service Provider Apache/IIS is already installed on your target web servers.
+* The X509Certificate (sp-cert.pem, sp-key.pem) keys are in their default locations along-side shibboleth2.xml.  This tool does not help you generate these keys, that's up to you.  The default installation of Native Shib generates keys for you though.
 * The Shibboleth apache module is loaded globally for all vHosts
 * /bin/slh is in your $PATH (automatically done with Rubygem install
   method, manual is git cloned
@@ -63,7 +83,6 @@ For example, given the following shibboleths_lil_helper/config.rb:
       set :idp_metadata_url, 'https://idp-test.shib.umn.edu/metadata.xml'
       set :error_support_contact, 'goggins@umn.edu'
       for_host 'asr-web-dev4.oit.umn.edu' do
-        set :shib_prefix, "/swadm/etc/shibboleth"
         for_site 'shib-php-test.asr.umn.edu' do
           protect 'secure'
         end
@@ -73,7 +92,7 @@ For example, given the following shibboleths_lil_helper/config.rb:
       end
     end
 
-an invocations of
+an invocation of
 
     `slh generate`
 
@@ -91,6 +110,10 @@ associated with these specifications for each strategy, host, and site.
             <site>/               (shib-php-test.asr.umn.edu)
               fetched_metadata.xml
 
+
+* The generated shibboleth2.xml will have RequestMap specs that restrict
+  access to the "/secure" path for the specified vhosts.
+
 * These generated files should be checked into a source control repository.
 
 The core assumptions of the specifications DSL are
@@ -98,7 +121,6 @@ The core assumptions of the specifications DSL are
 * a strategy ("for_strategy")
   * has one IDP entity id (:idp_metadata_url)
   * has one service provider entity id (:sp_entity_id)
-  * has one template_dir used to translate specs into config XML (:template_dir)
   * has many hosts
 * a host (for_host)
   * has many sites 
@@ -119,16 +141,19 @@ Usage
   * [initialize] initialize a shibboleths_lil_helper/config.rb
   * [in your editor] tweak shibboleths_lil_helper/config.rb to reflect the servers you
     will be using shibboleth with
-  * [generate] generate shibboleth2.xml and other Native Shib config files
-  * [a deployment tool or manually] deploy these files out to each host using Capistrano (DEV_WISH_LIST,TODO: Though the initialize command does drop a config/deploy.rb there is no documenation of its usage or examples of how it should be used)
-  * [metadata] generate metadata
+  * [generate] generate shibboleth2.xml, shib_apach.conf
+    config files
+  * [a deployment tool or manually] deploy these files out to each host (ideally using a deployment automation tool such as Capistrano)
+  * [metadata] generate metadata: creates and combines SP Metadata from all
+    of the Shib servers into a file(s) you can share with your IDP.
+  * [email] send the generated meta data to your IDP
 
 Real World Example
 ==================
 The following describes how we integrate this tool's generated output
 into a deployment automation tool called Capistrano.
 
-We have a private repo called shibboleth_deployer that includes the shibboleths_lil_helper generated config files and uses Capistrano to push these files out target servers and restarts shibd.  It's usage looks like:
+We have a private repo called shibboleth_deployer that includes the shibboleths_lil_helper generated config files and uses Capistrano to push these files out target servers and restarts shibd and httpd.  It's usage looks like:
 
     cap deploy HOST=asr-web-dev4.oit.umn.edu
 
@@ -144,34 +169,24 @@ Setup symlinks to the appropriate config files within
 shibboleth_deployer from the places the Native Shibboleth SP expects
 files to be, e.g:
 
-ln -s /swadm/etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/shibboleth2.xml shibboleth2.xml
+    ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/shibboleth2.xml shibboleth2.xml
 
-ln -s /swadm/etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/idp_metadata.xml idp_metadata.xml
+    ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/idp_metadata.xml idp_metadata.xml
 
-ln -s /swadm/etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/shib_apache.conf shib_apache.conf
+    ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/shib_apache.conf shib_apache.conf
 
 How to Help
 ======================
 
 Email Us
 ----------------------
-* Let us know you are using the tool.  Tell us what things you had
-  difficulties with.
+* Let us know you are interested in using the tool.
 
-* Voice you ideas about features you'd like to see.
-
-Contribute to the code
-----------------------
-* Grep for DEV_WISH_LIST, DEPRECATE, or TODO these are areas in the code or docs that need
-  work.
-
-* We'll shortly post additional information about how developers can
-  contribute. DEV_WISH_LIST: TODO:JOE.
+* Voice you ideas about questions you have and features you'd like to see.
 
 Authors
 =======
 * Joe Goggins, Academic Support Resources, goggins@umn.edu
 * Chris Dinger, Academic Support Resources, ding0057@umn.edu
-
 
 Copyright (c) 2011 University of Minnesota
