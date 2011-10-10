@@ -1,4 +1,5 @@
 class Slh::Models::Site < Slh::Models::Base
+  class CouldNotGetMetadata < Exception; end
   attr_reader :name, :paths
   attr_accessor :site_id # site_id is for hosts who's host_type == :iis
   def initialize(site_name,*args,&block)
@@ -22,20 +23,20 @@ class Slh::Models::Site < Slh::Models::Base
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      http.open_timeout = 60
-      http.read_timeout = 60
+      http.open_timeout = 5
+      http.read_timeout = 5
       begin
         the_metadata_for_site = http.get(url.path)
       rescue
-        raise "Could not https GET #{self.metadata_url}, have you deployed your generated shib config files to this machine and restarted shibd?"
+        raise CouldNotGetMetadata.new("Could not https GET #{self.metadata_url}, have you deployed your generated shib config files to this machine and restarted shibd?")
       end
       case the_metadata_for_site
       when Net::HTTPSuccess
         @metadata = the_metadata_for_site.body
       else
-        raise "Got a non-200 http status code from #{self.metadata_url}"
+        raise CouldNotGetMetadata.new("Got a non-200 http status code from #{self.metadata_url}")
       end
-    end 
+    end
     @metadata
   end
 

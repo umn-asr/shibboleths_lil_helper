@@ -10,7 +10,19 @@ class Slh::Cli::FetchMetadata < Slh::Cli::CommandBase
           file_path = 'fetched_metadata.xml'
           Slh::Cli.instance.output "Fetching metadata for #{site.name}"
           FileUtils.mkdir_p(site_dir)
-          File.open(File.join(site_dir,file_path),'w') {|f| f.write(site.metadata) }
+          File.open(File.join(site_dir,file_path),'w') do |f| 
+            begin
+              f.write(site.metadata)
+            rescue Slh::Models::Site::CouldNotGetMetadata => e
+              Slh::Cli.instance.output "NOT FOUND metadata not found at #{site.metadata_url}", :highlight => :red
+              Slh::Cli.instance.output "  Error message: #{e.message}"
+              next # skip this site
+            rescue Timeout::Error => e
+              Slh::Cli.instance.output "  TIMEOUT at #{site.metadata_url}", :highlight => :red
+              Slh::Cli.instance.output "    Remote metadata not available at #{site.metadata_url}, exception message: #{e.message}"
+              next # skip this site
+            end
+          end
         end
       end
     end

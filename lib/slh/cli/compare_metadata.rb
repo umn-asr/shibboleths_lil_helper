@@ -12,25 +12,36 @@ class Slh::Cli::CompareMetadata < Slh::Cli::CommandBase
         shib2_path = File.join(strategy.config_dir_for_host(host), 'shibboleth2.xml')
         raise "Can't find the generated shibboleth2.xml for #{host.name}" unless File.exists?(shib2_path)
 
-        File.open(shib2_path, 'r') do |shib2|
-          local = Nokogiri::XML(shib2)
-          remote = Nokogiri::XML(host.sites.first.metadata)
-          local.remove_namespaces!
-          remote.remove_namespaces!
-          local_version_node = local.at('ApplicationDefaults/CredentialResolver/Key/Name')
-          remote_version_node = remote.at('KeyInfo/KeyName') # remote.at('md:KeyDescriptor/ds:Name')
-          raise "No version nodes found in #{shib2.path}!" if local_version_node.blank?
-          raise "No version nodes found in remote metadata for #{host.name}" if remote_version_node.blank?
-          local_version = local_version_node.inner_text.sub(Slh::Models::Version::PREFIX, '')
-          remote_version = remote_version_node.inner_text.sub(Slh::Models::Version::PREFIX, '')
-          if local_version == remote_version
-            Slh::Cli.instance.output "  OK        #{host.name}", {:highlight => :green}
-          else
-            Slh::Cli.instance.output "  MISMATCH  #{host.name}", {:highlight => :red}
-            mismatch_found = true
-          end
-        end
+        local = Nokogiri::XML(File.read(shib2_path)) #Nokogiri::XML(shib2)
+        remote_first_site = host.sites.first
 
+        begin
+          remote = Nokogiri::XML(remote_first_site.metadata)
+        rescue Slh::Models::Site::CouldNotGetMetadata => e
+          Slh::Cli.instance.output "  NOT FOUND  #{host.name}", :highlight => :red
+          Slh::Cli.instance.output "    Remote metadata not available at #{remote_first_site.metadata_url}, exception message: #{e.message}"
+          mismatch_found = true
+          next # skip this host
+        rescue Timeout::Error => e
+          Slh::Cli.instance.output "  TIMEOUT #{host.name}", :highlight => :red
+          Slh::Cli.instance.output "    Remote metadata not available at #{remote_first_site.metadata_url}, exception message: #{e.message}"
+          mismatch_found = true
+          next # skip this host
+        end
+        local.remove_namespaces!
+        remote.remove_namespaces!
+        local_version_node = local.at('ApplicationDefaults/CredentialResolver/Key/Name')
+        remote_version_node = remote.at('KeyInfo/KeyName') # remote.at('md:KeyDescriptor/ds:Name')
+        raise "No version nodes found in #{shib2.path}!" if local_version_node.blank?
+        raise "No version nodes found in remote metadata for #{host.name}" if remote_version_node.blank?
+        local_version = local_version_node.inner_text.sub(Slh::Models::Version::PREFIX, '')
+        remote_version = remote_version_node.inner_text.sub(Slh::Models::Version::PREFIX, '')
+        if local_version == remote_version
+          Slh::Cli.instance.output "  OK        #{host.name}", :highlight => :green
+        else
+          Slh::Cli.instance.output "  MISMATCH  #{host.name}", :highlight => :red
+          mismatch_found = true
+        end
       end
     end
 
