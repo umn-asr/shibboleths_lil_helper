@@ -1,6 +1,6 @@
 class Slh::Cli::DescribeConfig < Slh::Cli::CommandBase
   def default_options
-   { :mode => :all}
+   { :mode => :all, :filter => :none}
   end
   def option_parser
     @valid_modes = %w(all hosts)
@@ -11,6 +11,10 @@ class Slh::Cli::DescribeConfig < Slh::Cli::CommandBase
         end
         @options[:mode] = value.to_sym
       end
+      opts.on('-f','--filter FILTER', "Output will be filtered by matching hosts if specified") do |value|
+        @options[:filter] = value
+      end
+
     end
   end
  
@@ -21,6 +25,7 @@ class Slh::Cli::DescribeConfig < Slh::Cli::CommandBase
       Slh.strategies.each do |strategy|
         @output << strategy.name
         strategy.hosts.each do |host|
+          next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
           @output << "  #{host.name} #{host.host_type}"
           host.sites.each do |site|
             @output << "    #{site.name}"
@@ -35,6 +40,7 @@ class Slh::Cli::DescribeConfig < Slh::Cli::CommandBase
       host_strategy_mappings = {}
       Slh.strategies.each do |strategy|
         strategy.hosts.each do |host|
+          next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
           host_strategy_mappings[host.name] ||= []
           host_strategy_mappings[host.name] << strategy
         end
@@ -60,8 +66,8 @@ class Slh::Cli::DescribeConfig < Slh::Cli::CommandBase
       raise "invalid mode #{@options[:mode]}"
     end
     @output.each do |line|
-      if line.kind_of? String
-        Slh::Cli.instance.output line
+      if line.kind_of?(String) || line.kind_of?(Symbol)
+        Slh::Cli.instance.output line.to_s
       elsif line.kind_of? Array
         Slh::Cli.instance.output line[0], line[1]
       end
