@@ -11,6 +11,7 @@ module Slh
     autoload :GenerateCapistranoDeploy
     autoload :CopyTemplatesToOverride
     autoload :TestMetadata
+    autoload :DescribeConfig
 
     attr_reader :args,:action
 
@@ -56,7 +57,6 @@ MAIN COMMANDS (in usage order)
     Generates a bunch of Native shibboleth configuration files and puts them in
     a directory structure under "shibboleths_lil_helper/generated" that mirrors
     your config.rb file.  These files can then be copied to your target hosts.
-    Also generates a Capistrano "config/deploy.rb"
 
   metadata
     Assembles your Service Provider metadata for each host
@@ -87,6 +87,8 @@ OPTIONAL COMMANDS
 
     This feature is like a gun in church: You probably don't need it, but if you do, its good to have.
     (read: don't use this unless you really need it.)
+  describe
+    Outputs info from shibboleths_lil_helper/config.rb
         EOS
         exit
       when 'initialize'
@@ -99,6 +101,8 @@ OPTIONAL COMMANDS
         klass = Slh::Cli::GenerateCapistranoDeploy
       when "copy_templates_to_override"
         klass = Slh::Cli::CopyTemplatesToOverride
+      when "describe"
+        klass = Slh::Cli::DescribeConfig
       else 
         raise "Invalid slh action"
       end
