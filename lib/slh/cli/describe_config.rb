@@ -31,6 +31,7 @@ class Slh::Cli::DescribeConfig < Slh::Cli::CommandBase
         end
       end
     when :hosts
+      warn_on_multiple_strategies = false
       host_strategy_mappings = {}
       Slh.strategies.each do |strategy|
         strategy.hosts.each do |host|
@@ -39,7 +40,12 @@ class Slh::Cli::DescribeConfig < Slh::Cli::CommandBase
         end
       end
       host_strategy_mappings.each_pair do |host,strat_array|
-        @output << host
+        if strat_array.length > 1
+          warn_on_multiple_strategies = true
+          @output << [host, {:highlight => :red}]
+        else
+          @output << host
+        end
         strat_array.each_with_index do |strat,index|
           @output << "    ---#{index+1}---"
           @output << "    strategy name: #{strat.name}"
@@ -47,9 +53,18 @@ class Slh::Cli::DescribeConfig < Slh::Cli::CommandBase
           @output << "    idp_metadata_url #{strat.idp_metadata_url}"
         end
       end
+      if warn_on_multiple_strategies
+        @output << ["Make sure to check that the highlighted hosts with multiple strategies are configured correctly on your target hosts, only one can function correctly for a given host once deployed", {:highlight => :red}]
+      end
     else
       raise "invalid mode #{@options[:mode]}"
     end
-    Slh::Cli.instance.output @output.join("\n")
+    @output.each do |line|
+      if line.kind_of? String
+        Slh::Cli.instance.output line
+      elsif line.kind_of? Array
+        Slh::Cli.instance.output line[0], line[1]
+      end
+    end
   end
 end
