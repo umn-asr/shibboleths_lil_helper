@@ -77,7 +77,6 @@ class Slh::Models::Strategy  < Slh::Models::Base
   end
 
   def config_file_name(file_base_name,host,site=nil)
-    validate_config_file_name(file_base_name)
     if site.nil?
       File.join(host.name, file_base_name)
     else
@@ -86,7 +85,6 @@ class Slh::Models::Strategy  < Slh::Models::Base
   end
 
   def generate_config_file_content(file_base_name,host,site=nil)
-    validate_config_file_name(file_base_name)
     # to be referenced in erb templates below
     @strategy = self
     @host = host
@@ -117,12 +115,4 @@ class Slh::Models::Strategy  < Slh::Models::Base
   def config_template_content(file_base_name)
     File.read(self.config_template_file_path(file_base_name))
   end
-
-  protected
-    # TODO: DEPRECATE: If the file exists in the template_dir its legit
-    def validate_config_file_name(file_base_name)
-      unless VALID_CONFIG_FILES.include?(file_base_name) || file_base_name.match(/^_/) # allow 'partial' configs
-        raise "#{file_base_name} is not a valid shib SP config file name, must be one of the following #{VALID_CONFIG_FILES.join(',')}"
-      end
-    end
 end
