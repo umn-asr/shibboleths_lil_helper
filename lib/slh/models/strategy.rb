@@ -64,17 +64,6 @@ class Slh::Models::Strategy  < Slh::Models::Base
     @hosts << Slh::Models::Host.new(host_name,*args, &block)
   end
 
-  def generate_config
-    FileUtils.mkdir_p(self.config_dir)
-    # Generate Shib specific crap
-    self.hosts.each do |h|
-      (VALID_CONFIG_FILES - ['assembled_sp_metadata.xml']).each do |cf|
-        FileUtils.mkdir_p(self.config_dir_for_host(h))
-        File.open(self.config_file_path(cf,h), 'w') {|f| f.write(self.generate_config_file_content(cf,h)) }
-      end
-    end
-  end
-
   def config_dir
     File.join(Slh.config_dir,'generated',self.name.to_s)
   end

@@ -1,10 +1,8 @@
-class Slh::Cli::GenerateMetadata < Slh::Cli::CommandBase
-  def default_options
-   { }
-  end
+class Slh::Cli::GenerateMetadata < Slh::Cli::HostFilterableBase
   def perform_action
     Slh.strategies.each do |strategy|
       strategy.hosts.each do |host|
+        next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
         host_dir = strategy.config_dir_for_host(host)
         file_path = 'sp_metadata_for_host_to_give_to_idp.xml'
         @strategy = strategy

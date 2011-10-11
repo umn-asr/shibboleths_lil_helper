@@ -1,10 +1,8 @@
-class Slh::Cli::FetchMetadata < Slh::Cli::CommandBase
-  def default_options
-   { }
-  end
+class Slh::Cli::FetchMetadata < Slh::Cli::HostFilterableBase
   def perform_action
     Slh.strategies.each do |strategy|
       strategy.hosts.each do |host|
+        next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
         host.sites.each do |site|
           site_dir = File.join(strategy.config_dir_for_host(host),site.name.to_s)
           file_path = 'fetched_metadata.xml'

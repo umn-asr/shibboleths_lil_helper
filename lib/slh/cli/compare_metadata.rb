@@ -1,13 +1,11 @@
-class Slh::Cli::CompareMetadata < Slh::Cli::CommandBase
-  def default_options
-   { }
-  end
+class Slh::Cli::CompareMetadata < Slh::Cli::HostFilterableBase
   def perform_action
     # DEV_WISH_LIST: Clean up this mess... this stuff belongs somewhere else
     mismatch_found = false
 
     Slh.strategies.each do |strategy|
       strategy.hosts.each do |host|
+        next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
 
         shib2_path = File.join(strategy.config_dir_for_host(host), 'shibboleth2.xml')
         raise "Can't find the generated shibboleth2.xml for #{host.name}" unless File.exists?(shib2_path)

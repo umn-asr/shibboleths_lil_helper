@@ -14,7 +14,6 @@ class Slh::Cli::DescribeConfig < Slh::Cli::CommandBase
       opts.on('-f','--filter FILTER', "Output will be filtered by matching hosts if specified") do |value|
         @options[:filter] = value
       end
-
     end
   end
  

@@ -1,3 +1,5 @@
+# not used, not sure what exactly this would do.
+# possibly deprecate?
 class Slh::Cli::TestMetadata < Slh::Cli::CommandBase
   def default_options
    { }

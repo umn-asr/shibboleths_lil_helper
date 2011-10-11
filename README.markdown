@@ -169,10 +169,12 @@ Setup symlinks to the appropriate config files within
 shibboleth_deployer from the places the Native Shibboleth SP expects
 files to be, e.g:
 
+(from the /etc/shibboleth dir)
     ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/shibboleth2.xml shibboleth2.xml
 
     ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/idp_metadata.xml idp_metadata.xml
 
+(from the /etc/httpd/conf.d dir)
     ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/shib_apache.conf shib_apache.conf
 
 How to Help

@@ -1,10 +1,10 @@
 module Slh
   class Cli # Command Line Interface
     extend ActiveSupport::Autoload
-    autoload :CommandBase
+    autoload :CommandBase  # abstract class
+    autoload :HostFilterableBase # abstract class
     autoload :Initialize
     autoload :Generate
-    autoload :AssembleMetadata # TODO: Deprecate
     autoload :FetchMetadata
     autoload :CompareMetadata
     autoload :GenerateMetadata
@@ -96,7 +96,7 @@ OPTIONAL COMMANDS
       when 'generate'
         klass = Slh::Cli::Generate
       when 'metadata'
-        klass = [Slh::Cli::CompareMetadata,Slh::Cli::FetchMetadata,Slh::Cli::GenerateMetadata, Slh::Cli::TestMetadata]
+        klass = [Slh::Cli::CompareMetadata,Slh::Cli::FetchMetadata,Slh::Cli::GenerateMetadata] # possible deprecate Slh::Cli::TestMetadata?
       when "generate_capistrano"
         klass = Slh::Cli::GenerateCapistranoDeploy
       when "copy_templates_to_override"

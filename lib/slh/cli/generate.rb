@@ -1,12 +1,18 @@
-class Slh::Cli::Generate < Slh::Cli::CommandBase
-  def default_options
-   { }
-  end
+class Slh::Cli::Generate < Slh::Cli::HostFilterableBase
   def perform_action
-    Slh.strategies.each do |s|
-      Slh::Cli.instance.output "Generating Native SP config files for #{s.name.to_s} strategy"
-      s.generate_config
+    Slh.strategies.each do |strategy|
+      Slh::Cli.instance.output "Generating Native SP config files for strategy #{strategy.name.to_s}"
+      FileUtils.mkdir_p(strategy.config_dir)
+      strategy.hosts.each do |host|
+        next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
+        Slh::Cli.instance.output "  Generating host config for #{host.name}"
+        (Slh::Models::Strategy::VALID_CONFIG_FILES - ['assembled_sp_metadata.xml']).each do |cf|
+          FileUtils.mkdir_p(strategy.config_dir_for_host(host))
+          File.open(strategy.config_file_path(cf,host), 'w') {|f| f.write(strategy.generate_config_file_content(cf,host)) }
+          Slh::Cli.instance.output "    Wrote #{strategy.config_file_path(cf,host)}"
+        end
+      end
     end
-    Slh::Cli.instance.output "You MUST deploy these files your web servers for subsequent commands to work", :highlight => true
+    Slh::Cli.instance.output "You MUST deploy these files your web servers and restart httpd and shibd for subsequent commands to work", :highlight => true
   end
 end
