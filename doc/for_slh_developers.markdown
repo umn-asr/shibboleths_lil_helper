@@ -8,6 +8,18 @@ Find the version of shibboleth you are currently running on a host
 
 FOR SHIBBOLETHS_LIL_HELPER DEVELOPERS
 ---
+If you want to inspect what is happening ANYWHERE in the code (including
+ERB templates in <% %> tags)
+Put
+  debugger
+anywhere in the code, and run:
+  rdebug slh <SOME_COMMAND>
+
+An interactive Ruby shell will pop up and you can hit
+  e <THE_NAME_OF_THE_VAR>
+
+
+---
 Assuming
   * you are in the root dir of a git clone of shibboleths_lil_helper
   * you have already run initialize and therefore have a

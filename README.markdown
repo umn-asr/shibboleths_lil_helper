@@ -177,6 +177,11 @@ files to be, e.g:
 (from the /etc/httpd/conf.d dir)
     ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/shib_apache.conf shib_apache.conf
 
+Additional Docs
+===============
+* doc/nuances.markdown
+* doc/for_slh_developers.markdown
+
 How to Help
 ======================
 

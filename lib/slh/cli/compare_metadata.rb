@@ -38,6 +38,7 @@ class Slh::Cli::CompareMetadata < Slh::Cli::HostFilterableBase
           Slh::Cli.instance.output "  OK        #{host.name}", :highlight => :green
         else
           Slh::Cli.instance.output "  MISMATCH  #{host.name}", :highlight => :red
+          Slh::Cli.instance.output "    From metadata gathered at #{remote_first_site.metadata_url}"
           mismatch_found = true
         end
       end

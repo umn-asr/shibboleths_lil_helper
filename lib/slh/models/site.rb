@@ -34,7 +34,7 @@ class Slh::Models::Site < Slh::Models::Base
       when Net::HTTPSuccess
         @metadata = the_metadata_for_site.body
       else
-        raise CouldNotGetMetadata.new("Got a non-200 http status code from #{self.metadata_url}")
+        raise CouldNotGetMetadata.new("Got a non-200 http status code (actual=#{the_metadata_for_site.code}) from #{self.metadata_url}")
       end
     end
     @metadata
