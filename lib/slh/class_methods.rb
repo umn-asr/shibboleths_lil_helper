@@ -1,9 +1,27 @@
 module Slh::ClassMethods
   @@strategies = []
   def strategies; @@strategies; end
+
+
+  ##########################
+  # CORE API METHODS BEGIN #
+  ##########################
   def for_strategy(strategy_sym, *args, &block)
     @@strategies << Slh::Models::Strategy.new(strategy_sym, *args, &block)
   end
+
+  def clone_strategy_for_new_idp(existing_s, new_s, new_idp_url)
+    existing_strategy = self.strategies.detect {|x| x.name == existing_s}
+    raise "The specified strategy, #{existing_s}, does not exist" if existing_strategy.nil?
+    raise "The new strategy,#{new_s}, already exists" if self.strategies.detect {|x| x.name == new_s}
+    new_strategy = existing_strategy.clone
+    new_strategy.idp_metadata_url = new_idp_url
+    new_strategy.instance_variable_set(:@name, new_s)
+    @@strategies << new_strategy
+  end
+  ########################
+  # CORE API METHODS END #
+  ########################
 
   def config_dir
     'shibboleths_lil_helper'
