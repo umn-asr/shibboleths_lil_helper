@@ -35,7 +35,13 @@ module Slh::ClassMethods
   def load_config
     unless @@is_loaded 
       Slh.command_line_output "Loading #{Slh.config_file}"
-      require Slh.config_file
+      begin
+        require Slh.config_file
+      rescue LoadError
+        Slh.command_line_output "No #{Slh.config_file} found, exiting...Are you sure you are running this command from the right working directory?",
+          :highlight => :red,
+          :exit => true
+      end
       if Slh.strategies.empty?
         Slh.command_line_output "No strategies found in #{Slh.config_file}, you should add some, exiting...",
           :highlight => :red,
