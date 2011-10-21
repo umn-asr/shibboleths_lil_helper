@@ -65,12 +65,4 @@ module Slh::ClassMethods
       exit
     end
   end
-
-  @@strategy_defaults = {}
-  def set_strategy_defaults(*args)
-    @@strategy_defaults = args.extract_options!
-  end
-  def strategy_defaults
-    @@strategy_defaults
-  end
 end

@@ -1,19 +1,11 @@
-# Sets strategy defaults to be used throughout all your configuration
-# you can override them with `set` in your strategy as well for a particular strategy
-# if you want
-Slh.set_strategy_defaults :sp_entity_id => 'https://asr.umn.edu/shibboleth/default',
-  :idp_metadata_url => 'https://idp-test.shib.umn.edu/metadata.xml',
-  :error_support_contact => 'goggins@umn.edu'
-
-Slh.for_strategy :umn_apache_shib_test_server do
-  # if you want to override a strategy default, you could do something like
-  # set :idp_metadata_url, 'a_different_url'
-  for_host 'asr-web-dev4.oit.umn.edu' do
+# TODO: Set better example (DEMAND THIS FROM JOE if you are reading this!!!!!!!!!!!)
+Slh.for_strategy :todo_your_org_against_test_idp do
+  for_host 'somehost.com' do
     set :shib_prefix, "/swadm/etc/shibboleth"
-    for_site 'shib-php-test.asr.umn.edu' do
-      protect 'secure'
+    for_site 'somesite.com' do
+      protect 'somepath'
     end
-    for_site 'shib-rails2-test.asr.umn.edu' do
+    for_site 'somesite2.com' do
       protect 'secure'
       # Could also say 
       # protect 'lazy_auth', :flavor => :authentication_optional

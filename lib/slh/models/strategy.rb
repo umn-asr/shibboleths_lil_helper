@@ -9,9 +9,6 @@ class Slh::Models::Strategy  < Slh::Models::Base
     if block_given?
       self.instance_eval(&block)
     end
-    self.sp_entity_id ||= Slh.strategy_defaults[:sp_entity_id]
-    self.idp_metadata_url ||= Slh.strategy_defaults[:idp_metadata_url]
-    self.error_support_contact ||= Slh.strategy_defaults[:error_support_contact]
 
     # The following are checks to ensure required "set" commands are done to set required values
     if self.sp_entity_id.nil?
@@ -21,7 +18,7 @@ class Slh::Models::Strategy  < Slh::Models::Base
       raise "All strategies must specify an IDP metadata URL"
     end
     if self.error_support_contact.nil?
-      raise "All strategies must specify an error support contact for when Shibboleth breaks/fails/etc."
+      self.error_support_contact = "administrator"
     end
   end
 
