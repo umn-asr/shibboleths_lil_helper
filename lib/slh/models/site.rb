@@ -65,15 +65,6 @@ class Slh::Models::Site < Slh::Models::Base
     end
   end
 
-  def auth_request_map_xml_payload_for_flavor(flavor)
-    if flavor == :authentication_optional
-      'authType="shibboleth" requireSession="false"'
-    elsif [:authentication_required,:authentication_required_for_specific_users].include?(flavor)
-      'authType="shibboleth" requireSession="true"'
-    else 
-      raise "No auth_request_map_xml_payload_for_flavor flavor=#{flavor}"
-    end
-  end
 
   
   # See these for specs
@@ -81,16 +72,13 @@ class Slh::Models::Site < Slh::Models::Base
   # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPRequestMapPath
   # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPRequestMapPathRegex
   def to_auth_request_map_directive(*args)
-    host_begin = ''
+    common_host_begin = "<Host name=\"#{self.name}\" redirectToSSL=\"443\" applicationId=\"#{self.name}\" "
     host_end = '</Host>'
     path_strings = []
     if self.paths.first.name == '/'
-      host_begin = <<-EOS
-<!-- Shibboleths Lil Helper flavor=#{self.paths.first.flavor} protection for entire site -->
-<Host name="#{self.name}" #{self.auth_request_map_xml_payload_for_flavor(self.paths.first.flavor)} redirectToSSL="443" >
-EOS
+      host_begin = common_host_begin + " #{self.auth_request_map_xml_payload_for_flavor(self.paths.first.flavor)}>"
     else
-      host_begin = "<Host name=\"#{self.name}\" redirectToSSL=\"443\" applicationId=\"#{self.name}\" >"
+      host_begin =  common_host_begin + ">" # just close the tag, we all good
     end
     self.paths.each do |p|
       next if p.name == '/' # Already dealt with/baked into the <Host> Xml
@@ -113,4 +101,18 @@ EOS
   def to_https_prefixed_name
     "https://#{self.name}"
   end
+
+  protected
+    # Internal helper, used in <RequestMapper> 
+    # returned strings are interpoleted into <Host> or <Path>
+    #
+    def auth_request_map_xml_payload_for_flavor(flavor)
+      if flavor == :authentication_optional
+        'authType="shibboleth" requireSession="false"'
+      elsif [:authentication_required,:authentication_required_for_specific_users].include?(flavor)
+        'authType="shibboleth" requireSession="true"'
+      else 
+        raise "No auth_request_map_xml_payload_for_flavor flavor=#{flavor}"
+      end
+    end
 end
