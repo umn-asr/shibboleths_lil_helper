@@ -1,7 +1,23 @@
 class Slh::Models::Strategy  < Slh::Models::Base
+
+  ##########################
+  # CORE API METHODS BEGIN #
+  ##########################
+  def for_apache_host(host_name,*args,&block)
+    @hosts << Slh::Models::Host.new(host_name,*args, &block)
+  end
+
+  def for_iis_host(host_name,*args,&block)
+    t=Slh::Models::Host.new(host_name,*args, &block)
+    t.host_type = :iis
+    @hosts << t
+  end
+  ########################
+  # CORE API METHODS END #
+  ########################
+
   attr_reader :name, :hosts
   attr_accessor :sp_entity_id, :idp_metadata_url, :error_support_contact
-
   VALID_CONFIG_FILES = %w(shibboleth2.xml idp_metadata.xml assembled_sp_metadata.xml shib_apache.conf)
   def initialize(strategy_name,*args, &block)
     @name = strategy_name
@@ -56,10 +72,6 @@ class Slh::Models::Strategy  < Slh::Models::Base
     @idp_entity_id
   end
 
-  # DSL method
-  def for_host(host_name,*args,&block)
-    @hosts << Slh::Models::Host.new(host_name,*args, &block)
-  end
 
   def config_dir
     File.join(Slh.config_dir,'generated',self.name.to_s)

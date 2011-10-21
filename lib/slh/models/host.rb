@@ -1,5 +1,15 @@
 # This model represents the actual hostname/machine the shib SP instance lives on
 class Slh::Models::Host < Slh::Models::Base
+  ##########################
+  # CORE API METHODS BEGIN #
+  ##########################
+  def for_site(site_name,*args,&block)
+    @sites << Slh::Models::Site.new(site_name,*args, &block)
+  end
+  ########################
+  # CORE API METHODS END #
+  ########################
+
   attr_reader :name, :sites
   attr_accessor :host_type, :shib_prefix, :propogate_data_via_http_headers
   def initialize(host_name,*args,&block)
@@ -21,9 +31,6 @@ class Slh::Models::Host < Slh::Models::Base
     end
   end
 
-  def for_site(site_name,*args,&block)
-    @sites << Slh::Models::Site.new(site_name,*args, &block)
-  end
 
   # File.join('', 'asdf.txt') returns '/asdf.txt'. We need a way to accomodate
   # shib_prefix when needed, but avoiding values like '/shibboleth2.xml' when
