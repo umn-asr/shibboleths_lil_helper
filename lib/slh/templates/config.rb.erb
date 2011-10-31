@@ -1,19 +1,33 @@
-# TODO: Set better example (DEMAND THIS FROM JOE if you are reading this!!!!!!!!!!!)
-Slh.for_strategy :todo_your_org_against_test_idp do
-  for_host 'somehost.com' do
-    set :shib_prefix, "/swadm/etc/shibboleth"
-    for_site 'somesite.com' do
-      protect 'somepath'
+Slh.for_strategy :test_idp do
+  set :sp_entity_id, 'YOUR_ENTITY_ID'
+  set :idp_metadata_url, 'YOUR_IDP_METADATA_URL'
+  set :error_support_contact, 'YOUR_ERROR_SUPPORT_EMAIL_ADDRESS'
+
+  for_apache_host 'SOMEHOSTNAME.COM' do
+    # UNCOMMENT THIS IF YOUR SHIB STUFF LIVES IN A NON-STANDARD LOCATION 
+    # set :shib_prefix, '/swadm/etc/shibboleth'
+    for_site 'SOMESITENAME1.COM' do
+      protect 'SOME_PATH_YOU_WANT_TO_REQUIRE_AUTH'
     end
-    for_site 'somesite2.com' do
-      protect 'secure'
-      # Could also say 
-      # protect 'lazy_auth', :flavor => :authentication_optional
-      # OR
-      #
-      # Could also say 
-      # protect 'users', :flavor => :authentication_required_for_specific_users
-      # set :specific_users, %w(goggins@umn.edu ding0057@umn.edu)
+    for_site 'SOMESITENAME2.COM' do
+      protect 'SOME_PATH_YOU_WANT_OPTIONAL_AUTH' do
+        set :flavor, :authentication_optional
+      end
+    end
+    for_site 'SOMESITENAME3.COM' do
+      protect 'SOME_PATH_YOU_WANT_TO_RESTRICTED_TO_PARTICULAR_USERS' do
+        set :flavor, :authentication_required_for_specific_users
+        set :specific_users, %w(SOMEUSER@SOME.DOMAIN.COM ANOTHERUSER@SOME.DOMAIN.COM)
+      end
+    end
+  end
+  for_iis_host 'SOMEIISHOSTNAME.COM' do
+    for_site 'SOMEIISSITENAME1.COM' do
+      set :site_id, "YOU_MUST_SET_THE_SITE_ID_HERE"
+      protect 'SOME_PATH_YOU_WANT_TO_REQUIRE_AUTH'
     end
   end
 end
+Slh.clone_strategy_for_new_idp :test_idp,
+                               :production_idp,
+                               'THE_PRODUCTION_IDP_METADATA_URL'
