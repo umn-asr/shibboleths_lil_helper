@@ -3,8 +3,8 @@ class Slh::Models::Host < Slh::Models::Base
   ##########################
   # CORE API METHODS BEGIN #
   ##########################
-  def for_site(site_name,*args,&block)
-    @sites << Slh::Models::Site.new(site_name,*args, &block)
+  def for_site(site_name, &block)
+    @sites << Slh::Models::Site.new(site_name,&block)
   end
   ########################
   # CORE API METHODS END #
@@ -12,7 +12,7 @@ class Slh::Models::Host < Slh::Models::Base
 
   attr_reader :name, :sites
   attr_accessor :host_type, :shib_prefix, :propogate_data_via_http_headers
-  def initialize(host_name,*args,&block)
+  def initialize(host_name,&block)
     @name = host_name
     @host_type = :apache
     @propogate_data_via_http_headers = false

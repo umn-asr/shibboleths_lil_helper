@@ -1,4 +1,3 @@
-* Eliminate *args from all DSL models, it allows you to mis-used the tool easily (i did) with /protect
 * Rejigger the generate metadata command to reflect Chris B's thoughts:
     The OASIS SAML standard for metadata contains the XML schema defining the format of the metadata file.  You can only have one SPSSODescriptor element per EntityDescriptor.
 
@@ -8,3 +7,11 @@
 
 * Put comments in the generated output that specify the documentation associated with it
   For example, above SPSSO: http://www.schemacentral.com/sc/ulex20/e-md_SPSSODescriptor.html
+
+* Rejigger the default config.rb.erb--simplify and reference documentation
+
+* Release as gem
+
+
+DONE
+* Eliminate *args from all DSL models, it allows you to mis-used the tool easily (i did) with /protect

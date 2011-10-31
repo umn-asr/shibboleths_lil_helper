@@ -3,12 +3,12 @@ class Slh::Models::Strategy  < Slh::Models::Base
   ##########################
   # CORE API METHODS BEGIN #
   ##########################
-  def for_apache_host(host_name,*args,&block)
-    @hosts << Slh::Models::Host.new(host_name,*args, &block)
+  def for_apache_host(host_name,&block)
+    @hosts << Slh::Models::Host.new(host_name, &block)
   end
 
-  def for_iis_host(host_name,*args,&block)
-    t=Slh::Models::Host.new(host_name,*args, &block)
+  def for_iis_host(host_name, &block)
+    t=Slh::Models::Host.new(host_name, &block)
     t.host_type = :iis
     @hosts << t
   end
@@ -19,7 +19,7 @@ class Slh::Models::Strategy  < Slh::Models::Base
   attr_reader :name, :hosts
   attr_accessor :sp_entity_id, :idp_metadata_url, :error_support_contact
   VALID_CONFIG_FILES = %w(shibboleth2.xml idp_metadata.xml assembled_sp_metadata.xml shib_apache.conf)
-  def initialize(strategy_name,*args, &block)
+  def initialize(strategy_name, &block)
     @name = strategy_name
     @hosts = []
     if block_given?

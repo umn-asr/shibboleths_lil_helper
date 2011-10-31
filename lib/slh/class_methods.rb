@@ -6,8 +6,8 @@ module Slh::ClassMethods
   ##########################
   # CORE API METHODS BEGIN #
   ##########################
-  def for_strategy(strategy_sym, *args, &block)
-    @@strategies << Slh::Models::Strategy.new(strategy_sym, *args, &block)
+  def for_strategy(strategy_sym, &block)
+    @@strategies << Slh::Models::Strategy.new(strategy_sym, &block)
   end
 
   def clone_strategy_for_new_idp(existing_s, new_s, new_idp_url)

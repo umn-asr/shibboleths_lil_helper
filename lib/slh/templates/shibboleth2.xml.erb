@@ -27,7 +27,7 @@ to accommodate multiple vhosts (for both IIS and Apache) for the shibboleth-2.4.
     <RequestMapper type="Native">
       <RequestMap>
         <% @host.sites.each do |site| %>
-          <%= site.to_auth_request_map_directive(:strategy => @strategy, :host => @host, :site => site) %>
+          <%= site.to_auth_request_map_directive %>
         <% end %>
       </RequestMap>
     </RequestMapper>

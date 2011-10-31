@@ -2,7 +2,7 @@ class Slh::Models::Site < Slh::Models::Base
   class CouldNotGetMetadata < Exception; end
   attr_reader :name, :paths
   attr_accessor :site_id # site_id is for hosts who's host_type == :iis
-  def initialize(site_name,*args,&block)
+  def initialize(site_name,&block)
     @name = site_name 
     @paths = []
     if block_given?
@@ -10,11 +10,11 @@ class Slh::Models::Site < Slh::Models::Base
     end
   end
 
-  def protect(site_path, *args, &block)
+  def protect(site_path, &block)
     if site_path == '/' && !@paths.empty?
       raise "If you want to protect the entire site, you must specify \"protect '/'\" before all other site path rules"
     end
-    @paths << Slh::Models::SitePath.new(site_path, *args, &block)
+    @paths << Slh::Models::SitePath.new(site_path, &block)
   end
 
   def metadata
@@ -71,7 +71,7 @@ class Slh::Models::Site < Slh::Models::Base
   # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPRequestMapHowTo
   # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPRequestMapPath
   # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPRequestMapPathRegex
-  def to_auth_request_map_directive(*args)
+  def to_auth_request_map_directive
     common_host_begin = "<Host name=\"#{self.name}\" redirectToSSL=\"443\" applicationId=\"#{self.name}\" "
     host_end = '</Host>'
     path_strings = []
