@@ -1,13 +1,4 @@
-* Rejigger the generate metadata command to reflect Chris B's thoughts:
-    The OASIS SAML standard for metadata contains the XML schema defining the format of the metadata file.  You can only have one SPSSODescriptor element per EntityDescriptor.
-
-    To handle multiple virtual hosts, you just merge the endpoints (AssertionConsumerService, SingleLogoutService, etc.) you need into a single SPSSODescriptor element.
-
-    (On my to-do list is to document this in a FAQ on our shib wiki since it causes a lot of confusion.)
-
-* Put comments in the generated output that specify the documentation associated with it
-  For example, above SPSSO: http://www.schemacentral.com/sc/ulex20/e-md_SPSSODescriptor.html
-
+* Incorporate FAQ stuff somehow https://www.pivotaltracker.com/story/show/19256223
 * Rejigger the default config.rb.erb--simplify and reference documentation
 
 * Release as gem
@@ -15,3 +6,6 @@
 
 DONE
 * Eliminate *args from all DSL models, it allows you to mis-used the tool easily (i did) with /protect
+* Revert to host level sp metadata instead of all in one
+* Put comments in the generated output that specify the documentation associated with it
+  For example, above SPSSO: http://www.schemacentral.com/sc/ulex20/e-md_SPSSODescriptor.html
