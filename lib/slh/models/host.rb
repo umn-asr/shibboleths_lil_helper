@@ -11,11 +11,10 @@ class Slh::Models::Host < Slh::Models::Base
   ########################
 
   attr_reader :name, :sites
-  attr_accessor :host_type, :shib_prefix, :propogate_data_via_http_headers
+  attr_accessor :host_type, :shib_prefix
   def initialize(host_name,&block)
     @name = host_name
     @host_type = :apache
-    @propogate_data_via_http_headers = false
     @sites = []
     if block_given?
       self.instance_eval(&block)
