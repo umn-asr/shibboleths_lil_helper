@@ -92,6 +92,12 @@ OPTIONAL COMMANDS
   describe
     Summarizes the configuration described in shibboleths_lil_helper/config.rb
 
+OTHER DOCUMENTATION SOURCES (not just this tool)
+  https://wiki.shibboleth.net/
+    The official Shibboleth Wiki
+  (within this project--the doc folder)
+    There are lots of short little developer oriented tips we used while creating this tool.
+
         EOS
         exit
       when 'initialize'

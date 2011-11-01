@@ -2,6 +2,13 @@ This document is both for Shibboleth's Lil Helper developers and folks
 setting up the Shibboleth SP.  It was created to simply catelog the many
 different gotchas that were solved while building this tool
 
+---
+QUESTION
+How can I learn how Shibboleth actually works from end to end in
+less than an hour?
+
+ANSWER
+http://www.switch.ch/aai/demo/index.html
 
 ---
 QUESTION
