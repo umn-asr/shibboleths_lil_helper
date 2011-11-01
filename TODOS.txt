@@ -1,3 +1,5 @@
+* verify is_key_originator has been specified somewhere after a strategy
+  has been declared
 * Incorporate FAQ stuff somehow https://www.pivotaltracker.com/story/show/19256223
 * Rejigger the default config.rb.erb--simplify and reference documentation
 

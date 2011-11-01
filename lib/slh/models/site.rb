@@ -1,10 +1,17 @@
 class Slh::Models::Site < Slh::Models::Base
   class CouldNotGetMetadata < Exception; end
   attr_reader :name, :paths
-  attr_accessor :site_id # site_id is for hosts who's host_type == :iis
+
+  # This indicates the site is where all other sites get their encryption keys from
+  # and where the metadata X509Certificate comes from
+  attr_accessor :is_key_originator
+
+  # site_id is for hosts who's host_type == :iis
+  attr_accessor :site_id 
   def initialize(site_name,&block)
-    @name = site_name 
+    @name = site_name
     @paths = []
+    self.is_key_originator = false
     if block_given?
       self.instance_eval(&block)
     end

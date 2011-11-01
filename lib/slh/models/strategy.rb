@@ -1,4 +1,5 @@
 class Slh::Models::Strategy  < Slh::Models::Base
+  class KeyOriginatorNotSpecified < Exception; end
 
   ##########################
   # CORE API METHODS BEGIN #
@@ -123,5 +124,16 @@ class Slh::Models::Strategy  < Slh::Models::Base
 
   def config_template_content(file_base_name)
     File.read(self.config_template_file_path(file_base_name))
+  end
+
+  def key_originator_site
+    self.hosts.each do |host|
+      host.sites.each do |site|
+        if site.is_key_originator
+          return site
+        end
+      end
+    end
+    raise KeyOriginatorNotSpecified.new("You must specify set :is_key_originator, true, on at least one site in a strategy")
   end
 end
