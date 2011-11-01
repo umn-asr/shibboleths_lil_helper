@@ -1,8 +1,8 @@
-* Incorporate FAQ stuff somehow https://www.pivotaltracker.com/story/show/19256223
 * Release as gem
 
 
 DONE
+* Incorporate FAQ stuff somehow https://www.pivotaltracker.com/story/show/19256223
 * Add something that warns LOUDLY to use slh with source control
 * Rejigger the default config.rb.erb--simplify and reference documentation
   >>> Add is_key_originator

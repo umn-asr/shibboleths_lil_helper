@@ -2,10 +2,6 @@
 Find the version of shibboleth you are currently running on a host
   rpm -qi shibboleth
 
-
-
-
-
 FOR SHIBBOLETHS_LIL_HELPER DEVELOPERS
 ---
 If you want to inspect what is happening ANYWHERE in the code (including
