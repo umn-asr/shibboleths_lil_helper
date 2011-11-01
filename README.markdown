@@ -10,25 +10,11 @@ Shibboleth's Lil Helper is a tool that automates the generation of Apache/IIS Sh
 
 * __Providing conceptually simple linear process__ that distills the main steps associated with Shibboleth integration.
 
-IMPORTANT NOTE/DISCLAIMER
+DISCLAIMER
 -------------------------
 All you see here on Github is the readme, no code yet.
-For that to happen two things need to occur:
-
-* We need to battle-test the (working) code across our entire
-  infrastructure and fix bugs before releasing.
-
-* Someone from the IDM team within OIT needs approve that our approach
-  is solid and endorse its usage for the U of M.
-
-**The current status as of October 6th, 2011**
-
-* We have it working in PHP, .NET, and Rails on 2 servers and 4 vhosts for Apache and IIS.
-
-* Assuming no snags (cause that never happens in software, :)), we
-anticipate 90% of our infrastructure migrated by Nov 1st.  At which
-point we hope to release this code into the wild.  And perhaps do a demo
-session at a Code-People meeting.
+This is released as a RubyGem right now, we hope to push the source up
+here once things stabilize further
 
 Why another tool?
 -----------------
@@ -47,15 +33,8 @@ Installation
   * Rubygems: http://rubygems.org/pages/download
   * Bundler: gem install bundler
   
-* From github:
-
-      git clone git://github.com/joegoggins/shibboleths_lil_helper.git
-      cd shibboleths_lil_helper
-      bundle
-      ./bin/slh
-      (then follow instructions)
-
-* Via Ruby Gems: Not working yet
+* Via Ruby Gems:
+  * gem install slh
 
 Assumptions
 ===========
@@ -189,7 +168,7 @@ Email Us
 ----------------------
 * Let us know you are interested in using the tool.
 
-* Voice you ideas about questions you have and features you'd like to see.
+* Voice your ideas about questions you have and features you'd like to see.
 
 Authors
 =======
