@@ -11,7 +11,6 @@ module Slh
     autoload :GenerateMetadata
     autoload :GenerateCapistranoDeploy
     autoload :CopyTemplatesToOverride
-    autoload :TestMetadata
     autoload :DescribeConfig
 
     attr_reader :args,:action
@@ -32,42 +31,43 @@ module Slh
         puts <<-'EOS'
 
   This is Shibboleth's Lil Helper.
-
-               ___,@
-               /  <
-          ,_  /    \  _,                    He'll help you create consistent
-      ?    \`/______\`/                     config XML for your Shibboleth-Native 
-   ,_(_).  |; (e  e) ;|                     Service-Provider servers (Apache or IIS)
-    \___ \ \/\   7  /\/    _\8/_            without pulling your hair out in frustration.
+                                            He'll help you create consistent
+               ___,@                        config XML for your Shibboleth-Native 
+               /  <                         Service-Provider servers (Apache or IIS)
+          ,_  /    \  _,                    without pulling your hair out in frustration.
+      ?    \`/______\`/
+   ,_(_).  |; (e  e) ;|                     He knows several commands listed below
+    \___ \ \/\   7  /\/    _\8/_            invoked like: "slh initialize".
         \/\   \'=='/      | /| /|
-         \ \___)--(_______|//|//|
-          \___  ()  _____/|/_|/_|
-             /  ()  \    `----'             He knows several commands listed below
-            /   ()   \                      invoked like: "slh initialize".
-           '-.______.-'
-   jgs   _    |_||_|    _                   Append "--help" like "slh initialize --help"
-        (@____) || (____@)                  to learn about the options each command can
-         \______||______/                   take.
+         \ \___)--(_______|//|//|           Append "--help" like "slh initialize --help"
+          \___  ()  _____/|/_|/_|           to learn about the options each command can
+             /  ()  \    `----'             take
+            /   ()   \
+           '-.______.-'                     It is STRONLY RECOMMENDED to keep generated files
+         _    |_||_|    _                   produced by this tool under source control--this sneaky
+        (@____) || (____@)                  little elf does not prompt before overwriting files.
+         \______||______/
 MAIN COMMANDS (in usage order)
   initialize
-    Creates a shibboleths_lil_helper/config.rb file that is the place where
-    you specify all authentication settings for all hosts, sites, and paths
-    in your organization
+    Creates a shibboleths_lil_helper/config.rb.
+    This is where you put ALL OF YOUR shibboleth SP config info for your organization.
+    Shibboleth's Lil Helper operates on this structure to provide all of the funcionality below.
 
   generate
-    Generates a bunch of Native shibboleth configuration files and puts them in
-    a directory structure under "shibboleths_lil_helper/generated" that mirrors
-    your config.rb file.  These files can then be copied to your target hosts.
+    Generates shibboleth2.xml (and others) for deployment to each of your target hosts.
+    Don't forget to restart shibd and httpd on each host after you've updated these files.
 
-  metadata
-    Assembles your Service Provider metadata for each host
-    and creates a sp_metadata_for_host_to_give_to_idp.xml to give your Identity Provider.
-    It goes out and hits urls like https://somehost.com/Shibboleth.sso/Metadata to see if you
-    have already deployed generated content out in the wild (which your idp will require to make stuff work)
+  verify_metadata
+    Makes sure all sites expose a URL like site.com/Shibboleth.sso/Metadata.
+    Detects differences in locally generated config with deployed config.
+    Detects encryption key inconsistency issues.
+
+  generate_metadata
+    Assembles your SP metadata for each strategy to give to your IDP
 
 OPTIONAL COMMANDS
   generate_capistrano
-    Creates a config/deploy.rb for you as a starting point to use with Capistrano.
+    Creates a Capistrano config/deploy.rb for automating deployment.  (see Capistrano website)
     To install and prep for use with capistrano
       Install:    gem install capistrano
       Capify dir: capify .
@@ -75,9 +75,9 @@ OPTIONAL COMMANDS
       cap deploy HOST=somehost.com
 
   copy_templates_to_override
-    This copies all of the Native Shib config templates into your local directory where your can
-    customize them to your heart's content.  Meant to also be used with the set_custom :var, "somevalue" to
-    put special stuff in your shibboleth configuration files not covered by the defaults of the tool.
+    Copies config templates into your local directory should you need to customize things beyond what the tool
+    provides.
+    This feature is designed to be used with the 'set_custom :var, "somevalue"' syntax in the config.rb
     After running this command, you could add the following to one of the shibboleths_lil_helper/templates files:
       <% if @strategy.respond_to? :dogz %>
         <%= @strategy.dogz %>
@@ -88,16 +88,20 @@ OPTIONAL COMMANDS
 
     This feature is like a gun in church: You probably don't need it, but if you do, its good to have.
     (read: don't use this unless you really need it.)
+
   describe
-    Outputs info from shibboleths_lil_helper/config.rb
+    Summarizes the configuration described in shibboleths_lil_helper/config.rb
+
         EOS
         exit
       when 'initialize'
         klass = Slh::Cli::Initialize
       when 'generate'
         klass = Slh::Cli::Generate
-      when 'metadata'
-        klass = [Slh::Cli::FetchMetadata, Slh::Cli::CompareMetadata,Slh::Cli::VerifyMetadataEncryption, Slh::Cli::GenerateMetadata] # possible deprecate Slh::Cli::TestMetadata?
+      when 'verify_metadata'
+        klass = [Slh::Cli::FetchMetadata, Slh::Cli::CompareMetadata, Slh::Cli::VerifyMetadataEncryption]
+      when 'generate_metadata'
+        klass = [Slh::Cli::FetchMetadata, Slh::Cli::CompareMetadata,Slh::Cli::VerifyMetadataEncryption, Slh::Cli::GenerateMetadata]
       when "generate_capistrano"
         klass = Slh::Cli::GenerateCapistranoDeploy
       when "copy_templates_to_override"
