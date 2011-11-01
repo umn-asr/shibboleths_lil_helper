@@ -18,7 +18,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/joegoggins/shibboleths_lil_helper"
   gem.license = "MIT"
   gem.summary = %Q{A ruby gem to streamline the setup, deployment, and ongoing management of Apache & IIS web-servers running the Shibboleth Native Service Provider implementations.}
-  gem.description = %Q{Very very very Beta right now}
+  gem.description = %Q{See the summary text.}
   gem.email = "goggins@umn.edu"
   gem.authors = ["Joe Goggins"]
   gem.executables = 'slh'
