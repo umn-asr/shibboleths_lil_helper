@@ -7,7 +7,7 @@ class Slh::Cli::Generate < Slh::Cli::HostFilterableBase
       strategy.hosts.each do |host|
         next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
         Slh::Cli.instance.output "  Generating host config for #{host.name}"
-        (Slh::Models::Strategy::VALID_CONFIG_FILES - ['assembled_sp_metadata.xml']).each do |cf|
+        Slh::Models::Strategy::VALID_CONFIG_FILES.each do |cf|
           next if host.host_type == :iis && cf == 'shib_apache.conf' # not needed
           FileUtils.mkdir_p(host.config_dir)
           File.open(strategy.config_file_path(cf,host), 'w') {|f| f.write(strategy.generate_config_file_content(cf,host)) }
