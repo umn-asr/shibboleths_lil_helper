@@ -1,7 +1,14 @@
 * verify is_key_originator has been specified somewhere after a strategy
   has been declared
+
+* Separate metadata and make a verify_metadata command
+
 * Incorporate FAQ stuff somehow https://www.pivotaltracker.com/story/show/19256223
+
 * Rejigger the default config.rb.erb--simplify and reference documentation
+  >>> Add is_key_originator
+
+* Add something that warns LOUDLY to use slh with source control
 
 * Release as gem
 
