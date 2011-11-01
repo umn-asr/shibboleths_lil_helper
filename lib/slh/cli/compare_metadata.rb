@@ -7,10 +7,9 @@ class Slh::Cli::CompareMetadata < Slh::Cli::HostFilterableBase
       strategy.hosts.each do |host|
         next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
 
-        shib2_path = File.join(strategy.config_dir_for_host(host), 'shibboleth2.xml')
-        raise "Can't find the generated shibboleth2.xml for #{host.name}" unless File.exists?(shib2_path)
+        raise "Can't find the generated shibboleth2.xml for #{host.name}" unless File.exists?(host.shibboleth2_path)
 
-        local = Nokogiri::XML(File.read(shib2_path)) #Nokogiri::XML(shib2)
+        local = Nokogiri::XML(File.read(host.shibboleth2_path)) #Nokogiri::XML(shib2)
         remote_first_site = host.sites.first
 
         begin

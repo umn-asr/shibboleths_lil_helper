@@ -4,11 +4,9 @@ class Slh::Cli::FetchMetadata < Slh::Cli::HostFilterableBase
       strategy.hosts.each do |host|
         next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
         host.sites.each do |site|
-          site_dir = File.join(strategy.config_dir_for_host(host),site.name.to_s)
-          file_path = 'fetched_metadata.xml'
-          Slh::Cli.instance.output "Fetching metadata for #{site.name}"
-          FileUtils.mkdir_p(site_dir)
-          File.open(File.join(site_dir,file_path),'w') do |f| 
+          Slh::Cli.instance.output "Writing fetched metadata for #{site.name} to \n  #{site.fetched_metadata_path}"
+          FileUtils.mkdir_p(site.config_dir)
+          File.open(site.fetched_metadata_path,'w') do |f| 
             begin
               f.write(site.metadata)
             rescue Slh::Models::Site::CouldNotGetMetadata => e

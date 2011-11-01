@@ -73,24 +73,16 @@ class Slh::Models::Strategy  < Slh::Models::Base
     @idp_entity_id
   end
 
-
   def config_dir
     File.join(Slh.config_dir,'generated',self.name.to_s)
   end
 
-  def config_dir_for_host(host)
-    File.join(self.config_dir,host.name.to_s)
-  end
 
   def config_file_path(file_base_name,host,site=nil)
-    File.join(self.config_dir, self.config_file_name(file_base_name,host,site))
-  end
-
-  def config_file_name(file_base_name,host,site=nil)
     if site.nil?
-      File.join(host.name, file_base_name)
+      File.join(host.config_dir,file_base_name)
     else
-      File.join(host.name, site.name, file_base_name)
+      File.join(site.config_dir,file_base_name)
     end
   end
 

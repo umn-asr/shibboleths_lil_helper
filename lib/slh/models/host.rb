@@ -43,4 +43,12 @@ class Slh::Models::Host < Slh::Models::Base
     end
     filepath
   end
+
+  def config_dir
+    File.join(self.parent_strategy.config_dir,self.name.to_s)
+  end
+
+  def shibboleth2_path
+    File.join(self.config_dir,'shibboleth2.xml')
+  end
 end

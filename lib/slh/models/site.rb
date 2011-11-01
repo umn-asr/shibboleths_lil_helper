@@ -115,6 +115,14 @@ class Slh::Models::Site < Slh::Models::Base
     "https://#{self.name}"
   end
 
+  def config_dir
+    File.join(self.parent_host.config_dir,self.name.to_s)
+  end
+
+  def fetched_metadata_path
+    File.join(self.config_dir,'fetched_metadata.xml')
+  end
+
   protected
     # Internal helper, used in <RequestMapper> 
     # returned strings are interpoleted into <Host> or <Path>
