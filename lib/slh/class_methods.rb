@@ -33,7 +33,7 @@ module Slh::ClassMethods
 
   @@is_loaded = false
   def load_config
-    unless @@is_loaded 
+    unless @@is_loaded
       Slh.command_line_output "Loading #{Slh.config_file}"
       begin
         require Slh.config_file
@@ -47,7 +47,16 @@ module Slh::ClassMethods
           :highlight => :red,
           :exit => true
       end
-      @is_loaded = true
+      Slh.strategies.each do |strategy|
+        begin
+          strategy.key_originator_site
+        rescue Slh::Models::Strategy::KeyOriginatorNotSpecified => e
+          Slh.command_line_output "Strategy: #{strategy.name} DOES NOT specify 'set :is_key_originator, true' on any site--all strategies must.",
+            :highlight => :red,
+            :exit => true
+        end
+      end
+      @@is_loaded = true
     end
   end
   def command_line_output(msg,*args)

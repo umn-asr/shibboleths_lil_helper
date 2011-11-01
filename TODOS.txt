@@ -1,19 +1,14 @@
-* verify is_key_originator has been specified somewhere after a strategy
-  has been declared
-
-* Separate metadata and make a verify_metadata command
-
 * Incorporate FAQ stuff somehow https://www.pivotaltracker.com/story/show/19256223
-
-* Rejigger the default config.rb.erb--simplify and reference documentation
-  >>> Add is_key_originator
-
-* Add something that warns LOUDLY to use slh with source control
-
 * Release as gem
 
 
 DONE
+* Add something that warns LOUDLY to use slh with source control
+* Rejigger the default config.rb.erb--simplify and reference documentation
+  >>> Add is_key_originator
+* Separate metadata and make a verify_metadata command
+* verify is_key_originator has been specified somewhere after a strategy
+  has been declared
 * Eliminate *args from all DSL models, it allows you to mis-used the tool easily (i did) with /protect
 * Revert to host level sp metadata instead of all in one
 * Put comments in the generated output that specify the documentation associated with it
