@@ -34,7 +34,9 @@ Installation
   * Bundler: gem install bundler
   
 * Via Ruby Gems:
-  * gem install slh
+  * gem install shibboleths_lil_helper
+  * Then type `slh` -- this provides more detailed/actionable
+    documentation
 
 Assumptions
 ===========
