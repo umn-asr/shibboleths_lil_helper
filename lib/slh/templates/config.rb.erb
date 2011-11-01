@@ -7,6 +7,13 @@ Slh.for_strategy :test_idp do
     # UNCOMMENT THIS IF YOUR SHIB STUFF LIVES IN A NON-STANDARD LOCATION 
     # set :shib_prefix, '/swadm/etc/shibboleth'
     for_site 'SOMESITENAME1.COM' do
+      # Each strategy must set this for exactly one site
+      # its used as the authoritative source to from which all other
+      # sites metadata's X509Certificate should match
+      # the sp-key.pem and sp-cert.pem files from this host should be
+      # copied to all other hosts underneath the strategy
+      #
+      set :is_key_originator, true
       protect 'SOME_PATH_YOU_WANT_TO_REQUIRE_AUTH'
     end
     for_site 'SOMESITENAME2.COM' do
