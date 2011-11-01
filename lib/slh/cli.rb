@@ -7,6 +7,7 @@ module Slh
     autoload :Generate
     autoload :FetchMetadata
     autoload :CompareMetadata
+    autoload :VerifyMetadataEncryption
     autoload :GenerateMetadata
     autoload :GenerateCapistranoDeploy
     autoload :CopyTemplatesToOverride
@@ -96,7 +97,7 @@ OPTIONAL COMMANDS
       when 'generate'
         klass = Slh::Cli::Generate
       when 'metadata'
-        klass = [Slh::Cli::CompareMetadata,Slh::Cli::FetchMetadata,Slh::Cli::GenerateMetadata] # possible deprecate Slh::Cli::TestMetadata?
+        klass = [Slh::Cli::CompareMetadata,Slh::Cli::FetchMetadata,Slh::Cli::VerifyMetadataEncryption, Slh::Cli::GenerateMetadata] # possible deprecate Slh::Cli::TestMetadata?
       when "generate_capistrano"
         klass = Slh::Cli::GenerateCapistranoDeploy
       when "copy_templates_to_override"
