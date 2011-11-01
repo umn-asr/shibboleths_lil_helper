@@ -4,6 +4,7 @@ class Slh::Cli::CompareMetadata < Slh::Cli::HostFilterableBase
     mismatch_found = false
 
     Slh.strategies.each do |strategy|
+      Slh::Cli.instance.output "Iterating hosts for strategy #{strategy.name}"
       strategy.hosts.each do |host|
         next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
 
@@ -44,7 +45,7 @@ class Slh::Cli::CompareMetadata < Slh::Cli::HostFilterableBase
     end
 
     if mismatch_found
-      Slh::Cli.instance.output "\nThe newest copy of shibboleth2.xml is not deployed to all of your hosts!"
+      Slh::Cli.instance.output "\nThe newest copy of shibboleth2.xml is not deployed to all of your hosts!  This may or may not result in a broken installation, depending on what has changed since the last time you ran this command.", :highlight => true
     else
       Slh::Cli.instance.output "\nShibboleth2.xml is up-to-date on all of your hosts!"
     end

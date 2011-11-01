@@ -1,10 +1,11 @@
 class Slh::Cli::FetchMetadata < Slh::Cli::HostFilterableBase
   def perform_action
     Slh.strategies.each do |strategy|
+      Slh::Cli.instance.output "Fetching metadata for all sites associated with strategy #{strategy.name}"
       strategy.hosts.each do |host|
         next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
         host.sites.each do |site|
-          Slh::Cli.instance.output "Writing fetched metadata for #{site.name} to \n  #{site.fetched_metadata_path}"
+          # Slh::Cli.instance.output "Writing fetched metadata for #{site.name} to \n  #{site.fetched_metadata_path}"
           FileUtils.mkdir_p(site.config_dir)
           File.open(site.fetched_metadata_path,'w') do |f| 
             begin

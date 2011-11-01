@@ -35,7 +35,7 @@ class Slh::Models::Host < Slh::Models::Base
   # File.join('', 'asdf.txt') returns '/asdf.txt'. We need a way to accomodate
   # shib_prefix when needed, but avoiding values like '/shibboleth2.xml' when
   # a prefix isn't set.
-  #
+  # For interpolation into templates
   def prefixed_filepath_for(filename)
     filepath = filename
     unless @shib_prefix.nil?
@@ -48,6 +48,7 @@ class Slh::Models::Host < Slh::Models::Base
     File.join(self.parent_strategy.config_dir,self.name.to_s)
   end
 
+  # refers to the file within this checkout
   def shibboleth2_path
     File.join(self.config_dir,'shibboleth2.xml')
   end
