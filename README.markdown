@@ -1,18 +1,22 @@
 About
 =====
-Shibboleth's Lil Helper is a tool that automates the generation of Apache/IIS Shibboleth Native Service Provider configuration & metadata files.  It provides several benefits over manually configuring each NativeSp instance/server by:
+Shibboleth's Lil Helper (slh) is a tool that automates the generation of Apache/IIS Shibboleth Native Service Provider configuration & metadata files.  It provides several benefits over manually configuring each NativeSp instance/server by:
 
 * __Providing a consistent configuration approach__ you can apply uniformly across all of the servers managed by your organization.
   * Makes deployment automation possible, errors less frequent, and troubleshooting easier.
 
 * __Dividing high level auth specs from actual NativeSp configuration__
-  * Programmers can focus on high level goals like "protect files underneath the '/secure' directory on 'somewebsite.com'" rather than grappeling with the bewildering complexity of the NativeSp's interrelated XML files, the Shibboleth protocal, SAML, etc.  
+  * Programmers can focus on high level goals like "protect files underneath the '/secure' directory on 'somewebsite.com'" rather than grappeling with the bewildering complexity of the NativeSp's interrelated XML files, the Shibboleth protocal, SAML, etc.
 
 * __Providing conceptually simple linear process__ that distills the main steps associated with Shibboleth integration.
+
+* Verifying metadata consistency across sites & hosts associated with
+  particular Shibboletht SP entity_id.
 
 DISCLAIMER
 -------------------------
 All you see here on Github is the readme, no code yet.
+
 This is released as a RubyGem right now, we hope to push the source up
 here once things stabilize further
 
@@ -31,8 +35,7 @@ Installation
 ============
 * Pre-requisites:
   * Rubygems: http://rubygems.org/pages/download
-  * Bundler: gem install bundler
-  
+
 * Via Ruby Gems:
   * gem install shibboleths_lil_helper
   * Then type `slh` -- this provides more detailed/actionable
@@ -41,93 +44,59 @@ Installation
 Assumptions
 ===========
 * Shibboleth Native Service Provider Apache/IIS is already installed on your target web servers.
-* The X509Certificate (sp-cert.pem, sp-key.pem) keys are in their default locations along-side shibboleth2.xml.  This tool does not help you generate these keys, that's up to you.  The default installation of Native Shib generates keys for you though.
-* The Shibboleth apache module is loaded globally for all vHosts
-* /bin/slh is in your $PATH (automatically done with Rubygem install
-  method, manual is git cloned
+* The X509Certificate (sp-cert.pem, sp-key.pem) keys are in their default locations along-side shibboleth2.xml.
+* The Shibboleth apache module is loaded globally for all vHosts.
+* You are integrating with a single Identity Provider.
 
 Concept
 =======
 
-Auth specs are stated in your shibboleths_lil_helper/config.rb
-via an easily readable ruby parseable domain specific language.  From these specs, Shibboleth's Lil Helper is capable of generating all of the required XML files you will need to integrate with
-a Shibboleth Identify Provider (Idp).
+All configuration and authentication specs for all Shibboleth SP instances are specified in a single ruby parseable "shibboleths_lil_helper/config.rb" file.  From these specs, slh is capable of generating all of the required XML files you will need to integrate with a Shibboleth Identify Provider (Idp).
 
 The generation of these XML files happens through a command line tool
 called "slh".  Each particular task is broken into sub-commands such as
-"initialize", "generate", or "metadata" that perform various tasks.
+"initialize", "generate", "verify_metadata", or "generate_metadata" that perform various tasks.
 
-For example, given the following shibboleths_lil_helper/config.rb:
+* It all starts with:
 
-    Slh.for_strategy :umn_apache_shib_test_server do
-      set :sp_entity_id, 'https://asr.umn.edu/shibboleth/default'
-      set :idp_metadata_url, 'https://idp-test.shib.umn.edu/metadata.xml'
-      set :error_support_contact, 'goggins@umn.edu'
-      for_host 'asr-web-dev4.oit.umn.edu' do
-        for_site 'shib-php-test.asr.umn.edu' do
-          protect 'secure'
-        end
-        for_site 'shib-rails2-test.asr.umn.edu' do
-          protect 'secure'
-        end
-      end
-    end
+    mkdir shibboleth_deployer
+    cd shibboleth_deployer
+    slh initialize
 
-an invocation of
+  This creates a config file with example code you'll need to change to work.
 
-    `slh generate`
+* Go in and edit shibboleths_lil_helper/config.rb to reflect your setup,
+  adding
+  * entity id
+  * idp metadata url
+  * hosts, sites, and paths to protect for each for each site
 
-will produce the a dir structure and various config files
-associated with these specifications for each strategy, host, and site.
 
-    shibboleths_lil_helper/
-      generated/
-        <strategy>/               (apache_shib_test_server)
-          <hostname>/             (asr-web-dev4.oit.umn.edu)
-            idp_metadata.xml
-            shib_apache.conf
-            shibboleth2.xml
-            sp_metadata_for_host_to_give_to_idp.xml 
-            <site>/               (shib-php-test.asr.umn.edu)
-              fetched_metadata.xml
+* From here you type:
 
+    slh generate
+
+  which will generate shibboleth2.xml and a couple others
+  Now--you go put these files on the hosts they have been generated for.
 
 * The generated shibboleth2.xml will have RequestMap specs that restrict
-  access to the "/secure" path for the specified vhosts.
-
-* These generated files should be checked into a source control repository.
-
-The core assumptions of the specifications DSL are
-
-* a strategy ("for_strategy")
-  * has one IDP entity id (:idp_metadata_url)
-  * has one service provider entity id (:sp_entity_id)
-  * has many hosts
-* a host (for_host)
-  * has many sites 
-* a site (for_site)
-  * has many site paths that have various auth rules
-* a site path (protect)
-  * has a "flavor" such as the following specified like
-    *protect "optional_auth", :flavor => :authentication_optional*
-    * authentication_required
-    * authentication_optional
-    * authentication_required_for_specific_users
+  access to specified paths you have
 
 
-Usage
-=====
-* Type `slh`, you will see instructions for each sub-command and how
-  to get additional information about them.  In general the process is
-  * [initialize] initialize a shibboleths_lil_helper/config.rb
-  * [in your editor] tweak shibboleths_lil_helper/config.rb to reflect the servers you
-    will be using shibboleth with
-  * [generate] generate shibboleth2.xml, shib_apach.conf
-    config files
-  * [a deployment tool or manually] deploy these files out to each host (ideally using a deployment automation tool such as Capistrano)
-  * [metadata] generate metadata: creates and combines SP Metadata from all
-    of the Shib servers into a file(s) you can share with your IDP.
-  * [email] send the generated meta data to your IDP
+* Once you've copied the shibboleth2.xml up to your target hosts, you
+  can type:
+
+    slh verify_metadata
+
+  which will tell some of the things that are probably incorrect with
+  your setup and how to fix it. (like copying the sp-key.pem and sp-cert.pem keys associated with the :is_key_originator site to all of the other hosts)
+
+* Then, once verify_metadata is showing all green:
+
+    slh generate_metadata
+
+  which generates a metadata file for each strategy/entity id you have
+that you can give you your IDP.
 
 Real World Example
 ==================
@@ -160,8 +129,7 @@ files to be, e.g:
 
 Additional Docs
 ===============
-* doc/nuances.markdown
-* doc/for_slh_developers.markdown
+* See the stuff in /doc in this project
 
 How to Help
 ======================
