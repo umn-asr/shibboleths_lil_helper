@@ -5,11 +5,11 @@ class Slh::Models::Strategy  < Slh::Models::Base
   # CORE API METHODS BEGIN #
   ##########################
   def for_apache_host(host_name,&block)
-    @hosts << Slh::Models::Host.new(host_name, &block)
+    @hosts << Slh::Models::Host.new(host_name, self, &block)
   end
 
   def for_iis_host(host_name, &block)
-    t=Slh::Models::Host.new(host_name, &block)
+    t=Slh::Models::Host.new(host_name, self, &block)
     t.host_type = :iis
     @hosts << t
   end

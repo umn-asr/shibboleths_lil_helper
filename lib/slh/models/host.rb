@@ -4,15 +4,16 @@ class Slh::Models::Host < Slh::Models::Base
   # CORE API METHODS BEGIN #
   ##########################
   def for_site(site_name, &block)
-    @sites << Slh::Models::Site.new(site_name,&block)
+    @sites << Slh::Models::Site.new(site_name,self, &block)
   end
   ########################
   # CORE API METHODS END #
   ########################
 
-  attr_reader :name, :sites
+  attr_reader :name, :sites, :parent_strategy
   attr_accessor :host_type, :shib_prefix
-  def initialize(host_name,&block)
+  def initialize(host_name,parent_strategy,&block)
+    @parent_strategy = parent_strategy
     @name = host_name
     @host_type = :apache
     @sites = []

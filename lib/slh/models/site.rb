@@ -1,6 +1,18 @@
 class Slh::Models::Site < Slh::Models::Base
+  ##########################
+  # CORE API METHODS BEGIN #
+  ##########################
+  def protect(site_path, &block)
+    if site_path == '/' && !@paths.empty?
+      raise "If you want to protect the entire site, you must specify \"protect '/'\" before all other site path rules"
+    end
+    @paths << Slh::Models::SitePath.new(site_path, self, &block)
+  end
+  ##########################
+  # CORE API METHODS END   #
+  ##########################
   class CouldNotGetMetadata < Exception; end
-  attr_reader :name, :paths
+  attr_reader :name, :paths, :parent_host
 
   # This indicates the site is where all other sites get their encryption keys from
   # and where the metadata X509Certificate comes from
@@ -8,20 +20,14 @@ class Slh::Models::Site < Slh::Models::Base
 
   # site_id is for hosts who's host_type == :iis
   attr_accessor :site_id 
-  def initialize(site_name,&block)
+  def initialize(site_name,parent_host,&block)
+    @parent_host = parent_host
     @name = site_name
     @paths = []
     self.is_key_originator = false
     if block_given?
       self.instance_eval(&block)
     end
-  end
-
-  def protect(site_path, &block)
-    if site_path == '/' && !@paths.empty?
-      raise "If you want to protect the entire site, you must specify \"protect '/'\" before all other site path rules"
-    end
-    @paths << Slh::Models::SitePath.new(site_path, &block)
   end
 
   def metadata
