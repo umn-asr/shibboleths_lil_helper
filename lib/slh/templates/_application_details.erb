@@ -5,7 +5,7 @@
     <Logout>SAML2 Local</Logout>
 
     <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
-    <Handler type="Status" Location="/Status" />
+    <Handler type="Status" Location="/Status" acl="127.0.0.1"/><!-- NOTE: this acl bit, makes this Shibboleth.sso/Status url only available from the server, not publically, this is an important security feature. -->
     <Handler type="Session" Location="/Session" showAttributeValues="false"/>
     <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
 </Sessions>
