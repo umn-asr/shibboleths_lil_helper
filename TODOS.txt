@@ -1,7 +1,31 @@
-* Release as gem
+TODOS
+* add better instructions after generate: "copy idp_metadata.xml" and shib2.xml"
+
+* reflect on brads email to
+  https://mail.google.com/mail/u/0/?shva=1#search/bostr007%40umn.edu/13341a8a9d3cdd89
+    What web server is it? IIS or Apache
+
+    What is the host name of the computer?  (e.g. somehost.oit.umn.edu)
+
+    What is the site name?  (e.g. myshinynewwebsite.umn.edu)
+
+    If IIS, what is the site ID?  
+    (you can find this my clicking "Websites" in IIS and looking at the "Identifier" column for myshinynewwebsite.umn.edu)
+
+    Is authentication required for the entire site or particular directories?
+
+    Is this URL available for your site?  myshinynewwebsite.umn.edu/Shibboleth.sso/Metadata
+
+    What is the error support contact email?
+
+    What is the Service Provider entity ID you'd like to use? 
+    (we are using simple convention like: https://wf.umn.edu/shibboleth/default or https://asr.umn.edu/shibboleth/default, it doesn't really matter what you use)
+
+* add changelog.txt
 
 
 DONE
+* Release as gem
 * Incorporate FAQ stuff somehow https://www.pivotaltracker.com/story/show/19256223
 * Add something that warns LOUDLY to use slh with source control
 * Rejigger the default config.rb.erb--simplify and reference documentation

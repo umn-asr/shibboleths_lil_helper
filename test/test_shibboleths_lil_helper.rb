@@ -1,17 +1,9 @@
 require 'helper'
 
 class TestShibbolethsLilHelper < Test::Unit::TestCase
-  # should "have a Slh namespace that will contain all classes contained" do
-  #   assert Slh.class == Module
-  # end
-  # should "provides class representing core shibboleth model-ish ideas" do
-  #   assert Slh::Models::App.class == Class
-  #   assert Slh::Models::Host.class == Class
-  #   # TODO add more
-  # end
-  # should "provide some top level methods for using the tool" do
-  #   # TODO add more
-  # end
+  should "have a Slh namespace that will contain all classes contained" do
+    assert Slh.class == Module
+  end
 
   # context "with :dummy1 strategy" do
   #   setup do
