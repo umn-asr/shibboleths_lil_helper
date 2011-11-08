@@ -12,6 +12,15 @@ class Slh::Cli::Generate < Slh::Cli::HostFilterableBase
           FileUtils.mkdir_p(host.config_dir)
           File.open(strategy.config_file_path(cf,host), 'w') {|f| f.write(strategy.generate_config_file_content(cf,host)) }
           Slh::Cli.instance.output "    Wrote #{strategy.config_file_path(cf,host)}"
+          if cf == 'shib_apache.conf'
+            Slh::Cli.instance.output "      copy this into /etc/httpd/conf.d or somewhere apache can read it"
+          else
+            if host.shib_prefix.nil?
+              Slh::Cli.instance.output "      copy this into /etc/shibboleth for this host"
+            else
+              Slh::Cli.instance.output "      copy this into #{host.prefixed_filepath_for(cf)} "
+            end
+          end
         end
       end
     end
