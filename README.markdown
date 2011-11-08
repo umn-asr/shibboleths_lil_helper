@@ -10,15 +10,7 @@ Shibboleth's Lil Helper (slh) is a tool that automates the generation of Apache/
 
 * __Providing conceptually simple linear process__ that distills the main steps associated with Shibboleth integration.
 
-* Verifying metadata consistency across sites & hosts associated with
-  particular Shibboletht SP entity_id.
-
-DISCLAIMER
--------------------------
-All you see here on Github is the readme, no code yet.
-
-This is released as a RubyGem right now, we hope to push the source up
-here once things stabilize further
+* __Verifying metadata consistency__ across sites & hosts associated with particular Shibboletht SP entity_id.
 
 Why another tool?
 -----------------
@@ -32,8 +24,9 @@ configuration consistently with minimal manual work for:
   * each running the Apache/IIS Native Service Provider
 
 Installation
-============
-* Pre-requisites:
+------------
+* Pre-requisites
+  * Ruby: http://www.ruby-lang.org/en/downloads/
   * Rubygems: http://rubygems.org/pages/download
 
 * Via Ruby Gems:
@@ -41,12 +34,28 @@ Installation
   * Then type `slh` -- this provides more detailed/actionable
     documentation
 
+* Via Git: (requires bundler gem)
+  * this is how developers/contributors should install the tool
+  * git clone ...git://thisrepo... slh
+  * cd slh
+  * bundle install
+  * then add a symlink to bin/slh
+    * ln -s bin/slh ~/slh
+  * make sure the slh binary is the right one (not a gem one)
+    * `which slh`
+
+Before using this tool
+----------------------
+* Install Shibboleth Native Service Provider Apache/IIS stuff on all of
+  the hosts you wish to use shibboleth with.
+  https://wiki.shibboleth.net/confluence/display/SHIB2/Installation
+
 Assumptions
-===========
-* Shibboleth Native Service Provider Apache/IIS is already installed on your target web servers.
-* The X509Certificate (sp-cert.pem, sp-key.pem) keys are in their default locations along-side shibboleth2.xml.
+-----------
+* Each host integrates with a single Identity Provider, not multiple.
+
+* The X509Certificate (sp-cert.pem, sp-key.pem) keys are in their default locations along-side shibboleth2.xml. (you
 * The Shibboleth apache module is loaded globally for all vHosts.
-* You are integrating with a single Identity Provider.
 
 Concept
 =======

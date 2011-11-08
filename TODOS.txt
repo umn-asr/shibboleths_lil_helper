@@ -1,6 +1,4 @@
 TODOS
-* add better instructions after generate: "copy idp_metadata.xml" and shib2.xml"
-
 * reflect on brads email to
   https://mail.google.com/mail/u/0/?shva=1#search/bostr007%40umn.edu/13341a8a9d3cdd89
     What web server is it? IIS or Apache
@@ -25,6 +23,8 @@ TODOS
 
 
 DONE
+
+* add better instructions after generate: "copy idp_metadata.xml" and shib2.xml"
 * Release as gem
 * Incorporate FAQ stuff somehow https://www.pivotaltracker.com/story/show/19256223
 * Add something that warns LOUDLY to use slh with source control

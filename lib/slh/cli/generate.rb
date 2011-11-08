@@ -13,17 +13,22 @@ class Slh::Cli::Generate < Slh::Cli::HostFilterableBase
           File.open(strategy.config_file_path(cf,host), 'w') {|f| f.write(strategy.generate_config_file_content(cf,host)) }
           Slh::Cli.instance.output "    Wrote #{strategy.config_file_path(cf,host)}"
           if cf == 'shib_apache.conf'
-            Slh::Cli.instance.output "      copy this into /etc/httpd/conf.d or somewhere apache can read it"
+            Slh::Cli.instance.output "      copy this into /etc/httpd/conf.d or somewhere apache can read it are target host", :highlight => :green
           else
             if host.shib_prefix.nil?
-              Slh::Cli.instance.output "      copy this into /etc/shibboleth for this host"
+              Slh::Cli.instance.output "      copy this into /etc/shibboleth for this host on target host", :highlight => :green
             else
-              Slh::Cli.instance.output "      copy this into #{host.prefixed_filepath_for(cf)} "
+              Slh::Cli.instance.output "      copy this into #{host.prefixed_filepath_for(cf)} on target host", :highlight => :green
             end
           end
         end
       end
+
+      originator_host = strategy.key_originator_site.parent_host
+      Slh::Cli.instance.output "\ncopy sp-key.pem sp-cert.pem from host #{originator_host.name} to ALL target hosts.", :highlight => :green
+      Slh::Cli.instance.output "  This makes the X509Certificate stuff in all metadata for all sites associated with an entity_id match"
     end
+
     Slh::Cli.instance.output "You MUST deploy these files your web servers and restart httpd and shibd for subsequent commands to work", :highlight => true
   end
 end
