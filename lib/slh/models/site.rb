@@ -28,6 +28,9 @@ class Slh::Models::Site < Slh::Models::Base
     if block_given?
       self.instance_eval(&block)
     end
+    if self.paths.empty?
+      raise "No protect statements for site #{site_name}, you must protect at least 1 path for every site.  Adding a \"protect\" statement should make this error go away"
+    end
   end
 
   def metadata

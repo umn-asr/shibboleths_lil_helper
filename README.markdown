@@ -44,11 +44,43 @@ Installation
   * make sure the slh binary is the right one (not a gem one)
     * `which slh`
 
+* Install notes:
+  * Tool requires nokogiri gem which in-turn requires libxml2, you may
+    run into difficulties there: See http://nokogiri.org/tutorials/installing_nokogiri.html if you have problems.
+
 Before using this tool
 ----------------------
-* Install Shibboleth Native Service Provider Apache/IIS stuff on all of
-  the hosts you wish to use shibboleth with.
-  https://wiki.shibboleth.net/confluence/display/SHIB2/Installation
+For each host you want to integrate with Shibboleth, do the following and have answers for the questions below.
+
+__Don't try to use this tool until you have followed these instructions for at least one host.__
+
+For each host:
+
+  * __Install Shibboleth Native Service Provider Apache/IIS__
+    https://wiki.shibboleth.net/confluence/display/SHIB2/Installation
+    Ideally, you should be able to hit a URL like "Shibboleth.ss/Metadata" for each site
+    on the host and have it cough out some XML goo. (not a strict
+requirement, slh will help you with this later too)
+
+  * What web server is it? IIS or Apache
+
+  * If IIS, what is the site ID?  
+    You can find this my clicking "Websites" in IIS and looking at the "Identifier" column for myshinynewwebsite.umn.edu.
+
+  * What is the host name of the computer?  (e.g. somehost.com)
+
+  * What is the site name?  (e.g. myshinynewwebsite.umn.edu)
+
+  * Is authentication required for the entire site or particular directories?
+
+  * Is this URL available for your site?  myshinynewwebsite.umn.edu/Shibboleth.sso/Metadata
+
+  * What is the error support contact email?
+
+  * What is the Service Provider entity ID you'd like to use? 
+    A simple convention is to have a dev entity for "development" or "staging" apps and one for production stuff.
+    You might consider https://YOUR_ORG.umn.edu/shibboleth/dev_default or https://YOUR_ORG.umn.edu/shibboleth/prod_default
+
 
 Assumptions
 -----------
