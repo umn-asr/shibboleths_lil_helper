@@ -107,7 +107,7 @@ OTHER DOCUMENTATION SOURCES (not just this tool)
       when 'verify_metadata'
         klass = [Slh::Cli::FetchMetadata, Slh::Cli::CompareMetadata, Slh::Cli::VerifyMetadataEncryption]
       when 'generate_metadata'
-        klass = [Slh::Cli::FetchMetadata, Slh::Cli::CompareMetadata,Slh::Cli::VerifyMetadataEncryption, Slh::Cli::GenerateMetadata]
+        klass = Slh::Cli::GenerateMetadata
       when "generate_capistrano"
         klass = Slh::Cli::GenerateCapistranoDeploy
       when "copy_templates_to_override"

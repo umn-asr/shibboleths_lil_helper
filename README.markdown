@@ -30,17 +30,17 @@ Installation
   * Rubygems: http://rubygems.org/pages/download
 
 * Via Ruby Gems:
-  * gem install shibboleths_lil_helper
+  * `gem install shibboleths_lil_helper`
   * Then type `slh` -- this provides more detailed/actionable
     documentation
 
 * Via Git: (requires bundler gem)
   * this is how developers/contributors should install the tool
-  * git clone ...git://thisrepo... slh
-  * cd slh
-  * bundle install
-  * then add a symlink to bin/slh
-    * ln -s bin/slh ~/slh
+  * `git clone ...git://thisrepo... slh`
+  * `cd slh`
+  * `bundle install`
+  * then add a symlink to bin/slh (something like below)
+    * `ln -s bin/slh ~/slh`
   * make sure the slh binary is the right one (not a gem one)
     * `which slh`
 
@@ -53,71 +53,91 @@ Before using this tool
 Assumptions
 -----------
 * Each host integrates with a single Identity Provider, not multiple.
-
-* The X509Certificate (sp-cert.pem, sp-key.pem) keys are in their default locations along-side shibboleth2.xml. (you
-* The Shibboleth apache module is loaded globally for all vHosts.
+* (for Apache) The Shibboleth apache module is loaded globally for all vHosts.
 
 Concept
-=======
+-------
 
-All configuration and authentication specs for all Shibboleth SP instances are specified in a single ruby parseable "shibboleths_lil_helper/config.rb" file.  From these specs, slh is capable of generating all of the required XML files you will need to integrate with a Shibboleth Identify Provider (Idp).
+All configuration and authentication specs for all Shibboleth SP instances are specified in a single ruby parseable `shibboleths_lil_helper/config.rb` file.  From these specs, slh is capable of generating all of the required XML files you will need to integrate with a Shibboleth Identify Provider (Idp).  The following breaks down the essential steps.
 
-The generation of these XML files happens through a command line tool
-called "slh".  Each particular task is broken into sub-commands such as
-"initialize", "generate", "verify_metadata", or "generate_metadata" that perform various tasks.
 
-* It all starts with:
+### Initialization
+It all starts with
 
     mkdir shibboleth_deployer
     cd shibboleth_deployer
     slh initialize
 
-  This creates a config file with example code you'll need to change to work.
+This creates a config file with example code you'll need to change to work.
 
-* Go in and edit shibboleths_lil_helper/config.rb to reflect your setup,
-  adding
+### SP configuration
+Edit `shibboleths_lil_helper/config.rb` to reflect your setup:
+
   * entity id
   * idp metadata url
   * hosts, sites, and paths to protect for each for each site
 
-
-* From here you type:
+From here you type:
 
     slh generate
 
-  which will generate shibboleth2.xml and a couple others
-  Now--you go put these files on the hosts they have been generated for.
+This creates:
 
-* The generated shibboleth2.xml will have RequestMap specs that restrict
-  access to specified paths you have
+  * shibboleth2.xml
+  * idp_metadata.xml
+  * shib_apache.conf (if using apache)
 
+for each host for each entity_id.  shibboleth2.xml contains RequestMap, AssertionConsumer server "endpoints" and other goo needed to integrate with an Shib IDP.
 
-* Once you've copied the shibboleth2.xml up to your target hosts, you
-  can type:
+Go deploy these config files to you hosts. (the tool provides more details)
+
+### Metadata verification
+Verify your metadata data across all hosts:
 
     slh verify_metadata
 
-  which will tell some of the things that are probably incorrect with
-  your setup and how to fix it. (like copying the sp-key.pem and sp-cert.pem keys associated with the :is_key_originator site to all of the other hosts)
+Which will tell some of the things that are probably incorrect with
+  your setup and how to fix it. (like copying the sp-key.pem and sp-cert.pem keys associated with the `:is_key_originator` site to all of the other hosts)
 
-* Then, once verify_metadata is showing all green:
+### Metadata generation
+Once verify_metadata is showing all green:
 
     slh generate_metadata
 
-  which generates a metadata file for each strategy/entity id you have
+which generates a metadata file for each strategy/entity id you have
 that you can give you your IDP.
 
-Real World Example
-==================
-The following describes how we integrate this tool's generated output
-into a deployment automation tool called Capistrano.
+Once the IDP has added your metadata, then each site should be able to
+respond to 
 
-We have a private repo called shibboleth_deployer that includes the shibboleths_lil_helper generated config files and uses Capistrano to push these files out target servers and restarts shibd and httpd.  It's usage looks like:
+    Shibboleth.sso/Login
+
+and be happily prompted for login.
+
+
+Deployment automation
+---------------------
+Once you have the basic stuff working, you may want to automate
+deployment:
+
+    slh capistrano_deploy
+
+will create a config/deploy.rb
+
+See https://github.com/capistrano/capistrano/wiki/ for more details
+
+This requires some initial setup per host and only works well if your
+target hosts run SSH (aka default not-IIS setup)
+
+deployment automation example
+-----------------------------
+We have a private repo called shibboleth\_deployer that includes the shibboleths\_lil\_helper generated config files and uses Capistrano to push these files out target servers and restarts shibd and httpd.  It's usage looks like:
 
     cap deploy HOST=asr-web-dev4.oit.umn.edu
 
+### Initial setup
 For each of our target servers we setup Capistrano to have a clone of
-this shibboleth_deployer repo structured in the standard way, e.g:
+this shibboleth\_deployer repo structured in the standard way:
 
     ls /etc/shibboleth_deployer
         current
@@ -125,33 +145,49 @@ this shibboleth_deployer repo structured in the standard way, e.g:
         shared
 
 Setup symlinks to the appropriate config files within
-shibboleth_deployer from the places the Native Shibboleth SP expects
+shibboleth\_deployer from the places the Native Shibboleth SP expects
 files to be, e.g:
 
-(from the /etc/shibboleth dir)
+from the /etc/shibboleth dir
+
     ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/shibboleth2.xml shibboleth2.xml
 
     ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/idp_metadata.xml idp_metadata.xml
 
-(from the /etc/httpd/conf.d dir)
+from the /etc/httpd/conf.d dir
+
     ln -s /etc/shibboleth_deployer/current/shibboleths_lil_helper/generated/apache_shib_test_server/asr-web-dev4.oit.umn.edu/shib_apache.conf shib_apache.conf
 
-Additional Docs
-===============
-* See the stuff in /doc in this project
-
 How to Help
-======================
+-----------
+* Let us know the issues you are having with the tool via Github Issues.
 
-Email Us
+* Improve the documentation!  The whole purpose of this tool is to
+  provide a straight-forward path to setting up a Shibboleth SP.
+
+How to contribute
 ----------------------
-* Let us know you are interested in using the tool.
+* Fork, implement, issue a pull request for small changes.
 
-* Voice your ideas about questions you have and features you'd like to see.
+* Email us for big ideas or API changes--we'd like to keep this tool
+  stable and want to collaborate to identify the right way of
+accommodating new features while maintaining backward compatibility.
 
-Authors
-=======
+Contributors
+------------
 * Joe Goggins, Academic Support Resources, goggins@umn.edu
 * Chris Dinger, Academic Support Resources, ding0057@umn.edu
 
-Copyright (c) 2011 University of Minnesota
+Acknowledgements
+----------------
+Thanks to these folks for providing feedback and willingness to pilot
+the tool.
+
+* David Peterson, Office of Institutional Research
+* Debbie Gillespie, Computer Science and Engineering
+* Eva Young, Office of Institional Compliance
+* Josh Buysse, CLA Office of Information Technology
+* Aaron Zirbes, Environmental Health Sciences
+
+
+Copyright (c) Regents of the University of Minnesota
