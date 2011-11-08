@@ -1,40 +1,96 @@
+# ABOUT
+# =====
+# This file is the basis for your shibboleth config for
+# all entities, hosts, sites, and url paths you want to protect for your organization.
+# 
+# All slh commands utilize this file to do its thing.
+#
+# To get started:
+#   * fill in the REQUIRED items
+#   * run slh generate
+#   * deploy the files our to your server to the appropriate place
+#   * fight with your server to get somesite.com/Shibboleth.sso/Metadata spitting out XML
+#     for each host
+#
+# Then:
+#   * run slh verify_metadata
+#   * copy sp-key, sp-cert, etc
+#   * re-run command until you aren't seeing any errors
+# Then:
+#   * run slh generate_metadata
+#   * give the metadata to your IDP folks
+#
+# Verify:
+#   * Goto somesite.com/Shibboleth.sso/Login
+#   * You should be prompted to login
+#
+# A strategy
+#   has one entity
+#   has a metadata url
+#   has many hosts
+#     a host has many sites
+#         a site has many protected paths
+#           a protected path can require auth, optionally use auth, or restrict to a 
+#           particular set of users
+#
 Slh.for_strategy :test_idp do
-  set :sp_entity_id, 'YOUR_ENTITY_ID'
-  set :idp_metadata_url, 'YOUR_IDP_METADATA_URL'
-  set :error_support_contact, 'YOUR_ERROR_SUPPORT_EMAIL_ADDRESS'
+  set :sp_entity_id, 'YOUR_ENTITY_ID'                     # REQUIRED, https://yourorg.umn.edu/shibboleth/default
 
-  for_apache_host 'SOMEHOSTNAME.COM' do
-    # UNCOMMENT THIS IF YOUR SHIB STUFF LIVES IN A NON-STANDARD LOCATION 
-    # set :shib_prefix, '/swadm/etc/shibboleth'
-    for_site 'SOMESITENAME1.COM' do
+  set :idp_metadata_url, 'YOUR_IDP_METADATA_URL'          # REQUIRED, https://idp-test.shib.umn.edu/metadata.xml
+  set :error_support_contact, 'YOUR_ERROR_SUPPORT_EMAIL_ADDRESS' # OPTIONAL
+
+  # Can be either
+  # for_apache_host
+  #   or
+  # for_iis_host
+  for_apache_host 'SOMEHOSTNAME.COM' do                          # REQUIRED
+    # uncomment if your shib stuff lives in a non-standard location
+    # set :shib_prefix, '/swadm/etc/shibboleth'                  # OPTIONAL
+
+    # uncomment if and fill-in if you are using IIS
+    # set :site_id, "YOU_MUST_SET_THE_SITE_ID_HERE"              # REQUIRED if for_iis_host
+    #
+    # replace with the host name of your server
+    for_site 'SOMESITENAME1.COM' do                              # REQUIRED
       # Each strategy must set this for exactly one site
       # its used as the authoritative source to from which all other
       # sites metadata's X509Certificate should match
       # the sp-key.pem and sp-cert.pem files from this host should be
       # copied to all other hosts underneath the strategy
-      #
-      set :is_key_originator, true
-      protect 'SOME_PATH_YOU_WANT_TO_REQUIRE_AUTH'
-    end
-    for_site 'SOMESITENAME2.COM' do
-      protect 'SOME_PATH_YOU_WANT_OPTIONAL_AUTH' do
-        set :flavor, :authentication_optional
+      set :is_key_originator, true                               # REQUIRED, see instructions
+      protect '/' do                                             # REQUIRED
+        # delete this line if you want to require auth for the whole site 
+        set :flavor, :authentication_optional                    # OPTIONAL
+        # There are three "flavors":
+        #   authentication_required: defaults to this if unspecified
+        #     i.e. (no do-end block required)
+        #       protect 'secure'
+        #
+        #   authentication_optional: Makes it possible for
+        #     the app layer to redirect to Shibboleth.sso/Login
+        #     i.e. 
+        #       protect 'lazy_auth' do
+        #         set :flavor, :authentication_optional
+        #       end 
+        #   authentication_required_for_specific_users: Require auth and restrict to
+        #     a particular set of users (not-tested extensively)
+        #     i.e. 
+        #       protect 'specific_users' do
+        #         set :flavor, :authentication_required_for_specific_users
+        #         set :specific_users, %w(SOMEUSER@SOME.DOMAIN.COM ANOTHERUSER@SOME.DOMAIN.COM)
+        #       end 
       end
+      # ... for each protected dir for this site ...
     end
-    for_site 'SOMESITENAME3.COM' do
-      protect 'SOME_PATH_YOU_WANT_TO_RESTRICTED_TO_PARTICULAR_USERS' do
-        set :flavor, :authentication_required_for_specific_users
-        set :specific_users, %w(SOMEUSER@SOME.DOMAIN.COM ANOTHERUSER@SOME.DOMAIN.COM)
-      end
-    end
+    # ... for each site on this host ...
   end
-  for_iis_host 'SOMEIISHOSTNAME.COM' do
-    for_site 'SOMEIISSITENAME1.COM' do
-      set :site_id, "YOU_MUST_SET_THE_SITE_ID_HERE"
-      protect 'SOME_PATH_YOU_WANT_TO_REQUIRE_AUTH'
-    end
-  end
+  # ... for each host within this strategy (using this entity_id)
 end
-Slh.clone_strategy_for_new_idp :test_idp,
-                               :production_idp,
-                               'THE_PRODUCTION_IDP_METADATA_URL'
+# ... for each strategy/aka entity_id ...
+#
+# Uncomment this line if you want to create a new strategy that is identical
+# an existing one but points at a different IDP entity URL
+#
+# Slh.clone_strategy_for_new_idp :test_idp,                            # OPTIONAL
+#                                :production_idp,
+#                                'THE_PRODUCTION_IDP_METADATA_URL'
