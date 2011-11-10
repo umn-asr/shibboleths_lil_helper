@@ -14,7 +14,7 @@ module Slh::ClassMethods
     existing_strategy = self.strategies.detect {|x| x.name == existing_s}
     raise "The specified strategy, #{existing_s}, does not exist" if existing_strategy.nil?
     raise "The new strategy,#{new_s}, already exists" if self.strategies.detect {|x| x.name == new_s}
-    new_strategy = existing_strategy.clone
+    new_strategy = Marshal.load( Marshal.dump(existing_strategy))
     new_strategy.idp_metadata_url = new_idp_url
     new_strategy.instance_variable_set(:@name, new_s)
     @@strategies << new_strategy
