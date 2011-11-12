@@ -2,15 +2,19 @@ About
 =====
 Shibboleth's Lil Helper (slh) is a tool that automates the generation of Apache/IIS Shibboleth Native Service Provider configuration & metadata files.  It provides several benefits over manually configuring each NativeSp instance/server by:
 
-* __Providing a consistent configuration approach__ you can apply uniformly across all of the servers managed by your organization.
-  * Makes deployment automation possible, errors less frequent, and troubleshooting easier.
-
-* __Dividing high level auth specs from actual NativeSp configuration__
-  * Programmers can focus on high level goals like "protect files underneath the '/secure' directory on 'somewebsite.com'" rather than grappeling with the bewildering complexity of the NativeSp's interrelated XML files, the Shibboleth protocal, SAML, etc.
+* __Providing a consistent configuration approach__ applied uniformly across all servers in your organization.
 
 * __Providing conceptually simple linear process__ that distills the main steps associated with Shibboleth integration.
 
 * __Verifying metadata consistency__ across sites & hosts associated with particular Shibboletht SP entity_id.
+
+* __Dividing high level auth specs from actual NativeSp configuration__
+  * Programmers can focus on high level goals like "protect files underneath the '/secure' directory on 'somewebsite.com'" rather than grappeling with the bewildering complexity of the NativeSp's interrelated XML files, the Shibboleth protocal, SAML, etc.
+
+__This code is under active development as of 11/12/2011__.  
+Please watch this Github repo or periodically check CHANGLOG.markdown to stay to up-to-date.
+
+Use `gem update shibboleths_lil_helper` to get the most current version.
 
 Why another tool?
 -----------------
