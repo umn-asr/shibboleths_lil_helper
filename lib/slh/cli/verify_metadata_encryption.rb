@@ -8,10 +8,15 @@ class Slh::Cli::VerifyMetadataEncryption < Slh::Cli::HostFilterableBase
         next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])
         Slh::Cli.instance.output "Iterating sites for host #{host.name}"
         host.sites.each do |site|
-          if key_originator_site.x509_certificate_string == site.x509_certificate_string
-            Slh::Cli.instance.output "  X509Certificate matches for #{site.name} ", :highlight => :green
-          else
-            Slh::Cli.instance.output "  Mismatching X509Certificate for #{site.name}, WILL NOT WORK", :highlight => :red
+          begin 
+            if key_originator_site.x509_certificate_string == site.x509_certificate_string
+              Slh::Cli.instance.output "  X509Certificate matches for #{site.name} ", :highlight => :green
+            else
+              Slh::Cli.instance.output "  Mismatching X509Certificate for #{site.name}, WILL NOT WORK", :highlight => :red
+              broken = true
+            end
+          rescue Slh::Models::Site::CouldNotGetMetadata => e
+            Slh::Cli.instance.output "  Could not get metadata from #{site.name}, Slh::Models::Site::CouldNotGetMetadata exception thrown, message=#{e.message}, this site will not work", :highlight => :red
             broken = true
           end
         end
