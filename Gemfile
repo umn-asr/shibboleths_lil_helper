@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 # Add dependencies required to use your gem here.
 # Example:
-gem "activesupport", "~> 3.0.9"
+gem "activesupport", ">= 3.0.9"
 gem "nokogiri"
 gem 'i18n' # Required to make require 'active_support/all' work...
 
