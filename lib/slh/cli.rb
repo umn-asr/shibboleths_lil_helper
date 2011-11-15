@@ -14,21 +14,9 @@ module Slh
     autoload :DescribeConfig
 
     attr_reader :args,:action
-
-    def output(msg,*args)
-      Slh.command_line_output(msg,*args)
-    end
-
-    def parse_options_and_delegate(args)
-      if args.nil?
-        @args = [] 
-      else  
-        @args = args.dup
-      end
-      $stdout.sync = true # no output buffering
-      case @args.first
-      when nil
-        puts <<-'EOS'
+    
+    def self.documentation
+      <<-'EOS'
 
   This is Shibboleth's Lil Helper.
                                             He'll help you create consistent
@@ -98,7 +86,22 @@ OTHER DOCUMENTATION SOURCES (not just this tool)
   (within this project--the doc folder)
     There are lots of short little developer oriented tips we used while creating this tool.
 
-        EOS
+      EOS
+    end
+    def output(msg,*args)
+      Slh.command_line_output(msg,*args)
+    end
+
+    def parse_options_and_delegate(args)
+      if args.nil?
+        @args = [] 
+      else  
+        @args = args.dup
+      end
+      $stdout.sync = true # no output buffering
+      case @args.first
+      when nil
+        puts self.class.documentation
         exit
       when 'initialize'
         klass = Slh::Cli::Initialize
