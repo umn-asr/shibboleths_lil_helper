@@ -89,7 +89,10 @@ requirement, slh will help you with this later too)
 Assumptions
 -----------
 * Each host integrates with a single Identity Provider, not multiple.
-* (for Apache) The Shibboleth apache module is loaded globally for all vHosts.
+* (for Apache) The Shibboleth apache module is loaded globally for all
+  vHosts.  (This doesn't mean that it requires auth globally--just available).
+* shibboleth-2.4.3 is installed on your target hosts.  Versions greater than this should
+  work too, but have not been tested.
 
 Concept
 -------
