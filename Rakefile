@@ -15,7 +15,7 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "shibboleths_lil_helper"
-  gem.homepage = "http://github.com/joegoggins/shibboleths_lil_helper"
+  gem.homepage = "http://github.com/umn-asr/shibboleths_lil_helper"
   gem.license = "MIT"
   gem.summary = %Q{A ruby gem to streamline the setup, deployment, and ongoing management of Apache & IIS web-servers running the Shibboleth Native Service Provider implementations.}
   gem.description = %Q{See the summary text.}
