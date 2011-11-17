@@ -1,3 +1,12 @@
+1.0.5
+=====
+* Relaxed dependency on ActiveSupport from ~> 3.0.9 to >= 3.0.9
+* Made verify_metadata not exit on fatal error if Shibboleth.sso does
+  not exist
+* Moved documentation into its own string Slh::Cli.documentation
+* Specified shibboleth-2.4.3 is installed on your target hosts in README
+* Made all github links about this project point to http://github.com/umn-asr/shibboleths_lil_helper, its final resting point.
+
 1.0.4
 =====
 * Fixed an evil bug in Slh.clone_strategy_for_new_idp that
@@ -23,3 +32,4 @@
 1.0.0
 =====
 * Initial release
+
