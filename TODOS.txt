@@ -1,9 +1,10 @@
 TODOS
 
-
-
+* Make the remote call to fetch metadata unnecessary--instead, the user
+  will be expected to snag the X509Data and put it into the config somehow.
 
 DONE
+* Move the set :site_id to the correct area in the config.rb.erb
 * Added note in readme: Broke because of libxml2 lacking http://nokogiri.org/tutorials/installing_nokogiri.html
 * after slh generate, tell the user exactly where they should put the files.
 * Blowup gracefully when no protect statements 

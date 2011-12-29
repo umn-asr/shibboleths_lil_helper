@@ -47,11 +47,14 @@ Slh.for_strategy :test_idp do
     # uncomment if your shib stuff lives in a non-standard location
     # set :shib_prefix, '/swadm/etc/shibboleth'                  # OPTIONAL
 
-    # uncomment if and fill-in if you are using IIS
-    # set :site_id, "YOU_MUST_SET_THE_SITE_ID_HERE"              # REQUIRED if for_iis_host
     #
     # replace with the host name of your server
     for_site 'SOMESITENAME1.COM' do                              # REQUIRED
+
+      # uncomment if and fill-in if you are using IIS
+      # set :site_id, "YOU_MUST_SET_THE_SITE_ID_HERE"              # REQUIRED if for_iis_host
+      #
+      #
       # Each strategy must set this for exactly one site
       # its used as the authoritative source to from which all other
       # sites metadata's X509Certificate should match
