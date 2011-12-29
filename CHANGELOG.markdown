@@ -1,3 +1,9 @@
+1.0.6
+=====
+* Moved the wrong documentation for set :site_id into the correct place in
+  default generated config.rb (under for_site, not for_iis_host or for_apache_host)
+* Fixed the load file so it would work in ruby 1.9.3
+
 1.0.5
 =====
 * Relaxed dependency on ActiveSupport from ~> 3.0.9 to >= 3.0.9
