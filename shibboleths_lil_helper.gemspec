@@ -4,14 +4,15 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "shibboleths_lil_helper"
-  s.version = "1.0.7"
+  s.name = %q{shibboleths_lil_helper}
+  s.version = "1.0.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joe Goggins"]
-  s.date = "2011-12-29"
-  s.description = "See the summary text."
-  s.email = "goggins@umn.edu"
+  s.date = %q{2011-12-29}
+  s.default_executable = %q{slh}
+  s.description = %q{See the summary text.}
+  s.email = %q{goggins@umn.edu}
   s.executables = ["slh"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
@@ -68,16 +69,17 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/test_shibboleths_lil_helper.rb"
   ]
-  s.homepage = "http://github.com/umn-asr/shibboleths_lil_helper"
+  s.homepage = %q{http://github.com/umn-asr/shibboleths_lil_helper}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
-  s.summary = "A ruby gem to streamline the setup, deployment, and ongoing management of Apache & IIS web-servers running the Shibboleth Native Service Provider implementations."
+  s.rubygems_version = %q{1.3.6}
+  s.summary = %q{A ruby gem to streamline the setup, deployment, and ongoing management of Apache & IIS web-servers running the Shibboleth Native Service Provider implementations.}
 
   if s.respond_to? :specification_version then
+    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 3.0.9"])
       s.add_runtime_dependency(%q<nokogiri>, [">= 0"])
       s.add_runtime_dependency(%q<i18n>, [">= 0"])
