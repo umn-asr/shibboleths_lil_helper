@@ -28,7 +28,7 @@ module Slh::ClassMethods
   end
 
   def config_file
-    File.join self.config_dir,'config.rb'
+    File.join '.', self.config_dir,'config.rb'
   end
 
   @@is_loaded = false
@@ -37,10 +37,11 @@ module Slh::ClassMethods
       Slh.command_line_output "Loading #{Slh.config_file}"
       begin
         require Slh.config_file
-      rescue LoadError
+      rescue LoadError => e
         Slh.command_line_output "No #{Slh.config_file} found, exiting...Are you sure you are running this command from the right working directory?",
           :highlight => :red,
-          :exit => true
+          :exit => true,
+          :exception => e
       end
       if Slh.strategies.empty?
         Slh.command_line_output "No strategies found in #{Slh.config_file}, you should add some, exiting...",
