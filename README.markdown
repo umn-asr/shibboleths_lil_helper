@@ -11,10 +11,17 @@ Shibboleth's Lil Helper (slh) is a tool that automates the generation of Apache/
 * __Dividing high level auth specs from actual NativeSp configuration__
   * Programmers can focus on high level goals like "protect files underneath the '/secure' directory on 'somewebsite.com'" rather than grappeling with the bewildering complexity of the NativeSp's interrelated XML files, the Shibboleth protocal, SAML, etc.
 
-__This code is under active development as of 11/12/2011__.  
-Please watch this Github repo or periodically check CHANGLOG.markdown to stay to up-to-date.
+Staying up-to-date
+------------------
+__This code is under active development__.
 
-Use `gem update shibboleths_lil_helper` to get the most current version.
+* Create a Github issue to report problems you might be having with the
+  tool.
+* See CHANGLOG.markdown for the changes associated with each gem release
+* See TODOS.markdown for changes that we're thinking about
+  incorporating.  Send me (Joe) a message on Github (joegoggins) or email
+  if you have other things you are thinking of.
+* Use `gem update shibboleths_lil_helper` to get the most current version.
 
 Why another tool?
 -----------------
@@ -26,6 +33,14 @@ configuration consistently with minimal manual work for:
   * each hosting many vhosts (aka sites)
   * each running PHP, Rails 2 + 3, classic ASP, or .NET
   * each running the Apache/IIS Native Service Provider
+
+Assumptions
+-----------
+* __shibboleth-2.4.3 is installed on your target hosts__.  Versions greater than this should
+  work too, but have not been tested.
+* Each host integrates with a single Identity Provider, not multiple.
+* (for Apache) The Shibboleth apache module is loaded globally for all
+  vHosts.  (This doesn't mean that it requires auth globally--just available).
 
 Installation
 ------------
@@ -85,14 +100,6 @@ requirement, slh will help you with this later too)
     A simple convention is to have a dev entity for "development" or "staging" apps and one for production stuff.
     You might consider https://YOUR_ORG.umn.edu/shibboleth/dev_default or https://YOUR_ORG.umn.edu/shibboleth/prod_default
 
-
-Assumptions
------------
-* Each host integrates with a single Identity Provider, not multiple.
-* (for Apache) The Shibboleth apache module is loaded globally for all
-  vHosts.  (This doesn't mean that it requires auth globally--just available).
-* shibboleth-2.4.3 is installed on your target hosts.  Versions greater than this should
-  work too, but have not been tested.
 
 Concept
 -------
@@ -227,6 +234,6 @@ the tool.
 * Eva Young, Office of Institional Compliance
 * Josh Buysse, CLA Office of Information Technology
 * Aaron Zirbes, Environmental Health Sciences
-
+* Rex Wheeler, University of Minnesota Extension
 
 Copyright (c) Regents of the University of Minnesota
