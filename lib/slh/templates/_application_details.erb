@@ -2,7 +2,7 @@
     <SSO entityID="<%= @strategy.idp_entity_id %>">
       SAML2 SAML1
     </SSO>
-    <Logout>SAML2 Local</Logout>
+    <Logout>Local</Logout>
 
     <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
     <Handler type="Status" Location="/Status" acl="127.0.0.1"/><!-- NOTE: this acl bit, makes this Shibboleth.sso/Status url only available from the server, not publically, this is an important security feature. -->
