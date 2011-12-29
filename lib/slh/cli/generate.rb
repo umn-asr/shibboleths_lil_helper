@@ -2,7 +2,6 @@ class Slh::Cli::Generate < Slh::Cli::HostFilterableBase
   def perform_action
     Slh.strategies.each do |strategy|
       Slh::Cli.instance.output "Generating Native SP config files for strategy #{strategy.name.to_s}"
-      FileUtils.rm_rf(strategy.config_dir)
       FileUtils.mkdir_p(strategy.config_dir)
       strategy.hosts.each do |host|
         next if @options[:filter].kind_of?(String) && !host.name.match(@options[:filter])

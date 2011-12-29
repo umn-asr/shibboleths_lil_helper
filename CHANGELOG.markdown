@@ -1,3 +1,17 @@
+1.0.8
+=====
+* Don't remove the entire "generated" directory every time "slh generate" is run.
+  Rather, just over-write existing files.  This is a simple change that
+  eliminates tons of white-noise from a diff of before and after.  This
+is particularly useful for folks who are using slh with source control (which everyone should!!)
+  Also useful when doing something like `slh generate --filter=somehostname.com`, which
+  will only generate new shib2.xmls for these hosts.
+
+1.0.7
+=====
+* <Logout>SAML2 Local</Logout> to <Logout>Local</Logout>.  Was
+  misleading, SAML2 log-out not supported.
+
 1.0.6
 =====
 * Moved the wrong documentation for set :site_id into the correct place in
