@@ -121,7 +121,13 @@ shibboleth2.xml contains a <RequestMap> and other goo needed to integrate with a
 You must deploy these files to each host and restart the shib
 daeman/service and apache/IIS.
 
-You must also arbitrarily pick a particular sp-key.pem and sp-cert.pem pair to distribute to all of your hosts that change the same SP entity ID and `set :is_key_originator,true` for the site you choose to be where you are copying from.
+You must also arbitrarily __pick one particular site__ in each strategy to `set :is_key_originator,true` for, if you see this more in a strategy, it will NOT WORK.
+
+`set :is_key_originator, true` tells slh that this site has the authoriative X509Certificate (in the SP metadata) that all other sites should match against (used in the verify_metadata command).
+
+It implies that each host in your strategy has the same sp-key.pem and sp-cert.pem files as the host where the "is_key_originator" site lives.  
+
+It also implies that, when you setup a new web server host: copy the sp-key and sp-cert files from this "is_key_originator" host to the new host.
 
 ### 4. Verify SP metadata correctness
 Once you've deployed you shibboleth2.xml, idp_metadata.xml, shib_apache,
