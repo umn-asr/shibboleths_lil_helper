@@ -121,7 +121,7 @@ shibboleth2.xml contains a <RequestMap> and other goo needed to integrate with a
 You must deploy these files to each host and restart the shib
 daeman/service and apache/IIS.
 
-You must also arbitrarily __pick one particular site__ in each strategy to `set :is_key_originator,true` for, if you see this more in a strategy, it will NOT WORK.
+You must also arbitrarily __pick one particular site__ in each strategy to `set :is_key_originator,true` for, if you see this more in a strategy, it will NOT WORK.  (also, don't set it to false, just remove the line in all but one site)
 
 `set :is_key_originator, true` tells slh that this site has the authoriative X509Certificate (in the SP metadata) that all other sites should match against (used in the verify_metadata command).
 
