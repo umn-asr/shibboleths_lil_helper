@@ -1,29 +1,25 @@
-# ABOUT
+# About
 # =====
 # This file is the basis for your shibboleth config for
 # all entities, hosts, sites, and url paths you want to protect for your organization.
 # 
 # All slh commands utilize this file to do its thing.
 #
+# To run slh commands you need to be in the directory above
+# shibboleths_lil_helper/config.rb, aka
+#
+#   shibboleth_deployer/
+#     <YOU NEED TO BE IN THIS DIRECTORY>
+#     shibboleths_lil_helper/
+#       <NOT THIS ONE>
+#       generated/
+#       config.rb
+#
 # To get started:
 #   * fill in the REQUIRED items
-#   * run slh generate
-#   * deploy the files our to your server to the appropriate place
-#   * fight with your server to get somesite.com/Shibboleth.sso/Metadata spitting out XML
-#     for each host
-#
-# Then:
-#   * run slh verify_metadata
-#   * copy sp-key, sp-cert, etc
-#   * re-run command until you aren't seeing any errors
-# Then:
-#   * run slh generate_metadata
-#   * give the metadata to your IDP folks
-#
-# Verify:
-#   * Goto somesite.com/Shibboleth.sso/Login
-#   * You should be prompted to login
-#
+#   * follow the instructions at https://github.com/umn-asr/shibboleths_lil_helper
+# Data Model
+# ==========
 # A strategy
 #   has one entity
 #   has a metadata url
@@ -92,7 +88,8 @@ end
 # ... for each strategy/aka entity_id ...
 #
 # Uncomment this line if you want to create a new strategy that is identical
-# an existing one but points at a different IDP entity URL
+# an existing one integrates a different IDP.  The third param here
+# should be the URL where the IDP metadata lives (NOT THE IDP ENTITY ID)
 #
 # Slh.clone_strategy_for_new_idp :test_idp,                            # OPTIONAL
 #                                :production_idp,
