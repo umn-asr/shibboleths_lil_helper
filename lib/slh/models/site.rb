@@ -67,8 +67,9 @@ class Slh::Models::Site < Slh::Models::Base
     "#{self.to_https_prefixed_name}/Shibboleth.sso/Metadata"
   end
 
-  # Gets interpolated into the sp_metadata_for_host_to_give_to_idp.xml
-  # file
+  # Gets interpolated into the
+  #   sp_metadata_for_entity_id_to_give_to_idp.xml.erb # file
+  #
   def x509_certificate_string
     t=self.metadata_nokogiri.clone
     t.remove_namespaces!
