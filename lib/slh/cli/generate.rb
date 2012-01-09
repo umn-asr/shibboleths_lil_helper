@@ -28,6 +28,6 @@ class Slh::Cli::Generate < Slh::Cli::HostFilterableBase
       Slh::Cli.instance.output "  This makes the X509Certificate stuff in all metadata for all sites associated with an entity_id match"
     end
 
-    Slh::Cli.instance.output "You MUST deploy these files your web servers and restart httpd and shibd for subsequent commands to work", :highlight => true
+    Slh::Cli.instance.output "You MUST deploy these files your web servers and restart httpd/IIS and shibd/Shibboleth Service for subsequent commands to work", :highlight => true
   end
 end

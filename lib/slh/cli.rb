@@ -20,7 +20,7 @@ module Slh
 
   This is Shibboleth's Lil Helper.
                                             He'll help you create consistent
-               ___,@                        config XML for your Shibboleth-Native 
+               ___,@                        config XML for your Shibboleth-Native
                /  <                         Service-Provider servers (Apache or IIS)
           ,_  /    \  _,                    without pulling your hair out in frustration.
       ?    \`/______\`/
