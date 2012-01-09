@@ -81,10 +81,10 @@ OPTIONAL COMMANDS
     Summarizes the configuration described in shibboleths_lil_helper/config.rb
 
 OTHER DOCUMENTATION SOURCES (not just this tool)
-  https://wiki.shibboleth.net/
-    The official Shibboleth Wiki
-  (within this project--the doc folder)
-    There are lots of short little developer oriented tips we used while creating this tool.
+  * The official page of this tool: https://github.com/umn-asr/shibboleths_lil_helper/
+  * The official Shibboleth Wiki: https://wiki.shibboleth.net/
+  * Doc within this project--(the doc folder)
+    There are some short little developer oriented tips that could be useful
 
       EOS
     end
