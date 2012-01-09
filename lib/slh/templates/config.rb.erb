@@ -15,12 +15,9 @@
 #       generated/
 #       config.rb
 #
-# To get started:
-#   * fill in the REQUIRED items
-#   * follow the instructions at https://github.com/umn-asr/shibboleths_lil_helper
 # Data Model
 # ==========
-# A strategy
+# A strategy (you can think of this as a container to hold all config associated with an SP Entity ID)
 #   has one entity
 #   has a metadata url
 #   has many hosts
@@ -28,69 +25,88 @@
 #         a site has many protected paths
 #           a protected path can require auth, optionally use auth, or restrict to a 
 #           particular set of users
+# Usage
+# =====
+# * fill in the REQUIRED items and change stuff that is in ALL CAPS
+# * follow the instructions at https://github.com/umn-asr/shibboleths_lil_helper
 #
 Slh.for_strategy :test_idp do
-  set :sp_entity_id, 'YOUR_ENTITY_ID'                     # REQUIRED, https://yourorg.umn.edu/shibboleth/default
+  # REQUIRED, https://yourorg.umn.edu/shibboleth/default
+  set :sp_entity_id, 'YOUR_ENTITY_ID'
+  # REQUIRED, https://idp-test.shib.umn.edu/metadata.xml
+  set :idp_metadata_url, 'YOUR_IDP_METADATA_URL'
+  # OPTIONAL
+  set :error_support_contact, 'YOUR_ERROR_SUPPORT_EMAIL_ADDRESS'
 
-  set :idp_metadata_url, 'YOUR_IDP_METADATA_URL'          # REQUIRED, https://idp-test.shib.umn.edu/metadata.xml
-  set :error_support_contact, 'YOUR_ERROR_SUPPORT_EMAIL_ADDRESS' # OPTIONAL
-
+  # REQUIRED
   # Can be either
-  # for_apache_host
-  #   or
-  # for_iis_host
-  for_apache_host 'SOMEHOSTNAME.COM' do                          # REQUIRED
+  #   for_apache_host
+  #     or
+  #   for_iis_host
+  # SOMEHOSTNAME.COM does not matter externally and might have the same
+  # name as a site underneath it.  Most of the times the actual hostname of a
+  # server is different than the sites that live on it
+  #
+  for_apache_host 'SOMEHOSTNAME.COM' do
+    # OPTIONAL
     # uncomment if your shib stuff lives in a non-standard location
-    # set :shib_prefix, '/swadm/etc/shibboleth'                  # OPTIONAL
-
+    # set :shib_prefix, '/swadm/etc/shibboleth'
     #
-    # replace with the host name of your server
-    for_site 'SOMESITENAME1.COM' do                              # REQUIRED
-
+    # REQUIRED
+    # replace with the site of your server
+    for_site 'SOMESITENAME1.COM' do
+      # REQUIRED if this site is underneath a "for_iis_host" block
       # uncomment if and fill-in if you are using IIS
-      # set :site_id, "YOU_MUST_SET_THE_SITE_ID_HERE"              # REQUIRED if for_iis_host
+      # set :site_id, "YOU_MUST_SET_THE_SITE_ID_HERE_IF_ON_IIS" 
       #
-      #
-      # Each strategy must set this for exactly one site
-      # its used as the authoritative source to from which all other
+      # REQUIRED
+      # Each strategy must set this for exactly one site.
+      # Its used as the authoritative source to from which all other
       # sites metadata's X509Certificate should match
       # the sp-key.pem and sp-cert.pem files from this host should be
       # copied to all other hosts underneath the strategy
-      set :is_key_originator, true                               # REQUIRED, see instructions
-      protect '/' do                                             # REQUIRED
-        # delete this line if you want to require auth for the whole site 
-        set :flavor, :authentication_optional                    # OPTIONAL
-        # There are three "flavors":
-        #   authentication_required: defaults to this if unspecified
-        #     i.e. (no do-end block required)
-        #       protect 'secure'
-        #
-        #   authentication_optional: Makes it possible for
-        #     the app layer to redirect to Shibboleth.sso/Login
-        #     i.e. 
-        #       protect 'lazy_auth' do
-        #         set :flavor, :authentication_optional
-        #       end 
-        #   authentication_required_for_specific_users: Require auth and restrict to
-        #     a particular set of users (not-tested extensively)
-        #     i.e. 
-        #       protect 'specific_users' do
-        #         set :flavor, :authentication_required_for_specific_users
-        #         set :specific_users, %w(SOMEUSER@SOME.DOMAIN.COM ANOTHERUSER@SOME.DOMAIN.COM)
-        #       end 
-      end
-      # ... for each protected dir for this site ...
-    end
-    # ... for each site on this host ...
-  end
-  # ... for each host within this strategy (using this entity_id)
-end
-# ... for each strategy/aka entity_id ...
+      set :is_key_originator, true
+
+      # REQUIRED for each path you want to protect (or "/" if the entire site)
+      # You should have at least one of these for each site, but can have many
+      # There are three "flavors" of protection
+      #   authentication_required: Web-server will force login for any path underneath it
+      #     i.e. 
+      #       protect '/' do
+      #         set :flavor, :authentication_required
+      #       end
+      #
+      #   authentication_optional: Makes it possible for
+      #     the app layer to redirect to Shibboleth.sso/Login
+      #     Use this when you want the app/site (rather than the web-server)
+      #     to be in control of authentication
+      #     i.e.
+      #       protect 'lazy_auth' do
+      #         set :flavor, :authentication_optional
+      #       end
+      #
+      #   authentication_required_for_specific_users: Require auth and restrict to
+      #     a particular set of users (not-tested extensively)
+      #     i.e. 
+      #       protect 'specific_users' do
+      #         set :flavor, :authentication_required_for_specific_users
+      #         set :specific_users, %w(SOMEUSER@SOME.DOMAIN.COM ANOTHERUSER@SOME.DOMAIN.COM)
+      #       end
+      #
+      protect '/' do
+        set :flavor, :authentication_optional
+      end # ... for each protected dir for this site ...
+    end # ... for each site on this host ...
+  end # ... for each host within this strategy (using this entity_id)
+end # ... for each strategy/aka entity_id ...
+
+# OPTIONAL
+# Uncomment these 3 lines if you want to create a new strategy that is identical
+# an existing one but integrates against a different IDP.  The third param here
+# should be the URL where the IDP metadata lives (NOT THE IDP ENTITY ID).
 #
-# Uncomment this line if you want to create a new strategy that is identical
-# an existing one integrates a different IDP.  The third param here
-# should be the URL where the IDP metadata lives (NOT THE IDP ENTITY ID)
-#
-# Slh.clone_strategy_for_new_idp :test_idp,                            # OPTIONAL
-#                                :production_idp,
-#                                'THE_PRODUCTION_IDP_METADATA_URL'
+# This creates a new strategy from an existing one who's only difference is the idp_metadata.xml
+# comes from THE_PRODUCTION_IDP_METADATA_URL rather than the one specified in the strategy you are cloning from (the first param)
+# Slh.clone_strategy_for_new_idp :test_idp,  # The name of the strategy you are cloning from
+#                                :production_idp, # the name of the strategy you are cloning to
+#                                'THE_PRODUCTION_IDP_METADATA_URL'  # the url where the production idp metadata lives
