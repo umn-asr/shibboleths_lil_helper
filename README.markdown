@@ -51,6 +51,8 @@ Installation
 * Install notes:
   * Tool requires nokogiri gem which in-turn requires libxml2, you may
     run into difficulties there: See http://nokogiri.org/tutorials/installing_nokogiri.html if you have problems.
+  * Doesn't work w JRuby, probably all versions, 1.6.7 confirmed to not
+    work.
 
 Before using this tool
 ----------------------
@@ -229,21 +231,10 @@ How to help/contribute
 
 * To add features or fix stuff yourself: fork, implement, issue a pull request.
 
-Contributors
-------------
+* To show your support financially you can [donate a couple bucks to this project here.](http://pledgie.com/campaigns/17458).
+
+Author
+------
 * Joe Goggins, Academic Support Resources, goggins@umn.edu
-* Chris Dinger, Academic Support Resources, ding0057@umn.edu
-
-Acknowledgements
-----------------
-Thanks to these folks for providing feedback and willingness to pilot
-the tool.
-
-* David Peterson, Office of Institutional Research
-* Debbie Gillespie, Computer Science and Engineering
-* Eva Young, Office of Institional Compliance
-* Josh Buysse, CLA Office of Information Technology
-* Aaron Zirbes, Environmental Health Sciences
-* Rex Wheeler, University of Minnesota Extension
-
+     
 Copyright (c) Regents of the University of Minnesota

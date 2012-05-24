@@ -1,7 +1,18 @@
-# Shibboleth Apache Global configuration
+##########################################
+# Shibboleth Apache Global configuration #
+##########################################
+# * See https://spaces.internet2.edu/display/SHIB2/NativeSPApacheConfig
+#   For details on the switches that can be flipped in the mod_shib module
+#
+
+
+# This is required to be on for Native SP.
 UseCanonicalName On
 
-<% unless @host.shib_prefix.nil? %>
+<% if @host.shib_prefix.nil? %>
+# Note: Intentionally not specifying ShibConfig '/some/crazy/path', assumed to be default
+<% else %>
+# Specifying a non-standard config file location
 ShibConfig <%= File.join(@host.shib_prefix, 'shibboleth2.xml') %>
 <% end %>
   
@@ -17,7 +28,8 @@ LoadModule mod_shib /usr/lib64/shibboleth/mod_shib_22.so
 
 # Enable shibboleth for all vhosts, does NOT require auth anywhere
 # just makes it possible.
-# Specific auth requirements are make in the <RequestMap> in shibboleth2.xml
+# Specific auth requirements are made in the <RequestMap> in shibboleth2.xml
+# rather than in apache conf files
 <Location />
   AuthType shibboleth
   Require shibboleth

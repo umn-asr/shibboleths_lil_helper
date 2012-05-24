@@ -4,6 +4,12 @@ TODOS
   will be expected to snag the X509Data and put it into the config somehow.
 
 DONE
+* Make note that JRuby does not work w SLH.
+* Tweak shib_apache.conf template
+    Include ref to https://spaces.internet2.edu/display/SHIB2/NativeSPApacheConfig in shib_apache.conf 
+  Include 
+    ShibConfig /swadm/etc/shibboleth/shibboleth2.xml
+  "Specific requirements are make" to "are made"
 * Move the set :site_id to the correct area in the config.rb.erb
 * Added note in readme: Broke because of libxml2 lacking http://nokogiri.org/tutorials/installing_nokogiri.html
 * after slh generate, tell the user exactly where they should put the files.
