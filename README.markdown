@@ -231,8 +231,6 @@ How to help/contribute
 
 * To add features or fix stuff yourself: fork, implement, issue a pull request.
 
-* To show your support financially you can [donate a couple bucks to this project here](http://pledgie.com/campaigns/17458).
-
 Author
 ------
 * Joe Goggins, Academic Support Resources, goggins@umn.edu
