@@ -1,3 +1,13 @@
+2.0.0
+=====
+* Complete re-write/re-think of the tool using test driven
+  development to verify intended behavior, see doc/v2.0.0_feature_list.md for details of features.
+  Most of the DSL syntax is the same.
+
+1.0.9
+=====
+* Mostly a bunch of documentation improvements.
+
 1.0.8
 =====
 * Don't remove the entire "generated" directory every time "slh generate" is run.
