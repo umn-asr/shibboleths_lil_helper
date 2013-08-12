@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "shibboleths_lil_helper" do
-  it "should fail" do
-    expect(1).to eql(0), "shibboleths_lil_helper yo! delete this failing test case and add one that works"
+  it "should say oh hay hay" do
+    expect(1).to eql(0), "oh hay hay developer, here is your first failing test case, :), "
   end
 end
