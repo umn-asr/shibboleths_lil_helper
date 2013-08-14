@@ -16,4 +16,12 @@ TODO
 Contributing
 ------------
 
-TODO
+To run tests:
+
+    git clone ...
+
+    cd <the_dir>
+
+    bundle
+
+    bundle exec rspec
